@@ -81,12 +81,12 @@ public class Main {
                     new PilasColasMenu().mostrarMenu();
                 }
                 case 4 -> {
-                    MenuFormatter.mostrarMensajeInfo("Módulo de Árboles AVL en desarrollo");
-                    InputValidator.pausar();
+                    MenuFormatter.limpiarPantalla();
+                    new ArbolAVLMenu().mostrarMenu();
                 }
                 case 5 -> {
-                    MenuFormatter.mostrarMensajeInfo("Módulo de Recursividad en desarrollo");
-                    InputValidator.pausar();
+                    MenuFormatter.limpiarPantalla();
+                    new RecursividadMenu().mostrarMenu();
                 }
                 case 6 -> mostrarInformacionSistema();
                 case 0 -> {

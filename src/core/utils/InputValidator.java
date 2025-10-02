@@ -47,6 +47,19 @@ public class InputValidator {
     }
     
     /**
+     * Lee un entero positivo
+     */
+    public static int leerEnteroPositivo(String mensaje) {
+        while (true) {
+            int valor = leerEntero(mensaje);
+            if (valor > 0) {
+                return valor;
+            }
+            System.out.println("[ERROR] El valor debe ser mayor que cero");
+        }
+    }
+    
+    /**
      * Lee un double positivo
      */
     public static double leerDoublePositivo(String mensaje) {
