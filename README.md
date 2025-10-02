@@ -1,179 +1,143 @@
 # 🎓 Informática 3 - Guías Prácticas
 
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=for-the-badge)
+Colección integrada de implementaciones académicas de estructuras de datos y algoritmos fundamentales, desarrollada como material de estudio para la materia Informática 3.
 
-## 📋 Descripción
+## 📋 Descripción Académica
 
-Este proyecto unifica múltiples guías prácticas de la materia **Informática 3**, implementando diversos conceptos de estructuras de datos y algoritmos en Java. El sistema está diseñado con arquitectura **MVC** para mantener una separación clara entre la lógica de negocio y la interfaz de usuario.
+Este repositorio unifica múltiples módulos de práctica que cubren los conceptos fundamentales de:
+- **Algoritmos de Ordenamiento** con análisis de complejidad temporal
+- **Estructuras de Datos Lineales** (Pilas y Colas)
+- **Estructuras de Datos No Lineales** (Árboles AVL)
+- **Programación Orientada a Objetos** con patrones de diseño
+- **Técnicas de Recursividad** aplicadas
 
-## 🏗️ Arquitectura del Proyecto
+## 🏗️ Arquitectura del Sistema
 
 ```
-informatica3-guias-practicas/
-├── src/
-│   ├── core/                    # 🔧 Implementaciones (Modelo)
-│   │   ├── pizzeria/           # Gestión de pizzería y algoritmos de ordenamiento
-│   │   ├── tareas/             # Gestión de tareas y operaciones CRUD
-│   │   ├── estructuras/        # Estructuras de datos
-│   │   │   ├── arboles/        # Árboles AVL
-│   │   │   ├── pilas/          # Implementación de pilas
-│   │   │   ├── colas/          # Implementación de colas
-│   │   │   └── recursividad/   # Ejercicios recursivos
-│   │   └── utils/              # Utilidades y validadores
-│   ├── views/                  # 🖥️ Interfaces de usuario (Vista)
-│   │   ├── PizzeriaMenu.java   # Menú de gestión de pizzería
-│   │   ├── TareasMenu.java     # Menú de gestión de tareas
-│   │   └── PilasColasMenu.java # Menú de pilas y colas
-│   └── Main.java              # 🎯 Controlador principal
-├── README.md                   # Este archivo
-└── .gitignore                 # Archivos ignorados por Git
+src/
+├── app/                    # Controlador principal unificado
+├── core/                   # Núcleo de implementaciones
+│   ├── pizzeria/          # Caso de estudio: algoritmos de ordenamiento
+│   │   ├── Pedido.java    # Entidad de dominio
+│   │   ├── Pizzeria.java  # Gestor de colecciones
+│   │   ├── Ordenador.java # Implementación de algoritmos
+│   │   └── TiempoOrdenamiento.java # Análisis de performance
+│   ├── tareas/            # Caso de estudio: operaciones CRUD
+│   │   ├── Tarea.java     # Modelo de datos
+│   │   └── GestorTareas.java # Operaciones sobre colecciones
+│   ├── estructuras/       # Estructuras de datos clásicas
+│   │   ├── pilas/         # Implementación LIFO
+│   │   ├── colas/         # Implementación FIFO
+│   │   ├── arboles/       # Árboles auto-balanceados
+│   │   └── recursividad/  # Técnicas recursivas
+│   └── utils/             # Utilidades de sistema
+└── views/                  # Interfaces de usuario
 ```
 
-## 🚀 Características Principales
+## � Implementaciones Técnicas
 
-### 🍕 Gestión de Pizzería
-- **Algoritmos de Ordenamiento**: Inserción, Shell Sort, Quick Sort
-- **Análisis de Rendimiento**: Comparación de tiempos de ejecución
-- **Gestión de Pedidos**: CRUD completo con validaciones
+### 🍕 Módulo Pizzería - Algoritmos de Ordenamiento
 
-### 📋 Gestión de Tareas
-- **Operaciones CRUD**: Crear, leer, actualizar, eliminar tareas
-- **Estados**: Pendiente/Completada con filtros avanzados
-- **Estadísticas**: Progreso visual y métricas
+**Objetivo:** Comparar algoritmos de ordenamiento en un contexto práctico.
 
-### 📚 Pilas y Colas
-- **Pila (LIFO)**: Implementación con arreglo dinámico
-- **Cola (FIFO)**: Implementación circular con arreglo
-- **Operaciones**: Push/Pop, Enqueue/Dequeue con validaciones
+- **Inserción (Insertion Sort)** - O(n²)
+  - Ideal para conjuntos pequeños o parcialmente ordenados
+  - Implementación estable y adaptativa
 
-### 🌳 Árboles AVL
-- **Auto-balanceado**: Mantiene balance automáticamente
-- **Operaciones**: Inserción, eliminación, búsqueda
-- **Visualización**: Representación del árbol
+- **Shell Sort** - O(n log n) promedio
+  - Mejora del ordenamiento por inserción
+  - Utiliza secuencia de gaps para optimización
 
-## 🛠️ Tecnologías Utilizadas
+- **Quick Sort** - O(n log n) promedio, O(n²) peor caso
+  - Algoritmo divide y vencerás
+  - Implementación con particionado Lomuto
 
-- **Lenguaje**: Java 17+
-- **Paradigma**: Programación Orientada a Objetos
-- **Arquitectura**: Modelo-Vista-Controlador (MVC)
-- **Estructuras**: ArrayList, Arrays, Árboles binarios
-- **Algoritmos**: Ordenamiento, Búsqueda, Recursividad
+**Características:**
+- Análisis empírico de rendimiento con conjuntos de 100, 1,000 y 10,000 elementos
+- Generación automática de datos de prueba
+- Medición precisa de tiempos de ejecución en nanosegundos
 
-## 📦 Instalación y Ejecución
+### 📋 Módulo Tareas - Operaciones CRUD
 
-### Prerrequisitos
-- Java JDK 17 o superior
-- Terminal/Command Prompt
+**Objetivo:** Demostrar manipulación de colecciones con operaciones básicas.
 
-### Pasos de instalación
+- **Create:** Validación de entrada y agregado a colección
+- **Read:** Filtrado por estado y listado completo
+- **Update:** Cambio de estados con validación
+- **Delete:** Eliminación individual y por lotes
 
-1. **Clonar el repositorio**
-   ```bash
-   git clone [URL_DEL_REPOSITORIO]
-   cd informatica3-guias-practicas
-   ```
+**Características:**
+- Uso de Java Streams para filtrado eficiente
+- Validación robusta de datos de entrada
+- Estadísticas en tiempo real de progreso
 
-2. **Compilar el proyecto**
-   ```bash
-   javac -d bin src/**/*.java src/*.java
-   ```
+### 📚 Módulo Pilas y Colas - Estructuras Lineales
 
-3. **Ejecutar la aplicación**
-   ```bash
-   java -cp bin Main
-   ```
+**Pilas (LIFO - Last In, First Out):**
+- Implementación con arreglo dinámico
+- Redimensionamiento automático (150% de capacidad)
+- Operaciones: `push()`, `pop()`, `top()`, `isEmpty()`, `isFull()`
 
-## 🎯 Uso del Sistema
+**Colas (FIFO - First In, First Out):**
+- Implementación circular con arreglo
+- Manejo eficiente de memoria con índices circulares
+- Operaciones: `enqueue()`, `dequeue()`, `front()`, `isEmpty()`, `isFull()`
 
-### Menú Principal
+### 🌳 Módulo Árboles AVL - Estructuras Auto-balanceadas
 
-Al ejecutar la aplicación, se presenta un menú principal con las siguientes opciones:
+**Características del AVL:**
+- Árbol binario de búsqueda auto-balanceado
+- Factor de balance mantenido en [-1, 0, 1]
+- Rotaciones simples y dobles para balance
+- Altura logarítmica garantizada: O(log n)
 
-1. **🍕 Gestión de Pizzería** - Algoritmos de ordenamiento y análisis
-2. **📋 Gestión de Tareas** - CRUD básico con listas y filtros
-3. **📚 Pilas y Colas** - Estructuras LIFO y FIFO
-4. **🌳 Árboles AVL** - Árboles binarios auto-balanceados
-5. **🔄 Recursividad** - Ejercicios y ejemplos recursivos
+**Operaciones principales:**
+- Inserción con rebalanceo automático
+- Búsqueda optimizada O(log n)
+- Cálculo dinámico de altura y factor de balance
 
-### Navegación
+## 🎯 Conceptos Pedagógicos Implementados
 
-- Use los números para seleccionar opciones
-- Presione `0` para volver al menú anterior
-- El sistema incluye validación de entrada robusta
-- Mensajes informativos guían al usuario en cada paso
+### Paradigmas de Programación
+- **Encapsulación:** Acceso controlado a datos mediante getters/setters
+- **Modularidad:** Separación clara de responsabilidades
+- **Reutilización:** Componentes genéricos y especializados
 
-## 📚 Conceptos Implementados
+### Patrones de Diseño
+- **MVC (Modelo-Vista-Controlador):** Separación de lógica de negocio e interfaz
+- **Template Method:** Estructura común para menús
+- **Strategy:** Diferentes algoritmos de ordenamiento intercambiables
 
-### Algoritmos de Ordenamiento
-- **Inserción**: O(n²) - Eficiente para conjuntos pequeños
-- **Shell Sort**: O(n log n) - Mejora del ordenamiento por inserción
-- **Quick Sort**: O(n log n) promedio - Divide y vencerás
+### Análisis de Algoritmos
+- **Complejidad Temporal:** Medición empírica vs. teórica
+- **Complejidad Espacial:** Uso eficiente de memoria
+- **Casos de Prueba:** Mejor caso, caso promedio, peor caso
 
-### Estructuras de Datos
-- **Pilas**: LIFO (Last In, First Out)
-- **Colas**: FIFO (First In, First Out)
-- **Árboles AVL**: Auto-balanceados para búsquedas eficientes
-- **Listas**: ArrayList para manejo dinámico de datos
+## 📊 Métricas y Análisis
 
-### Técnicas de Programación
-- **Recursividad**: Fibonacci, factorial, búsquedas
-- **Validación de datos**: Entrada robusta del usuario
-- **Manejo de excepciones**: Gestión de errores elegante
-- **Encapsulación**: Acceso controlado a datos
+El sistema incluye herramientas de análisis para:
+- **Benchmarking** de algoritmos de ordenamiento
+- **Visualización** de estructuras de datos
+- **Estadísticas** de uso y rendimiento
+- **Validación** automática de integridad de datos
 
-## 🧪 Funcionalidades de Prueba
+## 🧪 Casos de Uso Académicos
 
-### Datos de Prueba
-- **Generación automática**: Crea conjuntos de datos para testing
-- **Análisis de rendimiento**: Mide tiempos de ejecución
-- **Casos extremos**: Prueba con conjuntos vacíos, grandes, etc.
+1. **Estudio Comparativo de Algoritmos:** Análisis empírico de performance
+2. **Implementación de TADs:** Tipos Abstractos de Datos clásicos
+3. **Validación de Conceptos:** Verificación práctica de teoría
+4. **Experimentación:** Modificación de parámetros y observación de resultados
 
-### Validaciones
-- **Entrada de datos**: Validación de tipos y rangos
-- **Estados consistentes**: Verificación de integridad
-- **Mensajes informativos**: Feedback claro al usuario
+## � Ejecución
 
-## 🤝 Contribución
+```bash
+# Compilar
+javac -d bin -cp src src/app/*.java src/views/*.java src/core/*/*.java src/core/*/*/*.java
 
-Este proyecto está diseñado para fines educativos. Las contribuciones son bienvenidas:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📝 Notas de Desarrollo
-
-### Patrones Utilizados
-- **MVC**: Separación clara de responsabilidades
-- **Factory**: Para creación de estructuras de datos
-- **Singleton**: Para validadores y utilidades
-
-### Mejores Prácticas
-- **Código limpio**: Nombres descriptivos y comentarios útiles
-- **Modularidad**: Clases pequeñas y enfocadas
-- **Reutilización**: Componentes reutilizables
-- **Documentación**: JavaDoc en métodos importantes
-
-## 📄 Licencia
-
-Este proyecto es de uso educativo para la materia Informática 3.
-
-## 👥 Autores
-
-- **Equipo de Informática 3** - Desarrollo e implementación
-
-## 🆘 Soporte
-
-Si encuentras algún problema o tienes sugerencias:
-
-1. Revisa la documentación en código
-2. Verifica los mensajes de error del sistema
-3. Consulta los ejemplos de uso en cada módulo
+# Ejecutar
+java -cp bin app.Main
+```
 
 ---
 
-**¡Gracias por usar las Guías Prácticas de Informática 3!** 🎓✨
+**Requisitos:** Java 21+ | **Propósito:** Material educativo para Informática 3

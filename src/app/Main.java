@@ -1,3 +1,5 @@
+package app;
+
 import views.*;
 import core.utils.*;
 
@@ -25,11 +27,11 @@ public class Main {
     private static void mostrarBienvenida() {
         MenuFormatter.limpiarPantalla();
         MenuFormatter.mostrarTituloPrincipal("GUÍAS PRÁCTICAS DE INFORMÁTICA 3");
-        System.out.println("  🎓 Bienvenido al sistema integrado de prácticas");
-        System.out.println("  📚 Explora diferentes estructuras de datos y algoritmos");
-        System.out.println("  💡 Perfecto para aprender y practicar conceptos fundamentales");
+        System.out.println("  Bienvenido al sistema integrado de prácticas");
+        System.out.println("  Explora diferentes estructuras de datos y algoritmos");
+        System.out.println("  Perfecto para aprender y practicar conceptos fundamentales");
         System.out.println();
-        System.out.println("  📋 Módulos disponibles:");
+        System.out.println("  Módulos disponibles:");
         System.out.println("     • Gestión de Pizzería (Algoritmos de Ordenamiento)");
         System.out.println("     • Gestión de Tareas (Listas y Operaciones Básicas)");
         System.out.println("     • Pilas y Colas (Estructuras LIFO y FIFO)");
@@ -44,24 +46,24 @@ public class Main {
             MenuFormatter.limpiarPantalla();
             MenuFormatter.mostrarTituloPrincipal("MENÚ PRINCIPAL");
             
-            MenuFormatter.mostrarOpcion(1, "🍕 Gestión de Pizzería");
+            MenuFormatter.mostrarOpcion(1, "Gestión de Pizzería");
             System.out.println("     └─ Algoritmos: Inserción, Shell Sort, Quick Sort");
             
-            MenuFormatter.mostrarOpcion(2, "📋 Gestión de Tareas");
+            MenuFormatter.mostrarOpcion(2, "Gestión de Tareas");
             System.out.println("     └─ CRUD básico con listas y filtros");
             
-            MenuFormatter.mostrarOpcion(3, "📚 Pilas y Colas");
+            MenuFormatter.mostrarOpcion(3, "Pilas y Colas");
             System.out.println("     └─ Estructuras LIFO y FIFO con arreglos");
             
-            MenuFormatter.mostrarOpcion(4, "🌳 Árboles AVL");
+            MenuFormatter.mostrarOpcion(4, "Árboles AVL");
             System.out.println("     └─ Árboles binarios auto-balanceados");
             
-            MenuFormatter.mostrarOpcion(5, "🔄 Recursividad");
+            MenuFormatter.mostrarOpcion(5, "Recursividad");
             System.out.println("     └─ Ejercicios y ejemplos recursivos");
             
             MenuFormatter.mostrarSeparador();
-            MenuFormatter.mostrarOpcion(6, "ℹ️  Información del sistema");
-            MenuFormatter.mostrarOpcion(0, "🚪 Salir");
+            MenuFormatter.mostrarOpcion(6, "Información del sistema");
+            MenuFormatter.mostrarOpcion(0, "Salir");
             
             int opcion = InputValidator.leerEnteroEnRango("\\n👉 Seleccione un módulo: ", 0, 6);
             

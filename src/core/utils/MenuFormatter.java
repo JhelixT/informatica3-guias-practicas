@@ -21,7 +21,7 @@ public class MenuFormatter {
     }
     
     public static void mostrarOpcionSalir(int numero) {
-        System.out.printf("  %d. 🚪 Volver al menú anterior%n", numero);
+        System.out.printf("  %d. Volver al menú anterior%n", numero);
     }
     
     public static void mostrarOpcionSalir() {
@@ -33,19 +33,19 @@ public class MenuFormatter {
     }
     
     public static void mostrarMensajeExito(String mensaje) {
-        System.out.println("✅ " + mensaje);
+        System.out.println("[ÉXITO] " + mensaje);
     }
     
     public static void mostrarMensajeError(String mensaje) {
-        System.out.println("❌ " + mensaje);
+        System.out.println("[ERROR] " + mensaje);
     }
     
     public static void mostrarMensajeInfo(String mensaje) {
-        System.out.println("ℹ️  " + mensaje);
+        System.out.println("[INFO] " + mensaje);
     }
     
     public static void mostrarMensajeAdvertencia(String mensaje) {
-        System.out.println("⚠️  " + mensaje);
+        System.out.println("[ADVERTENCIA] " + mensaje);
     }
     
     public static void limpiarPantalla() {
@@ -56,7 +56,7 @@ public class MenuFormatter {
     }
     
     public static void mostrarDespedida() {
-        System.out.println("\n🔰 ¡Gracias por usar las Guías Prácticas de Informática 3!");
-        System.out.println("🎓 ¡Sigue practicando y mejorando tus habilidades!");
+        System.out.println("\n¡Gracias por usar las Guías Prácticas de Informática 3!");
+        System.out.println("¡Sigue practicando y mejorando tus habilidades!");
     }
 }

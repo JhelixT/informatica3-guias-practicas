@@ -17,12 +17,12 @@ public class PilasColasMenu {
     public void mostrarMenu() {
         while (true) {
             MenuFormatter.mostrarTituloSecundario("PILAS Y COLAS");
-            MenuFormatter.mostrarOpcion(1, "📚 Gestión de Pilas");
-            MenuFormatter.mostrarOpcion(2, "🎯 Gestión de Colas");
-            MenuFormatter.mostrarOpcion(3, "🔄 Reiniciar estructuras");
+            MenuFormatter.mostrarOpcion(1, "Gestión de Pilas");
+            MenuFormatter.mostrarOpcion(2, "Gestión de Colas");
+            MenuFormatter.mostrarOpcion(3, "Reiniciar estructuras");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\n👉 Seleccione una opción: ", 0, 3);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 3);
             
             switch (opcion) {
                 case 1 -> menuPilas();
@@ -40,14 +40,14 @@ public class PilasColasMenu {
             MenuFormatter.mostrarTituloSecundario("GESTIÓN DE PILAS");
             System.out.printf("Estado actual: %s%n", pila);
             MenuFormatter.mostrarSeparador();
-            MenuFormatter.mostrarOpcion(1, "⬆️  Push (Apilar elemento)");
-            MenuFormatter.mostrarOpcion(2, "⬇️  Pop (Desapilar elemento)");
-            MenuFormatter.mostrarOpcion(3, "👁️  Top (Ver elemento superior)");
-            MenuFormatter.mostrarOpcion(4, "📊 Ver información");
-            MenuFormatter.mostrarOpcion(5, "🧪 Llenar con datos de prueba");
+            MenuFormatter.mostrarOpcion(1, "Push (Apilar elemento)");
+            MenuFormatter.mostrarOpcion(2, "Pop (Desapilar elemento)");
+            MenuFormatter.mostrarOpcion(3, "Top (Ver elemento superior)");
+            MenuFormatter.mostrarOpcion(4, "Ver información");
+            MenuFormatter.mostrarOpcion(5, "Llenar con datos de prueba");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\n👉 Seleccione una opción: ", 0, 5);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 5);
             
             switch (opcion) {
                 case 1 -> pushPila();
@@ -68,14 +68,14 @@ public class PilasColasMenu {
             MenuFormatter.mostrarTituloSecundario("GESTIÓN DE COLAS");
             System.out.printf("Estado actual: %s%n", cola);
             MenuFormatter.mostrarSeparador();
-            MenuFormatter.mostrarOpcion(1, "➡️  Enqueue (Encolar elemento)");
-            MenuFormatter.mostrarOpcion(2, "⬅️  Dequeue (Desencolar elemento)");
-            MenuFormatter.mostrarOpcion(3, "👁️  Front (Ver primer elemento)");
-            MenuFormatter.mostrarOpcion(4, "📊 Ver información");
-            MenuFormatter.mostrarOpcion(5, "🧪 Llenar con datos de prueba");
+            MenuFormatter.mostrarOpcion(1, "Enqueue (Encolar elemento)");
+            MenuFormatter.mostrarOpcion(2, "Dequeue (Desencolar elemento)");
+            MenuFormatter.mostrarOpcion(3, "Front (Ver primer elemento)");
+            MenuFormatter.mostrarOpcion(4, "Ver información");
+            MenuFormatter.mostrarOpcion(5, "Llenar con datos de prueba");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\n👉 Seleccione una opción: ", 0, 5);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 5);
             
             switch (opcion) {
                 case 1 -> enqueueCola();
@@ -93,7 +93,7 @@ public class PilasColasMenu {
     
     private void pushPila() {
         try {
-            int valor = InputValidator.leerEntero("📥 Ingrese el valor a apilar: ");
+            int valor = InputValidator.leerEntero("Ingrese el valor a apilar: ");
             pila.push(valor);
             MenuFormatter.mostrarMensajeExito("Elemento " + valor + " apilado correctamente");
         } catch (Exception e) {
@@ -128,7 +128,7 @@ public class PilasColasMenu {
     }
     
     private void infoPila() {
-        System.out.println("\n📊 INFORMACIÓN DE LA PILA:");
+        System.out.println("\nINFORMACIÓN DE LA PILA:");
         System.out.printf("  Tamaño actual: %d elementos%n", pila.getSize());
         System.out.printf("  Capacidad: %d elementos%n", pila.getCapacity());
         System.out.printf("  ¿Está vacía?: %s%n", pila.isEmpty() ? "Sí" : "No");
@@ -147,7 +147,7 @@ public class PilasColasMenu {
     
     private void enqueueCola() {
         try {
-            int valor = InputValidator.leerEntero("📥 Ingrese el valor a encolar: ");
+            int valor = InputValidator.leerEntero("Ingrese el valor a encolar: ");
             cola.enqueue(valor);
             MenuFormatter.mostrarMensajeExito("Elemento " + valor + " encolado correctamente");
         } catch (Exception e) {
@@ -182,7 +182,7 @@ public class PilasColasMenu {
     }
     
     private void infoCola() {
-        System.out.println("\n📊 INFORMACIÓN DE LA COLA:");
+        System.out.println("\nINFORMACIÓN DE LA COLA:");
         System.out.printf("  Tamaño actual: %d elementos%n", cola.getSize());
         System.out.printf("  Capacidad: %d elementos%n", cola.getCapacity());
         System.out.printf("  ¿Está vacía?: %s%n", cola.isEmpty() ? "Sí" : "No");
