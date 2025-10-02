@@ -65,7 +65,7 @@ public class Main {
             MenuFormatter.mostrarOpcion(6, "Información del sistema");
             MenuFormatter.mostrarOpcion(0, "Salir");
             
-            int opcion = InputValidator.leerEnteroEnRango("\\n👉 Seleccione un módulo: ", 0, 6);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 6);
             
             switch (opcion) {
                 case 1 -> {
@@ -101,29 +101,29 @@ public class Main {
     private static void mostrarInformacionSistema() {
         MenuFormatter.mostrarTituloSecundario("INFORMACIÓN DEL SISTEMA");
         
-        System.out.println("📊 ESTADÍSTICAS DEL PROYECTO:");
+        System.out.println("ESTADÍSTICAS DEL PROYECTO:");
         System.out.println("  • Nombre: Informatica3 Guías Prácticas");
         System.out.println("  • Versión: 1.0");
         System.out.println("  • Lenguaje: Java");
         System.out.println("  • Arquitectura: MVC (Modelo-Vista-Controlador)");
         System.out.println();
         
-        System.out.println("📂 ESTRUCTURA DEL PROYECTO:");
+        System.out.println("ESTRUCTURA DEL PROYECTO:");
         System.out.println("  src/");
         System.out.println("  ├── core/                    # Implementaciones (Modelo)");
-        System.out.println("  │   ├── pizzeria/           # Clases del gestor de pizzería");
-        System.out.println("  │   ├── tareas/             # Clases del gestor de tareas");
-        System.out.println("  │   ├── estructuras/        # Estructuras de datos");
-        System.out.println("  │   │   ├── arboles/        # Árboles AVL");
-        System.out.println("  │   │   ├── pilas/          # Implementación de pilas");
-        System.out.println("  │   │   ├── colas/          # Implementación de colas");
-        System.out.println("  │   │   └── recursividad/   # Ejercicios recursivos");
-        System.out.println("  │   └── utils/              # Utilidades y helpers");
-        System.out.println("  ├── views/                  # Interfaces de usuario (Vista)");
-        System.out.println("  └── Main.java              # Controlador principal");
+        System.out.println("  │   ├── pizzeria/            # Clases del gestor de pizzería");
+        System.out.println("  │   ├── tareas/              # Clases del gestor de tareas");
+        System.out.println("  │   ├── estructuras/         # Estructuras de datos");
+        System.out.println("  │   │   ├── arboles/         # Árboles AVL");
+        System.out.println("  │   │   ├── pilas/           # Implementación de pilas");
+        System.out.println("  │   │   ├── colas/           # Implementación de colas");
+        System.out.println("  │   │   └── recursividad/    # Ejercicios recursivos");
+        System.out.println("  │   └── utils/               # Utilidades y helpers");
+        System.out.println("  ├── views/                   # Interfaces de usuario (Vista)");
+        System.out.println("  └── Main.java               # Controlador principal");
         System.out.println();
         
-        System.out.println("🎯 CONCEPTOS IMPLEMENTADOS:");
+        System.out.println("CONCEPTOS IMPLEMENTADOS:");
         System.out.println("  • Algoritmos de Ordenamiento (Inserción, Shell Sort, Quick Sort)");
         System.out.println("  • Estructuras de Datos (Pilas, Colas, Árboles)");
         System.out.println("  • Programación Orientada a Objetos");
@@ -132,7 +132,7 @@ public class Main {
         System.out.println("  • Separación de Responsabilidades (MVC)");
         System.out.println();
         
-        System.out.println("🔧 CARACTERÍSTICAS TÉCNICAS:");
+        System.out.println("CARACTERÍSTICAS TÉCNICAS:");
         System.out.println("  • Menús interactivos con validación");
         System.out.println("  • Manejo robusto de errores");
         System.out.println("  • Código modular y reutilizable");
