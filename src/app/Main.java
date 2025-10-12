@@ -9,7 +9,7 @@ import core.utils.*;
  * Esta aplicación integra:
  * - Gestión de Pizzería (algoritmos de ordenamiento)
  * - Gestión de Tareas (estructuras de datos básicas)
- * - Pilas y Colas (estructuras LIFO y FIFO)
+ * - Estructuras Lineales (Listas, Pilas y Colas)
  * - Árboles AVL (estructuras de datos avanzadas)
  * - Recursividad (técnicas de programación)
  * 
@@ -34,7 +34,7 @@ public class Main {
         System.out.println("  Módulos disponibles:");
         System.out.println("     • Gestión de Pizzería (Algoritmos de Ordenamiento)");
         System.out.println("     • Gestión de Tareas (Listas y Operaciones Básicas)");
-        System.out.println("     • Pilas y Colas (Estructuras LIFO y FIFO)");
+        System.out.println("     • Estructuras Lineales (Listas, Pilas y Colas)");
         System.out.println("     • Árboles AVL (Estructuras Balanceadas)");
         System.out.println("     • Recursividad (Técnicas de Programación)");
         System.out.println();
@@ -52,8 +52,8 @@ public class Main {
             MenuFormatter.mostrarOpcion(2, "Gestión de Tareas");
             System.out.println("     └─ CRUD básico con listas y filtros");
             
-            MenuFormatter.mostrarOpcion(3, "Pilas y Colas");
-            System.out.println("     └─ Estructuras LIFO y FIFO con arreglos");
+            MenuFormatter.mostrarOpcion(3, "Estructuras Lineales");
+            System.out.println("     └─ Listas, Pilas y Colas (Arreglos y Enlazadas)");
             
             MenuFormatter.mostrarOpcion(4, "Árboles AVL");
             System.out.println("     └─ Árboles binarios auto-balanceados");
@@ -78,7 +78,7 @@ public class Main {
                 }
                 case 3 -> {
                     MenuFormatter.limpiarPantalla();
-                    new PilasColasMenu().mostrarMenu();
+                    new EstructurasLinealesMenu().mostrarMenu();
                 }
                 case 4 -> {
                     MenuFormatter.limpiarPantalla();
@@ -115,8 +115,10 @@ public class Main {
         System.out.println("  │   ├── tareas/              # Clases del gestor de tareas");
         System.out.println("  │   ├── estructuras/         # Estructuras de datos");
         System.out.println("  │   │   ├── arboles/         # Árboles AVL");
-        System.out.println("  │   │   ├── pilas/           # Implementación de pilas");
-        System.out.println("  │   │   ├── colas/           # Implementación de colas");
+        System.out.println("  │   │   ├── listas/          # Listas enlazadas");
+        System.out.println("  │   │   ├── pilas/           # Pilas (arreglo y enlazada)");
+        System.out.println("  │   │   ├── colas/           # Colas (circular y enlazada)");
+        System.out.println("  │   │   ├── nodos/           # Nodos para estructuras enlazadas");
         System.out.println("  │   │   └── recursividad/    # Ejercicios recursivos");
         System.out.println("  │   └── utils/               # Utilidades y helpers");
         System.out.println("  ├── views/                   # Interfaces de usuario (Vista)");
@@ -125,7 +127,8 @@ public class Main {
         
         System.out.println("CONCEPTOS IMPLEMENTADOS:");
         System.out.println("  • Algoritmos de Ordenamiento (Inserción, Shell Sort, Quick Sort)");
-        System.out.println("  • Estructuras de Datos (Pilas, Colas, Árboles)");
+        System.out.println("  • Estructuras Lineales (Listas, Pilas, Colas - Arreglo y Enlazadas)");
+        System.out.println("  • Estructuras No Lineales (Árboles AVL)");
         System.out.println("  • Programación Orientada a Objetos");
         System.out.println("  • Manejo de Excepciones");
         System.out.println("  • Validación de Entrada de Datos");

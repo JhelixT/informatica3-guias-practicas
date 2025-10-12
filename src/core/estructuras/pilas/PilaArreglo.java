@@ -14,19 +14,19 @@ public class PilaArreglo {
         this.top = -1;
     }
 
-    public void push(int dato) {
+    public void push(int value) {
         if (isFull()) {
             // Crear nuevo arreglo con 50% más de capacidad
-            int nuevoTamaño = (int) (size * 1.5);
-            if (nuevoTamaño == size) nuevoTamaño = size + 1;
+            int newSize = (int) (size * 1.5);
+            if (newSize == size) newSize = size + 1;
             
-            int[] nuevo = new int[nuevoTamaño];
-            System.arraycopy(data, 0, nuevo, 0, size);
+            int[] newData = new int[newSize];
+            System.arraycopy(data, 0, newData, 0, size);
             
-            data = nuevo;
-            size = nuevoTamaño;
+            data = newData;
+            size = newSize;
         }
-        data[++top] = dato;
+        data[++top] = value;
     }
 
     public int pop() {

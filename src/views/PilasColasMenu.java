@@ -1,17 +1,17 @@
 package views;
 
 import core.estructuras.pilas.PilaArreglo;
-import core.estructuras.colas.ColaArreglo;
+import core.estructuras.colas.ColaCircular;
 import core.utils.*;
 
 public class PilasColasMenu {
     private PilaArreglo pila;
-    private ColaArreglo cola;
+    private ColaCircular cola;
     
     public PilasColasMenu() {
         // Inicializar con capacidades por defecto
         this.pila = new PilaArreglo(5);
-        this.cola = new ColaArreglo(5);
+        this.cola = new ColaCircular(5);
     }
     
     public void mostrarMenu() {
@@ -205,7 +205,7 @@ public class PilasColasMenu {
             int capacidadCola = InputValidator.leerEnteroEnRango("Nueva capacidad inicial de la cola: ", 1, 50);
             
             pila = new PilaArreglo(capacidadPila);
-            cola = new ColaArreglo(capacidadCola);
+            cola = new ColaCircular(capacidadCola);
             
             MenuFormatter.mostrarMensajeExito("Estructuras reiniciadas correctamente");
         }
