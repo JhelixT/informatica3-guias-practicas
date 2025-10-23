@@ -15,11 +15,12 @@ import core.estructuras.nodos.Nodo;
  * - Eliminación: O(n)
  * - Tamaño dinámico, crece según necesidad
  * 
+ * @param <T> Tipo de dato que almacena la lista
  * @author JhelixT
  * @version 1.0
  */
-public class ListaEnlazada {
-    private Nodo head;        // Primer nodo de la lista
+public class ListaEnlazada<T> {
+    private Nodo<T> head;     // Primer nodo de la lista
     private int size;         // Cantidad de elementos en la lista
     
     /**
@@ -35,8 +36,8 @@ public class ListaEnlazada {
      * 
      * @param data El valor a insertar
      */
-    public void insertarAlInicio(int data) {
-        Nodo newNode = new Nodo(data, head);
+    public void insertFirst(T data) {
+        Nodo<T> newNode = new Nodo<>(data, head);
         head = newNode;
         size++;
     }
@@ -46,13 +47,13 @@ public class ListaEnlazada {
      * 
      * @param data El valor a insertar
      */
-    public void insertarAlFinal(int data) {
-        Nodo newNode = new Nodo(data);
+    public void insertLast(T data) {
+        Nodo<T> newNode = new Nodo<>(data);
         
-        if (estaVacia()) {
+        if (isEmpty()) {
             head = newNode;
         } else {
-            Nodo current = head;
+            Nodo<T> current = head;
             while (current.getNext() != null) {
                 current = current.getNext();
             }
@@ -65,23 +66,23 @@ public class ListaEnlazada {
      * Inserta un elemento en una posición específica.
      * 
      * @param data El valor a insertar
-     * @param posicion La posición donde insertar (0 = inicio)
+     * @param position La posición donde insertar (0 = inicio)
      * @throws IndexOutOfBoundsException si la posición es inválida
      */
-    public void insertarEnPosicion(int data, int posicion) {
-        if (posicion < 0 || posicion > size) {
-            throw new IndexOutOfBoundsException("Posición inválida: " + posicion);
+    public void insertAt(T data, int position) {
+        if (position < 0 || position > size) {
+            throw new IndexOutOfBoundsException("Posición inválida: " + position);
         }
         
-        if (posicion == 0) {
-            insertarAlInicio(data);
+        if (position == 0) {
+            insertFirst(data);
             return;
         }
         
-        Nodo newNode = new Nodo(data);
-        Nodo current = head;
+        Nodo<T> newNode = new Nodo<>(data);
+        Nodo<T> current = head;
         
-        for (int i = 0; i < posicion - 1; i++) {
+        for (int i = 0; i < position - 1; i++) {
             current = current.getNext();
         }
         
@@ -96,12 +97,12 @@ public class ListaEnlazada {
      * @return El valor del elemento eliminado
      * @throws RuntimeException si la lista está vacía
      */
-    public int eliminarAlInicio() {
-        if (estaVacia()) {
+    public T removeFirst() {
+        if (isEmpty()) {
             throw new RuntimeException("Lista vacía, no se puede eliminar");
         }
         
-        int value = head.getData();
+        T value = head.getData();
         head = head.getNext();
         size--;
         return value;
@@ -113,21 +114,21 @@ public class ListaEnlazada {
      * @return El valor del elemento eliminado
      * @throws RuntimeException si la lista está vacía
      */
-    public int eliminarAlFinal() {
-        if (estaVacia()) {
+    public T removeLast() {
+        if (isEmpty()) {
             throw new RuntimeException("Lista vacía, no se puede eliminar");
         }
         
         if (size == 1) {
-            return eliminarAlInicio();
+            return removeFirst();
         }
         
-        Nodo current = head;
+        Nodo<T> current = head;
         while (current.getNext().getNext() != null) {
             current = current.getNext();
         }
         
-        int value = current.getNext().getData();
+        T value = current.getNext().getData();
         current.setNext(null);
         size--;
         return value;
@@ -136,25 +137,25 @@ public class ListaEnlazada {
     /**
      * Elimina un elemento en una posición específica.
      * 
-     * @param posicion La posición del elemento a eliminar (0 = inicio)
+     * @param position La posición del elemento a eliminar (0 = inicio)
      * @return El valor del elemento eliminado
      * @throws IndexOutOfBoundsException si la posición es inválida
      */
-    public int eliminarEnPosicion(int posicion) {
-        if (posicion < 0 || posicion >= size) {
-            throw new IndexOutOfBoundsException("Posición inválida: " + posicion);
+    public T removeAt(int position) {
+        if (position < 0 || position >= size) {
+            throw new IndexOutOfBoundsException("Posición inválida: " + position);
         }
         
-        if (posicion == 0) {
-            return eliminarAlInicio();
+        if (position == 0) {
+            return removeFirst();
         }
         
-        Nodo current = head;
-        for (int i = 0; i < posicion - 1; i++) {
+        Nodo<T> current = head;
+        for (int i = 0; i < position - 1; i++) {
             current = current.getNext();
         }
         
-        int value = current.getNext().getData();
+        T value = current.getNext().getData();
         current.setNext(current.getNext().getNext());
         size--;
         return value;
@@ -166,12 +167,12 @@ public class ListaEnlazada {
      * @param data El valor a buscar
      * @return La posición del elemento (0 = inicio), o -1 si no se encuentra
      */
-    public int buscar(int data) {
-        Nodo current = head;
+    public int search(T data) {
+        Nodo<T> current = head;
         int position = 0;
         
         while (current != null) {
-            if (current.getData() == data) {
+            if (current.getData().equals(data)) {
                 return position;
             }
             current = current.getNext();
@@ -184,17 +185,17 @@ public class ListaEnlazada {
     /**
      * Obtiene el valor en una posición específica.
      * 
-     * @param posicion La posición del elemento a obtener (0 = inicio)
+     * @param position La posición del elemento a obtener (0 = inicio)
      * @return El valor en esa posición
      * @throws IndexOutOfBoundsException si la posición es inválida
      */
-    public int obtenerEnPosicion(int posicion) {
-        if (posicion < 0 || posicion >= size) {
-            throw new IndexOutOfBoundsException("Posición inválida: " + posicion);
+    public T getAt(int position) {
+        if (position < 0 || position >= size) {
+            throw new IndexOutOfBoundsException("Posición inválida: " + position);
         }
         
-        Nodo current = head;
-        for (int i = 0; i < posicion; i++) {
+        Nodo<T> current = head;
+        for (int i = 0; i < position; i++) {
             current = current.getNext();
         }
         
@@ -207,8 +208,8 @@ public class ListaEnlazada {
      * @param data El valor a verificar
      * @return true si el valor está en la lista, false en caso contrario
      */
-    public boolean contiene(int data) {
-        return buscar(data) != -1;
+    public boolean contains(T data) {
+        return search(data) != -1;
     }
     
     /**
@@ -216,7 +217,7 @@ public class ListaEnlazada {
      * 
      * @return true si la lista no tiene elementos, false en caso contrario
      */
-    public boolean estaVacia() {
+    public boolean isEmpty() {
         return head == null;
     }
     
@@ -225,14 +226,14 @@ public class ListaEnlazada {
      * 
      * @return La cantidad de elementos en la lista
      */
-    public int getTamanio() {
+    public int getSize() {
         return size;
     }
     
     /**
      * Limpia todos los elementos de la lista.
      */
-    public void limpiar() {
+    public void clear() {
         head = null;
         size = 0;
     }
@@ -240,12 +241,12 @@ public class ListaEnlazada {
     /**
      * Invierte el orden de los elementos en la lista.
      */
-    public void invertir() {
+    public void reverse() {
         if (size <= 1) return;
         
-        Nodo previous = null;
-        Nodo current = head;
-        Nodo next;
+        Nodo<T> previous = null;
+        Nodo<T> current = head;
+        Nodo<T> next;
         
         while (current != null) {
             next = current.getNext();
@@ -259,13 +260,13 @@ public class ListaEnlazada {
     
     @Override
     public String toString() {
-        if (estaVacia()) {
+        if (isEmpty()) {
             return "Lista vacía";
         }
         
         StringBuilder sb = new StringBuilder();
         sb.append("Lista [");
-        Nodo current = head;
+        Nodo<T> current = head;
         
         while (current != null) {
             sb.append(current.getData());

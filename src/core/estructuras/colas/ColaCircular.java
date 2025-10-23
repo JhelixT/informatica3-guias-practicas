@@ -12,11 +12,13 @@ package core.estructuras.colas;
  * - Crecimiento dinámico cuando se llena (incremento del 50%)
  * - Uso eficiente de memoria al reutilizar espacios
  * 
+ * @param <T> Tipo de dato que almacena la cola
  * @author JhelixT
  * @version 1.0
  */
-public class ColaCircular {
-    private int[] data;       // Arreglo que almacena los elementos
+@SuppressWarnings("unchecked")
+public class ColaCircular<T> {
+    private T[] data;         // Arreglo que almacena los elementos
     private int front;        // Índice del primer elemento
     private int rear;         // Índice del último elemento
     private int size;         // Cantidad actual de elementos
@@ -33,7 +35,7 @@ public class ColaCircular {
             throw new IllegalArgumentException("La capacidad debe ser mayor a 0");
         }
         this.capacity = capacity;
-        this.data = new int[capacity];
+        this.data = (T[]) new Object[capacity];
         this.front = 0;
         this.rear = -1;
         this.size = 0;
@@ -46,13 +48,13 @@ public class ColaCircular {
      * 
      * @param value El elemento a agregar a la cola
      */
-    public void enqueue(int value) {
+    public void enqueue(T value) {
         if (isFull()) {
             // Crear nuevo arreglo con 50% más de capacidad
             int newCapacity = (int) (capacity * 1.5);
             if (newCapacity == capacity) newCapacity = capacity + 1;
             
-            int[] newData = new int[newCapacity];
+            T[] newData = (T[]) new Object[newCapacity];
 
             // Copiar elementos de la cola al nuevo arreglo en orden
             for (int i = 0; i < size; i++) {
@@ -78,11 +80,11 @@ public class ColaCircular {
      * @return El elemento que estaba al frente de la cola
      * @throws RuntimeException si la cola está vacía
      */
-    public int dequeue() {
+    public T dequeue() {
         if (isEmpty()) {
             throw new RuntimeException("Cola vacía, no se puede desencolar");
         }
-        int value = data[front];
+        T value = data[front];
         front = (front + 1) % capacity;
         size--;
         return value;
@@ -94,7 +96,7 @@ public class ColaCircular {
      * @return El elemento al frente de la cola
      * @throws RuntimeException si la cola está vacía
      */
-    public int front() {
+    public T front() {
         if (isEmpty()) {
             throw new RuntimeException("Cola vacía");
         }

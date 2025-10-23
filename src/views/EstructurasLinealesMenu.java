@@ -19,18 +19,18 @@ import core.utils.*;
  * @version 2.0
  */
 public class EstructurasLinealesMenu {
-    private ListaEnlazada lista;
-    private PilaArreglo pilaArreglo;
-    private PilaEnlazada pilaEnlazada;
-    private ColaCircular colaCircular;
-    private ColaEnlazada colaEnlazada;
+    private ListaEnlazada<Integer> lista;
+    private PilaArreglo<Integer> pilaArreglo;
+    private PilaEnlazada<Integer> pilaEnlazada;
+    private ColaCircular<Integer> colaCircular;
+    private ColaEnlazada<Integer> colaEnlazada;
     
     public EstructurasLinealesMenu() {
-        this.lista = new ListaEnlazada();
-        this.pilaArreglo = new PilaArreglo(5);
-        this.pilaEnlazada = new PilaEnlazada();
-        this.colaCircular = new ColaCircular(5);
-        this.colaEnlazada = new ColaEnlazada();
+        this.lista = new ListaEnlazada<>();
+        this.pilaArreglo = new PilaArreglo<>(5);
+        this.pilaEnlazada = new PilaEnlazada<>();
+        this.colaCircular = new ColaCircular<>(5);
+        this.colaEnlazada = new ColaEnlazada<>();
     }
     
     public void mostrarMenu() {
@@ -100,26 +100,26 @@ public class EstructurasLinealesMenu {
     
     private void insertarListaInicio() {
         int valor = InputValidator.leerEntero("Ingrese el valor a insertar: ");
-        lista.insertarAlInicio(valor);
+        lista.insertFirst(valor);
         MenuFormatter.mostrarMensajeExito("Elemento " + valor + " insertado al inicio");
     }
     
     private void insertarListaFinal() {
         int valor = InputValidator.leerEntero("Ingrese el valor a insertar: ");
-        lista.insertarAlFinal(valor);
+        lista.insertLast(valor);
         MenuFormatter.mostrarMensajeExito("Elemento " + valor + " insertado al final");
     }
     
     private void insertarListaPosicion() {
-        if (lista.estaVacia()) {
+        if (lista.isEmpty()) {
             MenuFormatter.mostrarMensajeAdvertencia("La lista está vacía. Use insertar al inicio o al final.");
             return;
         }
         int valor = InputValidator.leerEntero("Ingrese el valor a insertar: ");
-        int posicion = InputValidator.leerEnteroEnRango("Ingrese la posición (0-" + lista.getTamanio() + "): ", 
-                                                         0, lista.getTamanio());
+        int posicion = InputValidator.leerEnteroEnRango("Ingrese la posición (0-" + lista.getSize() + "): ", 
+                                                         0, lista.getSize());
         try {
-            lista.insertarEnPosicion(valor, posicion);
+            lista.insertAt(valor, posicion);
             MenuFormatter.mostrarMensajeExito("Elemento " + valor + " insertado en posición " + posicion);
         } catch (Exception e) {
             MenuFormatter.mostrarMensajeError("Error: " + e.getMessage());
@@ -128,7 +128,7 @@ public class EstructurasLinealesMenu {
     
     private void eliminarListaInicio() {
         try {
-            int valor = lista.eliminarAlInicio();
+            int valor = lista.removeFirst();
             MenuFormatter.mostrarMensajeExito("Elemento " + valor + " eliminado del inicio");
         } catch (Exception e) {
             MenuFormatter.mostrarMensajeError("Error: " + e.getMessage());
@@ -137,7 +137,7 @@ public class EstructurasLinealesMenu {
     
     private void eliminarListaFinal() {
         try {
-            int valor = lista.eliminarAlFinal();
+            int valor = lista.removeLast();
             MenuFormatter.mostrarMensajeExito("Elemento " + valor + " eliminado del final");
         } catch (Exception e) {
             MenuFormatter.mostrarMensajeError("Error: " + e.getMessage());
@@ -145,15 +145,15 @@ public class EstructurasLinealesMenu {
     }
     
     private void eliminarListaPosicion() {
-        if (lista.estaVacia()) {
+        if (lista.isEmpty()) {
             MenuFormatter.mostrarMensajeAdvertencia("La lista está vacía");
             return;
         }
         int posicion = InputValidator.leerEnteroEnRango("Ingrese la posición a eliminar (0-" + 
-                                                         (lista.getTamanio()-1) + "): ", 
-                                                         0, lista.getTamanio()-1);
+                                                         (lista.getSize()-1) + "): ", 
+                                                         0, lista.getSize()-1);
         try {
-            int valor = lista.eliminarEnPosicion(posicion);
+            int valor = lista.removeAt(posicion);
             MenuFormatter.mostrarMensajeExito("Elemento " + valor + " eliminado de posición " + posicion);
         } catch (Exception e) {
             MenuFormatter.mostrarMensajeError("Error: " + e.getMessage());
@@ -162,7 +162,7 @@ public class EstructurasLinealesMenu {
     
     private void buscarEnLista() {
         int valor = InputValidator.leerEntero("Ingrese el valor a buscar: ");
-        int posicion = lista.buscar(valor);
+        int posicion = lista.search(valor);
         if (posicion != -1) {
             MenuFormatter.mostrarMensajeExito("Elemento " + valor + " encontrado en posición " + posicion);
         } else {
@@ -171,15 +171,15 @@ public class EstructurasLinealesMenu {
     }
     
     private void obtenerEnPosicion() {
-        if (lista.estaVacia()) {
+        if (lista.isEmpty()) {
             MenuFormatter.mostrarMensajeAdvertencia("La lista está vacía");
             return;
         }
         int posicion = InputValidator.leerEnteroEnRango("Ingrese la posición (0-" + 
-                                                         (lista.getTamanio()-1) + "): ", 
-                                                         0, lista.getTamanio()-1);
+                                                         (lista.getSize()-1) + "): ", 
+                                                         0, lista.getSize()-1);
         try {
-            int valor = lista.obtenerEnPosicion(posicion);
+            int valor = lista.getAt(posicion);
             MenuFormatter.mostrarMensajeInfo("Elemento en posición " + posicion + ": " + valor);
         } catch (Exception e) {
             MenuFormatter.mostrarMensajeError("Error: " + e.getMessage());
@@ -187,13 +187,13 @@ public class EstructurasLinealesMenu {
     }
     
     private void invertirLista() {
-        lista.invertir();
+        lista.reverse();
         MenuFormatter.mostrarMensajeExito("Lista invertida correctamente");
     }
     
     private void limpiarLista() {
         if (InputValidator.confirmar("¿Está seguro de limpiar la lista?")) {
-            lista.limpiar();
+            lista.clear();
             MenuFormatter.mostrarMensajeExito("Lista limpiada");
         }
     }
@@ -201,7 +201,7 @@ public class EstructurasLinealesMenu {
     private void llenarListaPrueba() {
         int cantidad = InputValidator.leerEnteroEnRango("¿Cuántos elementos generar? ", 1, 20);
         for (int i = 1; i <= cantidad; i++) {
-            lista.insertarAlFinal((int)(Math.random() * 100) + 1);
+            lista.insertLast((int)(Math.random() * 100) + 1);
         }
         MenuFormatter.mostrarMensajeExito("Se agregaron " + cantidad + " elementos a la lista");
     }
@@ -356,7 +356,7 @@ public class EstructurasLinealesMenu {
     
     private void buscarPilaEnlazada() {
         int valor = InputValidator.leerEntero("Ingrese el valor a buscar: ");
-        int posicion = pilaEnlazada.buscar(valor);
+        int posicion = pilaEnlazada.search(valor);
         if (posicion != -1) {
             MenuFormatter.mostrarMensajeExito("Elemento encontrado a " + posicion + " posiciones desde el tope");
         } else {
@@ -552,7 +552,7 @@ public class EstructurasLinealesMenu {
     
     private void buscarColaEnlazada() {
         int valor = InputValidator.leerEntero("Ingrese el valor a buscar: ");
-        int posicion = colaEnlazada.buscar(valor);
+        int posicion = colaEnlazada.search(valor);
         if (posicion != -1) {
             MenuFormatter.mostrarMensajeExito("Elemento encontrado a " + posicion + " posiciones desde el frente");
         } else {
@@ -595,17 +595,17 @@ public class EstructurasLinealesMenu {
     
     private void reiniciarTodasLasEstructuras() {
         if (InputValidator.confirmar("¿Desea reiniciar TODAS las estructuras de datos?")) {
-            lista = new ListaEnlazada();
+            lista = new ListaEnlazada<>();
             
             int capacidadPila = InputValidator.leerEnteroEnRango(
                 "Nueva capacidad inicial de la pila con arreglo: ", 1, 50);
-            pilaArreglo = new PilaArreglo(capacidadPila);
-            pilaEnlazada = new PilaEnlazada();
+            pilaArreglo = new PilaArreglo<>(capacidadPila);
+            pilaEnlazada = new PilaEnlazada<>();
             
             int capacidadCola = InputValidator.leerEnteroEnRango(
                 "Nueva capacidad inicial de la cola circular: ", 1, 50);
-            colaCircular = new ColaCircular(capacidadCola);
-            colaEnlazada = new ColaEnlazada();
+            colaCircular = new ColaCircular<>(capacidadCola);
+            colaEnlazada = new ColaEnlazada<>();
             
             MenuFormatter.mostrarMensajeExito("Todas las estructuras han sido reiniciadas");
         }

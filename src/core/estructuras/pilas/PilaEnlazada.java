@@ -16,11 +16,12 @@ import core.estructuras.nodos.Nodo;
  * - Top (ver tope): O(1)
  * - Tamaño dinámico ilimitado
  * 
+ * @param <T> Tipo de dato que almacena la pila
  * @author JhelixT
  * @version 1.0
  */
-public class PilaEnlazada {
-    private Nodo top;         // Nodo en el tope de la pila
+public class PilaEnlazada<T> {
+    private Nodo<T> top;      // Nodo en el tope de la pila
     private int size;         // Cantidad de elementos en la pila
     
     /**
@@ -36,8 +37,8 @@ public class PilaEnlazada {
      * 
      * @param data El valor a apilar
      */
-    public void push(int data) {
-        Nodo newNode = new Nodo(data, top);
+    public void push(T data) {
+        Nodo<T> newNode = new Nodo<>(data, top);
         top = newNode;
         size++;
     }
@@ -48,12 +49,12 @@ public class PilaEnlazada {
      * @return El elemento que estaba en el tope
      * @throws RuntimeException si la pila está vacía
      */
-    public int pop() {
+    public T pop() {
         if (isEmpty()) {
             throw new RuntimeException("Pila vacía, no se puede desapilar");
         }
         
-        int value = top.getData();
+        T value = top.getData();
         top = top.getNext();
         size--;
         return value;
@@ -65,7 +66,7 @@ public class PilaEnlazada {
      * @return El elemento en el tope de la pila
      * @throws RuntimeException si la pila está vacía
      */
-    public int top() {
+    public T top() {
         if (isEmpty()) {
             throw new RuntimeException("Pila vacía");
         }
@@ -105,12 +106,12 @@ public class PilaEnlazada {
      * @param data El valor a buscar
      * @return La posición desde el tope, o -1 si no se encuentra
      */
-    public int buscar(int data) {
-        Nodo current = top;
+    public int search(T data) {
+        Nodo<T> current = top;
         int position = 0;
         
         while (current != null) {
-            if (current.getData() == data) {
+            if (current.getData().equals(data)) {
                 return position;
             }
             current = current.getNext();
@@ -128,7 +129,7 @@ public class PilaEnlazada {
         
         StringBuilder sb = new StringBuilder();
         sb.append("Pila [tope: ");
-        Nodo current = top;
+        Nodo<T> current = top;
         
         while (current != null) {
             sb.append(current.getData());

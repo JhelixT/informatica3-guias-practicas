@@ -3,16 +3,17 @@ package core.estructuras.nodos;
 /**
  * Clase Nodo para estructuras de datos enlazadas.
  * 
- * Representa un nodo individual que contiene un dato entero y una referencia
+ * Representa un nodo individual que contiene un dato y una referencia
  * al siguiente nodo en la estructura. Es la unidad básica de construcción
  * para listas enlazadas, pilas enlazadas y colas enlazadas.
  * 
+ * @param <T> Tipo de dato que almacena el nodo
  * @author JhelixT
  * @version 1.0
  */
-public class Nodo {
-    private int data;         // Valor almacenado en el nodo
-    private Nodo next;        // Referencia al siguiente nodo
+public class Nodo<T> {
+    private T data;           // Valor almacenado en el nodo
+    private Nodo<T> next;     // Referencia al siguiente nodo
     
     /**
      * Constructor que crea un nodo con un dato específico.
@@ -20,7 +21,7 @@ public class Nodo {
      * 
      * @param data El valor a almacenar en el nodo
      */
-    public Nodo(int data) {
+    public Nodo(T data) {
         this.data = data;
         this.next = null;
     }
@@ -31,7 +32,7 @@ public class Nodo {
      * @param data El valor a almacenar en el nodo
      * @param next Referencia al siguiente nodo
      */
-    public Nodo(int data, Nodo next) {
+    public Nodo(T data, Nodo<T> next) {
         this.data = data;
         this.next = next;
     }
@@ -41,7 +42,7 @@ public class Nodo {
      * 
      * @return El valor del nodo
      */
-    public int getData() {
+    public T getData() {
         return data;
     }
     
@@ -50,7 +51,7 @@ public class Nodo {
      * 
      * @param data El nuevo valor a almacenar
      */
-    public void setData(int data) {
+    public void setData(T data) {
         this.data = data;
     }
     
@@ -59,7 +60,7 @@ public class Nodo {
      * 
      * @return El siguiente nodo, o null si es el último
      */
-    public Nodo getNext() {
+    public Nodo<T> getNext() {
         return next;
     }
     
@@ -68,7 +69,7 @@ public class Nodo {
      * 
      * @param next El nodo que seguirá a este
      */
-    public void setNext(Nodo next) {
+    public void setNext(Nodo<T> next) {
         this.next = next;
     }
     
@@ -83,6 +84,6 @@ public class Nodo {
     
     @Override
     public String toString() {
-        return String.valueOf(data);
+        return data != null ? data.toString() : "null";
     }
 }

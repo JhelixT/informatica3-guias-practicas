@@ -16,12 +16,13 @@ import core.estructuras.nodos.Nodo;
  * - Front (ver frente): O(1)
  * - Tamaño dinámico ilimitado
  * 
+ * @param <T> Tipo de dato que almacena la cola
  * @author JhelixT
  * @version 1.0
  */
-public class ColaEnlazada {
-    private Nodo front;       // Primer nodo de la cola
-    private Nodo rear;        // Último nodo de la cola
+public class ColaEnlazada<T> {
+    private Nodo<T> front;    // Primer nodo de la cola
+    private Nodo<T> rear;     // Último nodo de la cola
     private int size;         // Cantidad de elementos en la cola
     
     /**
@@ -38,8 +39,8 @@ public class ColaEnlazada {
      * 
      * @param data El valor a encolar
      */
-    public void enqueue(int data) {
-        Nodo newNode = new Nodo(data);
+    public void enqueue(T data) {
+        Nodo<T> newNode = new Nodo<>(data);
         
         if (isEmpty()) {
             front = newNode;
@@ -58,12 +59,12 @@ public class ColaEnlazada {
      * @return El elemento que estaba al frente
      * @throws RuntimeException si la cola está vacía
      */
-    public int dequeue() {
+    public T dequeue() {
         if (isEmpty()) {
             throw new RuntimeException("Cola vacía, no se puede desencolar");
         }
         
-        int value = front.getData();
+        T value = front.getData();
         front = front.getNext();
         
         if (front == null) {
@@ -80,7 +81,7 @@ public class ColaEnlazada {
      * @return El elemento al frente de la cola
      * @throws RuntimeException si la cola está vacía
      */
-    public int front() {
+    public T front() {
         if (isEmpty()) {
             throw new RuntimeException("Cola vacía");
         }
@@ -93,7 +94,7 @@ public class ColaEnlazada {
      * @return El elemento al final de la cola
      * @throws RuntimeException si la cola está vacía
      */
-    public int back() {
+    public T back() {
         if (isEmpty()) {
             throw new RuntimeException("Cola vacía");
         }
@@ -134,12 +135,12 @@ public class ColaEnlazada {
      * @param data El valor a buscar
      * @return La posición desde el frente, o -1 si no se encuentra
      */
-    public int buscar(int data) {
-        Nodo current = front;
+    public int search(T data) {
+        Nodo<T> current = front;
         int position = 0;
         
         while (current != null) {
-            if (current.getData() == data) {
+            if (current.getData().equals(data)) {
                 return position;
             }
             current = current.getNext();
@@ -157,7 +158,7 @@ public class ColaEnlazada {
         
         StringBuilder sb = new StringBuilder();
         sb.append("Cola [frente: ");
-        Nodo current = front;
+        Nodo<T> current = front;
         
         while (current != null) {
             sb.append(current.getData());

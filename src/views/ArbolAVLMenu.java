@@ -16,10 +16,10 @@ import core.utils.*;
  * @version 1.0
  */
 public class ArbolAVLMenu {
-    private ArbolAVL arbol;
+    private ArbolAVL<Integer> arbol;
     
     public ArbolAVLMenu() {
-        this.arbol = new ArbolAVL();
+        this.arbol = new ArbolAVL<>();
     }
     
     public void mostrarMenu() {
@@ -59,44 +59,44 @@ public class ArbolAVLMenu {
         
         int valor = InputValidator.leerEntero("Ingrese el valor a insertar: ");
         
-        if (arbol.buscar(valor)) {
+        if (arbol.search(valor)) {
             MenuFormatter.mostrarMensajeAdvertencia("El valor " + valor + " ya existe en el árbol");
             MenuFormatter.mostrarMensajeInfo("Los árboles AVL no permiten valores duplicados");
             return;
         }
         
-        arbol.insertar(valor);
+        arbol.insert(valor);
         MenuFormatter.mostrarMensajeExito("Valor " + valor + " insertado exitosamente");
         MenuFormatter.mostrarMensajeInfo("El árbol se ha rebalanceado automáticamente");
         
         System.out.println("\nResumen:");
-        System.out.println("  - Altura del árbol: " + arbol.obtenerAltura());
-        System.out.println("  - Total de nodos: " + arbol.contarNodos());
+        System.out.println("  - Altura del árbol: " + arbol.getHeight());
+        System.out.println("  - Total de nodos: " + arbol.countNodes());
     }
     
     private void eliminarValor() {
         MenuFormatter.mostrarTituloSecundario("ELIMINAR VALOR");
         
-        if (arbol.estaVacio()) {
+        if (arbol.isEmpty()) {
             MenuFormatter.mostrarMensajeAdvertencia("El árbol está vacío");
             return;
         }
         
         int valor = InputValidator.leerEntero("Ingrese el valor a eliminar: ");
         
-        if (!arbol.buscar(valor)) {
+        if (!arbol.search(valor)) {
             MenuFormatter.mostrarMensajeError("El valor " + valor + " no se encuentra en el árbol");
             return;
         }
         
-        arbol.eliminar(valor);
+        arbol.delete(valor);
         MenuFormatter.mostrarMensajeExito("Valor " + valor + " eliminado exitosamente");
         MenuFormatter.mostrarMensajeInfo("El árbol se ha rebalanceado automáticamente");
         
-        if (!arbol.estaVacio()) {
+        if (!arbol.isEmpty()) {
             System.out.println("\nResumen:");
-            System.out.println("  - Altura del árbol: " + arbol.obtenerAltura());
-            System.out.println("  - Total de nodos: " + arbol.contarNodos());
+            System.out.println("  - Altura del árbol: " + arbol.getHeight());
+            System.out.println("  - Total de nodos: " + arbol.countNodes());
         } else {
             System.out.println("  El árbol ahora está vacío");
         }
@@ -105,14 +105,14 @@ public class ArbolAVLMenu {
     private void buscarValor() {
         MenuFormatter.mostrarTituloSecundario("BUSCAR VALOR");
         
-        if (arbol.estaVacio()) {
+        if (arbol.isEmpty()) {
             MenuFormatter.mostrarMensajeAdvertencia("El árbol está vacío");
             return;
         }
         
         int valor = InputValidator.leerEntero("Ingrese el valor a buscar: ");
         
-        boolean encontrado = arbol.buscar(valor);
+        boolean encontrado = arbol.search(valor);
         
         if (encontrado) {
             MenuFormatter.mostrarMensajeExito("El valor " + valor + " SÍ se encuentra en el árbol");
@@ -124,12 +124,12 @@ public class ArbolAVLMenu {
     private void mostrarEstructura() {
         MenuFormatter.mostrarTituloSecundario("ESTRUCTURA DEL ÁRBOL");
         
-        if (arbol.estaVacio()) {
+        if (arbol.isEmpty()) {
             MenuFormatter.mostrarMensajeAdvertencia("El árbol está vacío");
             return;
         }
         
-        arbol.mostrarArbol();
+        arbol.display();
         
         System.out.println("\nLeyenda:");
         System.out.println("  h: altura del nodo");
@@ -139,7 +139,7 @@ public class ArbolAVLMenu {
     private void mostrarRecorridos() {
         MenuFormatter.mostrarTituloSecundario("RECORRIDOS DEL ÁRBOL");
         
-        if (arbol.estaVacio()) {
+        if (arbol.isEmpty()) {
             MenuFormatter.mostrarMensajeAdvertencia("El árbol está vacío");
             return;
         }
@@ -148,25 +148,25 @@ public class ArbolAVLMenu {
         
         System.out.println("1. InOrden (Izq-Raíz-Der) - Orden ascendente:");
         System.out.print("   ");
-        arbol.recorridoInOrden();
+        arbol.inOrderTraversal();
         
         System.out.println("\n2. PreOrden (Raíz-Izq-Der) - Para copiar estructura:");
         System.out.print("   ");
-        arbol.recorridoPreOrden();
+        arbol.preOrderTraversal();
         
         System.out.println("\n3. PostOrden (Izq-Der-Raíz) - Para eliminar árbol:");
         System.out.print("   ");
-        arbol.recorridoPostOrden();
+        arbol.postOrderTraversal();
         
         System.out.println("\n4. Por Niveles (BFS) - Nivel por nivel:");
         System.out.print("   ");
-        arbol.recorridoPorNiveles();
+        arbol.levelOrderTraversal();
     }
     
     private void mostrarEstadisticas() {
         MenuFormatter.mostrarTituloSecundario("ESTADÍSTICAS DEL ÁRBOL");
         
-        if (arbol.estaVacio()) {
+        if (arbol.isEmpty()) {
             System.out.println("\nEstadísticas:");
             System.out.println("  - Estado: Vacío");
             System.out.println("  - Total de nodos: 0");
@@ -174,8 +174,8 @@ public class ArbolAVLMenu {
             return;
         }
         
-        int totalNodos = arbol.contarNodos();
-        int altura = arbol.obtenerAltura();
+        int totalNodos = arbol.countNodes();
+        int altura = arbol.getHeight();
         
         System.out.println("\nEstadísticas generales:");
         System.out.println("  - Estado: Árbol con datos");
@@ -219,8 +219,8 @@ public class ArbolAVLMenu {
         
         System.out.println("\nInsertando valores...");
         for (int valor : valores) {
-            if (!arbol.buscar(valor)) {
-                arbol.insertar(valor);
+            if (!arbol.search(valor)) {
+                arbol.insert(valor);
                 insertados++;
             } else {
                 duplicados++;
@@ -232,8 +232,8 @@ public class ArbolAVLMenu {
         if (duplicados > 0) {
             System.out.println("  - Valores duplicados omitidos: " + duplicados);
         }
-        System.out.println("  - Total de nodos en el árbol: " + arbol.contarNodos());
-        System.out.println("  - Altura del árbol: " + arbol.obtenerAltura());
+        System.out.println("  - Total de nodos en el árbol: " + arbol.countNodes());
+        System.out.println("  - Altura del árbol: " + arbol.getHeight());
         
         MenuFormatter.mostrarMensajeInfo("Sugerencia: Use la opción 4 para ver la estructura del árbol");
     }
@@ -241,7 +241,7 @@ public class ArbolAVLMenu {
     private void vaciarArbol() {
         MenuFormatter.mostrarTituloSecundario("VACIAR ÁRBOL");
         
-        if (arbol.estaVacio()) {
+        if (arbol.isEmpty()) {
             MenuFormatter.mostrarMensajeAdvertencia("El árbol ya está vacío");
             return;
         }
@@ -253,7 +253,7 @@ public class ArbolAVLMenu {
             return;
         }
         
-        arbol = new ArbolAVL();
+        arbol = new ArbolAVL<>();
         MenuFormatter.mostrarMensajeExito("El árbol ha sido vaciado exitosamente");
     }
 }

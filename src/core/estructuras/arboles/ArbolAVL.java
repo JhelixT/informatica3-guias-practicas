@@ -15,60 +15,61 @@ import java.util.Queue;
  * - Inserción: O(log n)
  * - Eliminación: O(log n)
  * 
+ * @param <T> Tipo de dato que almacena el árbol (debe ser Comparable)
  * @author Informática 3
  * @version 1.0
  */
-public class ArbolAVL {
+public class ArbolAVL<T extends Comparable<T>> {
     // Raíz del árbol AVL
-    private NodoAVL raiz;
+    private NodoAVL<T> root;
 
     /**
      * Constructor: Crea un árbol AVL vacío
      */
     public ArbolAVL() {
-        this.raiz = null;  // Árbol vacío inicialmente
+        this.root = null;  // Árbol vacío inicialmente
     }
 
     /**
      * Calcula la altura de un nodo
      * La altura de un nodo null es 0
      * 
-     * @param nodo Nodo del cual obtener la altura
+     * @param node Nodo del cual obtener la altura
      * @return Altura del nodo (0 si es null)
      */
-    private int altura(NodoAVL nodo) {
-        if (nodo == null) {
+    private int height(NodoAVL<T> node) {
+        if (node == null) {
             return 0;
         }
-        return nodo.altura;
+        return node.height;
     }
 
     /**
      * Obtiene el factor de balance de un nodo
      * Factor de balance = altura(subárbol izquierdo) - altura(subárbol derecho)
      * 
-     * @param nodo Nodo del cual obtener el factor de balance
+     * @param node Nodo del cual obtener el factor de balance
      * @return Factor de balance del nodo
      */
-    private int obtenerBalance(NodoAVL nodo) {
-        if (nodo == null) {
+    private int getBalance(NodoAVL<T> node) {
+        if (node == null) {
             return 0;
         }
-        return nodo.balance;
+        return node.balance;
     }
 
     /**
      * Actualiza la altura y el balance de un nodo
      * 
-     * @param nodo Nodo al cual actualizar altura y balance
+     * @param node Nodo al cual actualizar altura y balance
      */
-    private void actualizarAltura(NodoAVL nodo) {
-        if (nodo != null) {
-            int alturaIzq = altura(nodo.izquierdo);
-            int alturaDer = altura(nodo.derecho);
+    private void updateHeight(NodoAVL<T> node) {
+        if (node != null) {
+            int leftHeight = height(node.left);
+            int rightHeight = height(node.right);
             
-            nodo.altura = 1 + Math.max(alturaIzq, alturaDer);
-            nodo.balance = alturaIzq - alturaDer;
+            node.height = 1 + Math.max(leftHeight, rightHeight);
+            node.balance = leftHeight - rightHeight;
         }
     }
 
@@ -78,15 +79,15 @@ public class ArbolAVL {
      * @param y Nodo desbalanceado
      * @return Nueva raíz después de la rotación
      */
-    private NodoAVL rotacionDerecha(NodoAVL y) {
-        NodoAVL x = y.izquierdo;
-        NodoAVL B = x.derecho;
+    private NodoAVL<T> rotateRight(NodoAVL<T> y) {
+        NodoAVL<T> x = y.left;
+        NodoAVL<T> B = x.right;
 
-        x.derecho = y;
-        y.izquierdo = B;
+        x.right = y;
+        y.left = B;
 
-        actualizarAltura(y);
-        actualizarAltura(x);
+        updateHeight(y);
+        updateHeight(x);
 
         return x;
     }
@@ -97,15 +98,15 @@ public class ArbolAVL {
      * @param x Nodo desbalanceado
      * @return Nueva raíz después de la rotación
      */
-    private NodoAVL rotacionIzquierda(NodoAVL x) {
-        NodoAVL y = x.derecho;
-        NodoAVL B = y.izquierdo;
+    private NodoAVL<T> rotateLeft(NodoAVL<T> x) {
+        NodoAVL<T> y = x.right;
+        NodoAVL<T> B = y.left;
 
-        y.izquierdo = x;
-        x.derecho = B;
+        y.left = x;
+        x.right = B;
 
-        actualizarAltura(x);
-        actualizarAltura(y);
+        updateHeight(x);
+        updateHeight(y);
 
         return y;
     }
@@ -113,259 +114,265 @@ public class ArbolAVL {
     /**
      * Inserta un nuevo valor en el árbol AVL
      * 
-     * @param dato Valor a insertar
+     * @param data Valor a insertar
      */
-    public void insertar(int dato) {
-        raiz = insertarRecursivo(raiz, dato);
+    public void insert(T data) {
+        root = insertRecursive(root, data);
     }
 
     /**
      * Inserta un valor de forma recursiva manteniendo el balance AVL
      * 
-     * @param nodo Nodo actual en la recursión
-     * @param dato Valor a insertar
+     * @param node Nodo actual en la recursión
+     * @param data Valor a insertar
      * @return Nodo después de la inserción
      */
-    private NodoAVL insertarRecursivo(NodoAVL nodo, int dato) {
+    private NodoAVL<T> insertRecursive(NodoAVL<T> node, T data) {
         // PASO 1: Inserción BST estándar
-        if (nodo == null) {
-            return new NodoAVL(dato);
+        if (node == null) {
+            return new NodoAVL<>(data);
         }
 
-        if (dato < nodo.dato) {
-            nodo.izquierdo = insertarRecursivo(nodo.izquierdo, dato);
-        } else if (dato > nodo.dato) {
-            nodo.derecho = insertarRecursivo(nodo.derecho, dato);
+        int comparison = data.compareTo(node.data);
+        
+        if (comparison < 0) {
+            node.left = insertRecursive(node.left, data);
+        } else if (comparison > 0) {
+            node.right = insertRecursive(node.right, data);
         } else {
-            return nodo; // Valores duplicados no permitidos
+            return node; // Valores duplicados no permitidos
         }
 
         // PASO 2: Actualizar altura
-        actualizarAltura(nodo);
+        updateHeight(node);
 
         // PASO 3: Obtener balance
-        int balance = obtenerBalance(nodo);
+        int balance = getBalance(node);
 
         // PASO 4: Aplicar rotaciones si es necesario
 
         // Caso Izquierda-Izquierda
-        if (balance > 1 && dato < nodo.izquierdo.dato) {
-            return rotacionDerecha(nodo);
+        if (balance > 1 && data.compareTo(node.left.data) < 0) {
+            return rotateRight(node);
         }
 
         // Caso Derecha-Derecha
-        if (balance < -1 && dato > nodo.derecho.dato) {
-            return rotacionIzquierda(nodo);
+        if (balance < -1 && data.compareTo(node.right.data) > 0) {
+            return rotateLeft(node);
         }
 
         // Caso Izquierda-Derecha
-        if (balance > 1 && dato > nodo.izquierdo.dato) {
-            nodo.izquierdo = rotacionIzquierda(nodo.izquierdo);
-            return rotacionDerecha(nodo);
+        if (balance > 1 && data.compareTo(node.left.data) > 0) {
+            node.left = rotateLeft(node.left);
+            return rotateRight(node);
         }
 
         // Caso Derecha-Izquierda
-        if (balance < -1 && dato < nodo.derecho.dato) {
-            nodo.derecho = rotacionDerecha(nodo.derecho);
-            return rotacionIzquierda(nodo);
+        if (balance < -1 && data.compareTo(node.right.data) < 0) {
+            node.right = rotateRight(node.right);
+            return rotateLeft(node);
         }
 
-        return nodo;
+        return node;
     }
 
     /**
      * Busca un valor en el árbol AVL
      * 
-     * @param dato Valor a buscar
+     * @param data Valor a buscar
      * @return true si el valor existe, false en caso contrario
      */
-    public boolean buscar(int dato) {
-        return buscarRecursivo(raiz, dato);
+    public boolean search(T data) {
+        return searchRecursive(root, data);
     }
 
     /**
      * Busca un valor de forma recursiva
      * 
-     * @param nodo Nodo actual
-     * @param dato Valor a buscar
+     * @param node Nodo actual
+     * @param data Valor a buscar
      * @return true si se encuentra, false en caso contrario
      */
-    private boolean buscarRecursivo(NodoAVL nodo, int dato) {
-        if (nodo == null) {
+    private boolean searchRecursive(NodoAVL<T> node, T data) {
+        if (node == null) {
             return false;
         }
 
-        if (dato == nodo.dato) {
+        int comparison = data.compareTo(node.data);
+        
+        if (comparison == 0) {
             return true;
         }
 
-        if (dato < nodo.dato) {
-            return buscarRecursivo(nodo.izquierdo, dato);
+        if (comparison < 0) {
+            return searchRecursive(node.left, data);
         } else {
-            return buscarRecursivo(nodo.derecho, dato);
+            return searchRecursive(node.right, data);
         }
     }
 
     /**
      * Encuentra el nodo con el valor mínimo
      * 
-     * @param nodo Raíz del subárbol
+     * @param node Raíz del subárbol
      * @return Nodo con el valor mínimo
      */
-    private NodoAVL nodoMinimo(NodoAVL nodo) {
-        NodoAVL actual = nodo;
-        while (actual.izquierdo != null) {
-            actual = actual.izquierdo;
+    private NodoAVL<T> minNode(NodoAVL<T> node) {
+        NodoAVL<T> current = node;
+        while (current.left != null) {
+            current = current.left;
         }
-        return actual;
+        return current;
     }
 
     /**
      * Elimina un valor del árbol AVL
      * 
-     * @param dato Valor a eliminar
+     * @param data Valor a eliminar
      */
-    public void eliminar(int dato) {
-        raiz = eliminarRecursivo(raiz, dato);
+    public void delete(T data) {
+        root = deleteRecursive(root, data);
     }
 
     /**
      * Elimina un valor de forma recursiva manteniendo el balance AVL
      * 
-     * @param nodo Nodo actual
-     * @param dato Valor a eliminar
+     * @param node Nodo actual
+     * @param data Valor a eliminar
      * @return Nodo después de la eliminación
      */
-    private NodoAVL eliminarRecursivo(NodoAVL nodo, int dato) {
+    private NodoAVL<T> deleteRecursive(NodoAVL<T> node, T data) {
         // PASO 1: Eliminación BST estándar
-        if (nodo == null) {
-            return nodo;
+        if (node == null) {
+            return node;
         }
 
-        if (dato < nodo.dato) {
-            nodo.izquierdo = eliminarRecursivo(nodo.izquierdo, dato);
-        } else if (dato > nodo.dato) {
-            nodo.derecho = eliminarRecursivo(nodo.derecho, dato);
+        int comparison = data.compareTo(node.data);
+        
+        if (comparison < 0) {
+            node.left = deleteRecursive(node.left, data);
+        } else if (comparison > 0) {
+            node.right = deleteRecursive(node.right, data);
         } else {
             // Nodo encontrado
-            if (nodo.izquierdo == null) {
-                return nodo.derecho;
-            } else if (nodo.derecho == null) {
-                return nodo.izquierdo;
+            if (node.left == null) {
+                return node.right;
+            } else if (node.right == null) {
+                return node.left;
             }
 
             // Nodo con dos hijos
-            NodoAVL sucesor = nodoMinimo(nodo.derecho);
-            nodo.dato = sucesor.dato;
-            nodo.derecho = eliminarRecursivo(nodo.derecho, sucesor.dato);
+            NodoAVL<T> successor = minNode(node.right);
+            node.data = successor.data;
+            node.right = deleteRecursive(node.right, successor.data);
         }
 
         // PASO 2: Actualizar altura
-        actualizarAltura(nodo);
+        updateHeight(node);
 
         // PASO 3: Obtener balance
-        int balance = obtenerBalance(nodo);
+        int balance = getBalance(node);
 
         // PASO 4: Aplicar rotaciones si es necesario
 
         // Caso Izquierda-Izquierda
-        if (balance > 1 && obtenerBalance(nodo.izquierdo) >= 0) {
-            return rotacionDerecha(nodo);
+        if (balance > 1 && getBalance(node.left) >= 0) {
+            return rotateRight(node);
         }
 
         // Caso Izquierda-Derecha
-        if (balance > 1 && obtenerBalance(nodo.izquierdo) < 0) {
-            nodo.izquierdo = rotacionIzquierda(nodo.izquierdo);
-            return rotacionDerecha(nodo);
+        if (balance > 1 && getBalance(node.left) < 0) {
+            node.left = rotateLeft(node.left);
+            return rotateRight(node);
         }
 
         // Caso Derecha-Derecha
-        if (balance < -1 && obtenerBalance(nodo.derecho) <= 0) {
-            return rotacionIzquierda(nodo);
+        if (balance < -1 && getBalance(node.right) <= 0) {
+            return rotateLeft(node);
         }
 
         // Caso Derecha-Izquierda
-        if (balance < -1 && obtenerBalance(nodo.derecho) > 0) {
-            nodo.derecho = rotacionDerecha(nodo.derecho);
-            return rotacionIzquierda(nodo);
+        if (balance < -1 && getBalance(node.right) > 0) {
+            node.right = rotateRight(node.right);
+            return rotateLeft(node);
         }
 
-        return nodo;
+        return node;
     }
 
     /**
      * Recorrido InOrden (Izq-Raíz-Der)
      */
-    public void recorridoInOrden() {
+    public void inOrderTraversal() {
         System.out.print("InOrden: ");
-        recorridoInOrdenRecursivo(raiz);
+        inOrderTraversalRecursive(root);
         System.out.println();
     }
 
-    private void recorridoInOrdenRecursivo(NodoAVL nodo) {
-        if (nodo != null) {
-            recorridoInOrdenRecursivo(nodo.izquierdo);
-            System.out.print(nodo.dato + " ");
-            recorridoInOrdenRecursivo(nodo.derecho);
+    private void inOrderTraversalRecursive(NodoAVL<T> node) {
+        if (node != null) {
+            inOrderTraversalRecursive(node.left);
+            System.out.print(node.data + " ");
+            inOrderTraversalRecursive(node.right);
         }
     }
 
     /**
      * Recorrido PreOrden (Raíz-Izq-Der)
      */
-    public void recorridoPreOrden() {
+    public void preOrderTraversal() {
         System.out.print("PreOrden: ");
-        recorridoPreOrdenRecursivo(raiz);
+        preOrderTraversalRecursive(root);
         System.out.println();
     }
 
-    private void recorridoPreOrdenRecursivo(NodoAVL nodo) {
-        if (nodo != null) {
-            System.out.print(nodo.dato + " ");
-            recorridoPreOrdenRecursivo(nodo.izquierdo);
-            recorridoPreOrdenRecursivo(nodo.derecho);
+    private void preOrderTraversalRecursive(NodoAVL<T> node) {
+        if (node != null) {
+            System.out.print(node.data + " ");
+            preOrderTraversalRecursive(node.left);
+            preOrderTraversalRecursive(node.right);
         }
     }
 
     /**
      * Recorrido PostOrden (Izq-Der-Raíz)
      */
-    public void recorridoPostOrden() {
+    public void postOrderTraversal() {
         System.out.print("PostOrden: ");
-        recorridoPostOrdenRecursivo(raiz);
+        postOrderTraversalRecursive(root);
         System.out.println();
     }
 
-    private void recorridoPostOrdenRecursivo(NodoAVL nodo) {
-        if (nodo != null) {
-            recorridoPostOrdenRecursivo(nodo.izquierdo);
-            recorridoPostOrdenRecursivo(nodo.derecho);
-            System.out.print(nodo.dato + " ");
+    private void postOrderTraversalRecursive(NodoAVL<T> node) {
+        if (node != null) {
+            postOrderTraversalRecursive(node.left);
+            postOrderTraversalRecursive(node.right);
+            System.out.print(node.data + " ");
         }
     }
 
     /**
      * Recorrido por niveles (BFS)
      */
-    public void recorridoPorNiveles() {
-        if (raiz == null) {
+    public void levelOrderTraversal() {
+        if (root == null) {
             System.out.println("Por Niveles: (árbol vacío)");
             return;
         }
 
         System.out.print("Por Niveles: ");
-        Queue<NodoAVL> cola = new LinkedList<>();
-        cola.offer(raiz);
+        Queue<NodoAVL<T>> queue = new LinkedList<>();
+        queue.offer(root);
 
-        while (!cola.isEmpty()) {
-            NodoAVL actual = cola.poll();
-            System.out.print(actual.dato + " ");
+        while (!queue.isEmpty()) {
+            NodoAVL<T> current = queue.poll();
+            System.out.print(current.data + " ");
 
-            if (actual.izquierdo != null) {
-                cola.offer(actual.izquierdo);
+            if (current.left != null) {
+                queue.offer(current.left);
             }
-            if (actual.derecho != null) {
-                cola.offer(actual.derecho);
+            if (current.right != null) {
+                queue.offer(current.right);
             }
         }
         System.out.println();
@@ -374,28 +381,28 @@ public class ArbolAVL {
     /**
      * Muestra el árbol de forma visual
      */
-    public void mostrarArbol() {
-        if (raiz == null) {
+    public void display() {
+        if (root == null) {
             System.out.println("El árbol está vacío");
             return;
         }
         System.out.println("\n=== Estructura del Árbol AVL ===");
-        mostrarArbolRecursivo(raiz, "", true);
+        displayRecursive(root, "", true);
     }
 
-    private void mostrarArbolRecursivo(NodoAVL nodo, String prefijo, boolean esUltimo) {
-        if (nodo != null) {
-            System.out.println(prefijo + (esUltimo ? "└── " : "├── ") + 
-                             nodo.dato + " (h:" + nodo.altura + ", b:" + nodo.balance + ")");
+    private void displayRecursive(NodoAVL<T> node, String prefix, boolean isLast) {
+        if (node != null) {
+            System.out.println(prefix + (isLast ? "└── " : "├── ") + 
+                             node.data + " (h:" + node.height + ", b:" + node.balance + ")");
             
-            String nuevoPrefijo = prefijo + (esUltimo ? "    " : "│   ");
+            String newPrefix = prefix + (isLast ? "    " : "│   ");
             
-            if (nodo.izquierdo != null || nodo.derecho != null) {
-                if (nodo.izquierdo != null) {
-                    mostrarArbolRecursivo(nodo.izquierdo, nuevoPrefijo, nodo.derecho == null);
+            if (node.left != null || node.right != null) {
+                if (node.left != null) {
+                    displayRecursive(node.left, newPrefix, node.right == null);
                 }
-                if (nodo.derecho != null) {
-                    mostrarArbolRecursivo(nodo.derecho, nuevoPrefijo, true);
+                if (node.right != null) {
+                    displayRecursive(node.right, newPrefix, true);
                 }
             }
         }
@@ -404,28 +411,28 @@ public class ArbolAVL {
     /**
      * Verifica si el árbol está vacío
      */
-    public boolean estaVacio() {
-        return raiz == null;
+    public boolean isEmpty() {
+        return root == null;
     }
 
     /**
      * Obtiene la altura del árbol
      */
-    public int obtenerAltura() {
-        return altura(raiz);
+    public int getHeight() {
+        return height(root);
     }
 
     /**
      * Cuenta el número total de nodos
      */
-    public int contarNodos() {
-        return contarNodosRecursivo(raiz);
+    public int countNodes() {
+        return countNodesRecursive(root);
     }
 
-    private int contarNodosRecursivo(NodoAVL nodo) {
-        if (nodo == null) {
+    private int countNodesRecursive(NodoAVL<T> node) {
+        if (node == null) {
             return 0;
         }
-        return 1 + contarNodosRecursivo(nodo.izquierdo) + contarNodosRecursivo(nodo.derecho);
+        return 1 + countNodesRecursive(node.left) + countNodesRecursive(node.right);
     }
 }

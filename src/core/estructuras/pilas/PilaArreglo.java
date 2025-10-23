@@ -1,42 +1,53 @@
 package core.estructuras.pilas;
 
-public class PilaArreglo {
-    private int[] data;
+/**
+ * Implementación de una Pila usando un arreglo dinámico.
+ * 
+ * Una pila (Stack) es una estructura de datos LIFO (Last In, First Out).
+ * Esta implementación crece automáticamente cuando se llena.
+ * 
+ * @param <T> Tipo de dato que almacena la pila
+ * @author JhelixT
+ * @version 1.0
+ */
+@SuppressWarnings("unchecked")
+public class PilaArreglo<T> {
+    private T[] data;
     private int top;
-    private int size;
+    private int capacity;
 
-    public PilaArreglo(int size) {
-        if (size <= 0) {
+    public PilaArreglo(int capacity) {
+        if (capacity <= 0) {
             throw new IllegalArgumentException("El tamaño debe ser mayor a 0");
         }
-        this.size = size;
-        this.data = new int[size];
+        this.capacity = capacity;
+        this.data = (T[]) new Object[capacity];
         this.top = -1;
     }
 
-    public void push(int value) {
+    public void push(T value) {
         if (isFull()) {
             // Crear nuevo arreglo con 50% más de capacidad
-            int newSize = (int) (size * 1.5);
-            if (newSize == size) newSize = size + 1;
+            int newCapacity = (int) (capacity * 1.5);
+            if (newCapacity == capacity) newCapacity = capacity + 1;
             
-            int[] newData = new int[newSize];
-            System.arraycopy(data, 0, newData, 0, size);
+            T[] newData = (T[]) new Object[newCapacity];
+            System.arraycopy(data, 0, newData, 0, capacity);
             
             data = newData;
-            size = newSize;
+            capacity = newCapacity;
         }
         data[++top] = value;
     }
 
-    public int pop() {
+    public T pop() {
         if (isEmpty()) {
             throw new RuntimeException("Pila vacía, no se puede desapilar");
         }
         return data[top--];
     }
 
-    public int top() {
+    public T top() {
         if (isEmpty()) {
             throw new RuntimeException("Pila vacía");
         }
@@ -48,7 +59,7 @@ public class PilaArreglo {
     }
 
     public boolean isFull() {
-        return top == size - 1;
+        return top == capacity - 1;
     }
     
     public int getSize() {
@@ -56,7 +67,7 @@ public class PilaArreglo {
     }
     
     public int getCapacity() {
-        return size;
+        return capacity;
     }
     
     public void clear() {

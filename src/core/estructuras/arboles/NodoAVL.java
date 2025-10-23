@@ -8,65 +8,66 @@ package core.estructuras.arboles;
  * - Referencias a sus hijos izquierdo y derecho
  * - La altura del subárbol que tiene como raíz
  * 
+ * @param <T> Tipo de dato que almacena el nodo (debe ser Comparable)
  * @author Sistema
  * @version 1.0
  */
-public class NodoAVL {
+public class NodoAVL<T extends Comparable<T>> {
     // Atributos del nodo
-    int dato;              // Valor almacenado en el nodo
-    int altura;            // Altura del subárbol con raíz en este nodo
-    int balance;           // Factor de balance del nodo (altura izq - altura der)
-    NodoAVL izquierdo;     // Referencia al hijo izquierdo
-    NodoAVL derecho;       // Referencia al hijo derecho
+    T data;                      // Valor almacenado en el nodo
+    int height;                  // Altura del subárbol con raíz en este nodo
+    int balance;                 // Factor de balance del nodo (altura izq - altura der)
+    NodoAVL<T> left;             // Referencia al hijo izquierdo
+    NodoAVL<T> right;            // Referencia al hijo derecho
 
     /**
      * Constructor: Crea un nuevo nodo con un valor dado
      * 
-     * @param dato Valor a almacenar en el nodo
+     * @param data Valor a almacenar en el nodo
      * 
      * Inicializa:
      * - El dato con el valor proporcionado
      * - La altura en 1 (nodo hoja)
      * - Los hijos en null (sin hijos inicialmente)
      */
-    public NodoAVL(int dato) {
-        this.dato = dato;
-        this.altura = 1;           // Un nodo nuevo tiene altura 1
+    public NodoAVL(T data) {
+        this.data = data;
+        this.height = 1;           // Un nodo nuevo tiene altura 1
         this.balance = 0;          // Un nodo hoja tiene balance 0
-        this.izquierdo = null;     // Sin hijo izquierdo inicialmente
-        this.derecho = null;       // Sin hijo derecho inicialmente
+        this.left = null;          // Sin hijo izquierdo inicialmente
+        this.right = null;         // Sin hijo derecho inicialmente
     }
 
     /**
      * Obtiene el valor almacenado en el nodo
      * @return El dato del nodo
      */
-    public int getDato() {
-        return dato;
+    public T getData() {
+        return data;
     }
 
     /**
      * Establece el valor del nodo
-     * @param dato El nuevo valor del nodo
+     * @param data El nuevo valor del nodo
      */
-    public void setDato(int dato) {
-        this.dato = dato;
+    public void setData(T data) {
+        this.data = data;
     }
 
     /**
      * Obtiene la altura del subárbol
      * @return La altura del nodo
      */
-    public int getAltura() {
-        return altura;
+    public int getHeight() {
+        return height;
     }
 
     /**
      * Establece la altura del nodo
-     * @param altura La nueva altura del nodo
+     * @param height La nueva altura del nodo
      */
-    public void setAltura(int altura) {
-        this.altura = altura;
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     /**
@@ -89,40 +90,40 @@ public class NodoAVL {
      * Obtiene el hijo izquierdo
      * @return Referencia al nodo hijo izquierdo
      */
-    public NodoAVL getIzquierdo() {
-        return izquierdo;
+    public NodoAVL<T> getLeft() {
+        return left;
     }
 
     /**
      * Establece el hijo izquierdo
-     * @param izquierdo El nuevo hijo izquierdo
+     * @param left El nuevo hijo izquierdo
      */
-    public void setIzquierdo(NodoAVL izquierdo) {
-        this.izquierdo = izquierdo;
+    public void setLeft(NodoAVL<T> left) {
+        this.left = left;
     }
 
     /**
      * Obtiene el hijo derecho
      * @return Referencia al nodo hijo derecho
      */
-    public NodoAVL getDerecho() {
-        return derecho;
+    public NodoAVL<T> getRight() {
+        return right;
     }
 
     /**
      * Establece el hijo derecho
-     * @param derecho El nuevo hijo derecho
+     * @param right El nuevo hijo derecho
      */
-    public void setDerecho(NodoAVL derecho) {
-        this.derecho = derecho;
+    public void setRight(NodoAVL<T> right) {
+        this.right = right;
     }
 
     /**
      * Verifica si el nodo es una hoja (sin hijos)
      * @return true si es hoja, false en caso contrario
      */
-    public boolean esHoja() {
-        return izquierdo == null && derecho == null;
+    public boolean isLeaf() {
+        return left == null && right == null;
     }
 
     /**
@@ -131,6 +132,6 @@ public class NodoAVL {
      */
     @Override
     public String toString() {
-        return String.valueOf(dato);
+        return data != null ? data.toString() : "null";
     }
 }
