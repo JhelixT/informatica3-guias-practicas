@@ -203,6 +203,65 @@ public class ListaEnlazada<T> {
     }
     
     /**
+     * Elimina la primera ocurrencia de un valor específico.
+     * 
+     * @param data El valor a eliminar
+     * @return true si se eliminó el elemento, false si no se encontró
+     */
+    public boolean remove(T data) {
+        if (isEmpty()) {
+            return false;
+        }
+        
+        // Si el elemento está al inicio
+        if (head.getData().equals(data)) {
+            head = head.getNext();
+            size--;
+            return true;
+        }
+        
+        // Buscar en el resto de la lista
+        Nodo<T> current = head;
+        while (current.getNext() != null) {
+            if (current.getNext().getData().equals(data)) {
+                current.setNext(current.getNext().getNext());
+                size--;
+                return true;
+            }
+            current = current.getNext();
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Elimina todos los elementos duplicados de la lista.
+     * Mantiene solo la primera ocurrencia de cada valor.
+     */
+    public void removeDuplicates() {
+        if (isEmpty() || size == 1) {
+            return;
+        }
+        
+        Nodo<T> current = head;
+        
+        while (current != null) {
+            Nodo<T> runner = current;
+            
+            while (runner.getNext() != null) {
+                if (runner.getNext().getData().equals(current.getData())) {
+                    runner.setNext(runner.getNext().getNext());
+                    size--;
+                } else {
+                    runner = runner.getNext();
+                }
+            }
+            
+            current = current.getNext();
+        }
+    }
+    
+    /**
      * Verifica si la lista contiene un valor específico.
      * 
      * @param data El valor a verificar

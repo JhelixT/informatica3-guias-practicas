@@ -37,6 +37,7 @@ public class Main {
         System.out.println("     • Estructuras Lineales (Listas, Pilas y Colas)");
         System.out.println("     • Árboles AVL (Estructuras Balanceadas)");
         System.out.println("     • Recursividad (Técnicas de Programación)");
+        System.out.println("     • Ejercicios de Listas (10 Ejercicios Prácticos)");
         System.out.println();
         InputValidator.pausar();
     }
@@ -61,11 +62,14 @@ public class Main {
             MenuFormatter.mostrarOpcion(5, "Recursividad");
             System.out.println("     └─ Ejercicios y ejemplos recursivos");
             
+            MenuFormatter.mostrarOpcion(6, "Ejercicios de Listas Enlazadas");
+            System.out.println("     └─ 10 ejercicios prácticos paso a paso");
+            
             MenuFormatter.mostrarSeparador();
-            MenuFormatter.mostrarOpcion(6, "Información del sistema");
+            MenuFormatter.mostrarOpcion(7, "Información del sistema");
             MenuFormatter.mostrarOpcion(0, "Salir");
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 6);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 7);
             
             switch (opcion) {
                 case 1 -> {
@@ -88,7 +92,11 @@ public class Main {
                     MenuFormatter.limpiarPantalla();
                     new RecursividadMenu().mostrarMenu();
                 }
-                case 6 -> mostrarInformacionSistema();
+                case 6 -> {
+                    MenuFormatter.limpiarPantalla();
+                    new EjerciciosListasMenu().mostrarMenu();
+                }
+                case 7 -> mostrarInformacionSistema();
                 case 0 -> {
                     if (InputValidator.confirmar("¿Está seguro de que desea salir?")) {
                         return;
