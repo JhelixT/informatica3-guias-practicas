@@ -37,6 +37,7 @@ public class Main {
         System.out.println("     • Estructuras Lineales (Listas, Pilas y Colas)");
         System.out.println("     • Árboles AVL (Estructuras Balanceadas)");
         System.out.println("     • Árboles BST (Binary Search Tree)");
+        System.out.println("     • Árboles Rojinegro (Red-Black Tree)");
         System.out.println("     • Recursividad (Técnicas de Programación)");
         System.out.println("     • Ejercicios de Listas (10 Ejercicios Prácticos)");
         System.out.println();
@@ -63,17 +64,20 @@ public class Main {
             MenuFormatter.mostrarOpcion(5, "Árboles BST");
             System.out.println("     └─ Binary Search Tree con operaciones completas");
             
-            MenuFormatter.mostrarOpcion(6, "Recursividad");
+            MenuFormatter.mostrarOpcion(6, "Árboles Rojinegro");
+            System.out.println("     └─ Red-Black Tree auto-balanceado");
+            
+            MenuFormatter.mostrarOpcion(7, "Recursividad");
             System.out.println("     └─ Ejercicios y ejemplos recursivos");
             
-            MenuFormatter.mostrarOpcion(7, "Ejercicios de Listas Enlazadas");
+            MenuFormatter.mostrarOpcion(8, "Ejercicios de Listas Enlazadas");
             System.out.println("     └─ 10 ejercicios prácticos paso a paso");
             
             MenuFormatter.mostrarSeparador();
-            MenuFormatter.mostrarOpcion(8, "Información del sistema");
+            MenuFormatter.mostrarOpcion(9, "Información del sistema");
             MenuFormatter.mostrarOpcion(0, "Salir");
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 8);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 9);
             
             switch (opcion) {
                 case 1 -> {
@@ -98,13 +102,17 @@ public class Main {
                 }
                 case 6 -> {
                     MenuFormatter.limpiarPantalla();
-                    new RecursividadMenu().mostrarMenu();
+                    ArbolRojinegroMenu.mostrarMenu();
                 }
                 case 7 -> {
                     MenuFormatter.limpiarPantalla();
+                    new RecursividadMenu().mostrarMenu();
+                }
+                case 8 -> {
+                    MenuFormatter.limpiarPantalla();
                     new EjerciciosListasMenu().mostrarMenu();
                 }
-                case 8 -> mostrarInformacionSistema();
+                case 9 -> mostrarInformacionSistema();
                 case 0 -> {
                     if (InputValidator.confirmar("¿Está seguro de que desea salir?")) {
                         return;
@@ -130,7 +138,7 @@ public class Main {
         System.out.println("  │   ├── pizzeria/            # Clases del gestor de pizzería");
         System.out.println("  │   ├── tareas/              # Clases del gestor de tareas");
         System.out.println("  │   ├── estructuras/         # Estructuras de datos");
-        System.out.println("  │   │   ├── arboles/         # Árboles AVL y BST");
+        System.out.println("  │   │   ├── arboles/         # Árboles AVL, BST y Rojinegro");
         System.out.println("  │   │   ├── listas/          # Listas enlazadas");
         System.out.println("  │   │   ├── pilas/           # Pilas (arreglo y enlazada)");
         System.out.println("  │   │   ├── colas/           # Colas (circular y enlazada)");
@@ -144,7 +152,7 @@ public class Main {
         System.out.println("CONCEPTOS IMPLEMENTADOS:");
         System.out.println("  • Algoritmos de Ordenamiento (Inserción, Shell Sort, Quick Sort)");
         System.out.println("  • Estructuras Lineales (Listas, Pilas, Colas - Arreglo y Enlazadas)");
-        System.out.println("  • Estructuras No Lineales (Árboles AVL y BST)");
+        System.out.println("  • Estructuras No Lineales (Árboles AVL, BST y Rojinegro)");
         System.out.println("  • Programación Orientada a Objetos");
         System.out.println("  • Manejo de Excepciones");
         System.out.println("  • Validación de Entrada de Datos");
