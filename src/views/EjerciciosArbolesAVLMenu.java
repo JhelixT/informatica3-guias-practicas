@@ -35,16 +35,15 @@ public class EjerciciosArbolesAVLMenu {
             System.out.println("║  8. Implementación: Rotación doble LR                              ║");
             System.out.println("║                                                                    ║");
             System.out.println("║  🎯 EJERCICIOS AVANZADOS                                           ║");
-            System.out.println("║  9. Costos y altura - Análisis de complejidad                      ║");
-            System.out.println("║ 10. Secuencias estresantes y pruebas unitarias                     ║");
+            System.out.println("║  9. Secuencias estresantes y pruebas unitarias                     ║");
             System.out.println("║                                                                    ║");
             System.out.println("║  🚀 OPCIONES                                                       ║");
-            System.out.println("║ 11. Ejecutar TODOS los ejercicios                                  ║");
+            System.out.println("║ 10. Ejecutar TODOS los ejercicios                                  ║");
             System.out.println("║  0. Volver al menú principal                                       ║");
             System.out.println("║                                                                    ║");
             System.out.println("╚════════════════════════════════════════════════════════════════════╝");
             
-            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opción: ", 0, 11);
+            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opción: ", 0, 10);
             
             MenuFormatter.limpiarPantalla();
             
@@ -82,14 +81,10 @@ public class EjerciciosArbolesAVLMenu {
                     break;
                     
                 case 9:
-                    Ejercicio09_CostosYAltura.ejecutar();
-                    break;
-                    
-                case 10:
                     Ejercicio10_PruebasUnitarias.ejecutar();
                     break;
                     
-                case 11:
+                case 10:
                     ejecutarTodosLosEjercicios();
                     break;
                     
@@ -124,7 +119,6 @@ public class EjerciciosArbolesAVLMenu {
             "Factor de equilibrio completo",
             "Rotación izquierda",
             "Rotación doble LR",
-            "Costos y altura",
             "Pruebas unitarias"
         };
         
@@ -142,8 +136,7 @@ public class EjerciciosArbolesAVLMenu {
                 case 6: Ejercicio06_FactorEquilibrioCompleto.ejecutar(); break;
                 case 7: Ejercicio07_ImplementacionRotacionIzquierda.ejecutar(); break;
                 case 8: Ejercicio08_RotacionDobleLR.ejecutar(); break;
-                case 9: Ejercicio09_CostosYAltura.ejecutar(); break;
-                case 10: Ejercicio10_PruebasUnitarias.ejecutar(); break;
+                case 9: Ejercicio10_PruebasUnitarias.ejecutar(); break;
             }
             
             if (i < nombresEjercicios.length - 1) {
