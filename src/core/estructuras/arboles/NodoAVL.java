@@ -13,12 +13,12 @@ package core.estructuras.arboles;
  * @version 1.0
  */
 public class NodoAVL<T extends Comparable<T>> {
-    // Atributos del nodo
-    T data;                      // Valor almacenado en el nodo
-    int height;                  // Altura del subárbol con raíz en este nodo
-    int balance;                 // Factor de balance del nodo (altura izq - altura der)
-    NodoAVL<T> left;             // Referencia al hijo izquierdo
-    NodoAVL<T> right;            // Referencia al hijo derecho
+    // Atributos del nodo (privados para encapsulación)
+    private T data;                      // Valor almacenado en el nodo
+    private int height;                  // Altura del subárbol con raíz en este nodo
+    private int balance;                 // Factor de balance del nodo (altura izq - altura der)
+    private NodoAVL<T> left;             // Referencia al hijo izquierdo
+    private NodoAVL<T> right;            // Referencia al hijo derecho
 
     /**
      * Constructor: Crea un nuevo nodo con un valor dado
@@ -123,7 +123,7 @@ public class NodoAVL<T extends Comparable<T>> {
      * @return true si es hoja, false en caso contrario
      */
     public boolean isLeaf() {
-        return left == null && right == null;
+        return this.left == null && this.right == null;
     }
 
     /**
@@ -132,6 +132,6 @@ public class NodoAVL<T extends Comparable<T>> {
      */
     @Override
     public String toString() {
-        return data != null ? data.toString() : "null";
+        return this.data != null ? this.data.toString() : "null";
     }
 }

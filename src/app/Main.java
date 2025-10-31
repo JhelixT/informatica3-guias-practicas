@@ -40,6 +40,7 @@ public class Main {
         System.out.println("     • Árboles Rojinegro (Red-Black Tree)");
         System.out.println("     • Recursividad (Técnicas de Programación)");
         System.out.println("     • Ejercicios de Listas (10 Ejercicios Prácticos)");
+        System.out.println("     • Ejercicios de Árboles AVL (10 Ejercicios Avanzados)");
         System.out.println();
         InputValidator.pausar();
     }
@@ -73,11 +74,14 @@ public class Main {
             MenuFormatter.mostrarOpcion(8, "Ejercicios de Listas Enlazadas");
             System.out.println("     └─ 10 ejercicios prácticos paso a paso");
             
+            MenuFormatter.mostrarOpcion(9, "Ejercicios de Árboles AVL");
+            System.out.println("     └─ 10 ejercicios prácticos de AVL");
+            
             MenuFormatter.mostrarSeparador();
-            MenuFormatter.mostrarOpcion(9, "Información del sistema");
+            MenuFormatter.mostrarOpcion(10, "Información del sistema");
             MenuFormatter.mostrarOpcion(0, "Salir");
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 9);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 10);
             
             switch (opcion) {
                 case 1 -> {
@@ -112,7 +116,11 @@ public class Main {
                     MenuFormatter.limpiarPantalla();
                     new EjerciciosListasMenu().mostrarMenu();
                 }
-                case 9 -> mostrarInformacionSistema();
+                case 9 -> {
+                    MenuFormatter.limpiarPantalla();
+                    EjerciciosArbolesAVLMenu.mostrar();
+                }
+                case 10 -> mostrarInformacionSistema();
                 case 0 -> {
                     if (InputValidator.confirmar("¿Está seguro de que desea salir?")) {
                         return;
@@ -144,6 +152,9 @@ public class Main {
         System.out.println("  │   │   ├── colas/           # Colas (circular y enlazada)");
         System.out.println("  │   │   ├── nodos/           # Nodos para estructuras enlazadas");
         System.out.println("  │   │   └── recursividad/    # Ejercicios recursivos");
+        System.out.println("  │   ├── ejercicios/          # Ejercicios prácticos");
+        System.out.println("  │   │   ├── listas/          # Ejercicios de listas");
+        System.out.println("  │   │   └── arboles/         # Ejercicios de árboles AVL");
         System.out.println("  │   └── utils/               # Utilidades y helpers");
         System.out.println("  ├── views/                   # Interfaces de usuario (Vista)");
         System.out.println("  └── Main.java               # Controlador principal");

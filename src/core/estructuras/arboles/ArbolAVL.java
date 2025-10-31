@@ -41,7 +41,7 @@ public class ArbolAVL<T extends Comparable<T>> {
         if (node == null) {
             return 0;
         }
-        return node.height;
+        return node.getHeight();
     }
 
     /**
@@ -55,7 +55,7 @@ public class ArbolAVL<T extends Comparable<T>> {
         if (node == null) {
             return 0;
         }
-        return node.balance;
+        return node.getBalance();
     }
 
     /**
@@ -65,11 +65,11 @@ public class ArbolAVL<T extends Comparable<T>> {
      */
     private void updateHeight(NodoAVL<T> node) {
         if (node != null) {
-            int leftHeight = height(node.left);
-            int rightHeight = height(node.right);
+            int leftHeight = height(node.getLeft());
+            int rightHeight = height(node.getRight());
             
-            node.height = 1 + Math.max(leftHeight, rightHeight);
-            node.balance = leftHeight - rightHeight;
+            node.setHeight(1 + Math.max(leftHeight, rightHeight));
+            node.setBalance(leftHeight - rightHeight);
         }
     }
 
@@ -80,11 +80,11 @@ public class ArbolAVL<T extends Comparable<T>> {
      * @return Nueva raíz después de la rotación
      */
     private NodoAVL<T> rotateRight(NodoAVL<T> y) {
-        NodoAVL<T> x = y.left;
-        NodoAVL<T> B = x.right;
+        NodoAVL<T> x = y.getLeft();
+        NodoAVL<T> B = x.getRight();
 
-        x.right = y;
-        y.left = B;
+        x.setRight(y);
+        y.setLeft(B);
 
         updateHeight(y);
         updateHeight(x);
@@ -99,11 +99,11 @@ public class ArbolAVL<T extends Comparable<T>> {
      * @return Nueva raíz después de la rotación
      */
     private NodoAVL<T> rotateLeft(NodoAVL<T> x) {
-        NodoAVL<T> y = x.right;
-        NodoAVL<T> B = y.left;
+        NodoAVL<T> y = x.getRight();
+        NodoAVL<T> B = y.getLeft();
 
-        y.left = x;
-        x.right = B;
+        y.setLeft(x);
+        x.setRight(B);
 
         updateHeight(x);
         updateHeight(y);
@@ -133,12 +133,12 @@ public class ArbolAVL<T extends Comparable<T>> {
             return new NodoAVL<>(data);
         }
 
-        int comparison = data.compareTo(node.data);
+        int comparison = data.compareTo(node.getData());
         
         if (comparison < 0) {
-            node.left = insertRecursive(node.left, data);
+            node.setLeft(insertRecursive(node.getLeft(), data));
         } else if (comparison > 0) {
-            node.right = insertRecursive(node.right, data);
+            node.setRight(insertRecursive(node.getRight(), data));
         } else {
             return node; // Valores duplicados no permitidos
         }
@@ -152,24 +152,24 @@ public class ArbolAVL<T extends Comparable<T>> {
         // PASO 4: Aplicar rotaciones si es necesario
 
         // Caso Izquierda-Izquierda
-        if (balance > 1 && data.compareTo(node.left.data) < 0) {
+        if (balance > 1 && data.compareTo(node.getLeft().getData()) < 0) {
             return rotateRight(node);
         }
 
         // Caso Derecha-Derecha
-        if (balance < -1 && data.compareTo(node.right.data) > 0) {
+        if (balance < -1 && data.compareTo(node.getRight().getData()) > 0) {
             return rotateLeft(node);
         }
 
         // Caso Izquierda-Derecha
-        if (balance > 1 && data.compareTo(node.left.data) > 0) {
-            node.left = rotateLeft(node.left);
+        if (balance > 1 && data.compareTo(node.getLeft().getData()) > 0) {
+            node.setLeft(rotateLeft(node.getLeft()));
             return rotateRight(node);
         }
 
         // Caso Derecha-Izquierda
-        if (balance < -1 && data.compareTo(node.right.data) < 0) {
-            node.right = rotateRight(node.right);
+        if (balance < -1 && data.compareTo(node.getRight().getData()) < 0) {
+            node.setRight(rotateRight(node.getRight()));
             return rotateLeft(node);
         }
 
@@ -198,16 +198,16 @@ public class ArbolAVL<T extends Comparable<T>> {
             return false;
         }
 
-        int comparison = data.compareTo(node.data);
+        int comparison = data.compareTo(node.getData());
         
         if (comparison == 0) {
             return true;
         }
 
         if (comparison < 0) {
-            return searchRecursive(node.left, data);
+            return searchRecursive(node.getLeft(), data);
         } else {
-            return searchRecursive(node.right, data);
+            return searchRecursive(node.getRight(), data);
         }
     }
 
@@ -219,8 +219,8 @@ public class ArbolAVL<T extends Comparable<T>> {
      */
     private NodoAVL<T> minNode(NodoAVL<T> node) {
         NodoAVL<T> current = node;
-        while (current.left != null) {
-            current = current.left;
+        while (current.getLeft() != null) {
+            current = current.getLeft();
         }
         return current;
     }
@@ -247,24 +247,24 @@ public class ArbolAVL<T extends Comparable<T>> {
             return node;
         }
 
-        int comparison = data.compareTo(node.data);
+        int comparison = data.compareTo(node.getData());
         
         if (comparison < 0) {
-            node.left = deleteRecursive(node.left, data);
+            node.setLeft(deleteRecursive(node.getLeft(), data));
         } else if (comparison > 0) {
-            node.right = deleteRecursive(node.right, data);
+            node.setRight(deleteRecursive(node.getRight(), data));
         } else {
             // Nodo encontrado
-            if (node.left == null) {
-                return node.right;
-            } else if (node.right == null) {
-                return node.left;
+            if (node.getLeft() == null) {
+                return node.getRight();
+            } else if (node.getRight() == null) {
+                return node.getLeft();
             }
 
             // Nodo con dos hijos
-            NodoAVL<T> successor = minNode(node.right);
-            node.data = successor.data;
-            node.right = deleteRecursive(node.right, successor.data);
+            NodoAVL<T> successor = minNode(node.getRight());
+            node.setData(successor.getData());
+            node.setRight(deleteRecursive(node.getRight(), successor.getData()));
         }
 
         // PASO 2: Actualizar altura
@@ -276,24 +276,24 @@ public class ArbolAVL<T extends Comparable<T>> {
         // PASO 4: Aplicar rotaciones si es necesario
 
         // Caso Izquierda-Izquierda
-        if (balance > 1 && getBalance(node.left) >= 0) {
+        if (balance > 1 && getBalance(node.getLeft()) >= 0) {
             return rotateRight(node);
         }
 
         // Caso Izquierda-Derecha
-        if (balance > 1 && getBalance(node.left) < 0) {
-            node.left = rotateLeft(node.left);
+        if (balance > 1 && getBalance(node.getLeft()) < 0) {
+            node.setLeft(rotateLeft(node.getLeft()));
             return rotateRight(node);
         }
 
         // Caso Derecha-Derecha
-        if (balance < -1 && getBalance(node.right) <= 0) {
+        if (balance < -1 && getBalance(node.getRight()) <= 0) {
             return rotateLeft(node);
         }
 
         // Caso Derecha-Izquierda
-        if (balance < -1 && getBalance(node.right) > 0) {
-            node.right = rotateRight(node.right);
+        if (balance < -1 && getBalance(node.getRight()) > 0) {
+            node.setRight(rotateRight(node.getRight()));
             return rotateLeft(node);
         }
 
@@ -311,9 +311,9 @@ public class ArbolAVL<T extends Comparable<T>> {
 
     private void inOrderTraversalRecursive(NodoAVL<T> node) {
         if (node != null) {
-            inOrderTraversalRecursive(node.left);
-            System.out.print(node.data + " ");
-            inOrderTraversalRecursive(node.right);
+            inOrderTraversalRecursive(node.getLeft());
+            System.out.print(node.getData() + " ");
+            inOrderTraversalRecursive(node.getRight());
         }
     }
 
@@ -328,9 +328,9 @@ public class ArbolAVL<T extends Comparable<T>> {
 
     private void preOrderTraversalRecursive(NodoAVL<T> node) {
         if (node != null) {
-            System.out.print(node.data + " ");
-            preOrderTraversalRecursive(node.left);
-            preOrderTraversalRecursive(node.right);
+            System.out.print(node.getData() + " ");
+            preOrderTraversalRecursive(node.getLeft());
+            preOrderTraversalRecursive(node.getRight());
         }
     }
 
@@ -345,9 +345,9 @@ public class ArbolAVL<T extends Comparable<T>> {
 
     private void postOrderTraversalRecursive(NodoAVL<T> node) {
         if (node != null) {
-            postOrderTraversalRecursive(node.left);
-            postOrderTraversalRecursive(node.right);
-            System.out.print(node.data + " ");
+            postOrderTraversalRecursive(node.getLeft());
+            postOrderTraversalRecursive(node.getRight());
+            System.out.print(node.getData() + " ");
         }
     }
 
@@ -366,13 +366,13 @@ public class ArbolAVL<T extends Comparable<T>> {
 
         while (!queue.isEmpty()) {
             NodoAVL<T> current = queue.poll();
-            System.out.print(current.data + " ");
+            System.out.print(current.getData() + " ");
 
-            if (current.left != null) {
-                queue.offer(current.left);
+            if (current.getLeft() != null) {
+                queue.offer(current.getLeft());
             }
-            if (current.right != null) {
-                queue.offer(current.right);
+            if (current.getRight() != null) {
+                queue.offer(current.getRight());
             }
         }
         System.out.println();
@@ -393,16 +393,16 @@ public class ArbolAVL<T extends Comparable<T>> {
     private void displayRecursive(NodoAVL<T> node, String prefix, boolean isLast) {
         if (node != null) {
             System.out.println(prefix + (isLast ? "└── " : "├── ") + 
-                             node.data + " (h:" + node.height + ", b:" + node.balance + ")");
+                             node.getData() + " (h:" + node.getHeight() + ", b:" + node.getBalance() + ")");
             
             String newPrefix = prefix + (isLast ? "    " : "│   ");
             
-            if (node.left != null || node.right != null) {
-                if (node.left != null) {
-                    displayRecursive(node.left, newPrefix, node.right == null);
+            if (node.getLeft() != null || node.getRight() != null) {
+                if (node.getLeft() != null) {
+                    displayRecursive(node.getLeft(), newPrefix, node.getRight() == null);
                 }
-                if (node.right != null) {
-                    displayRecursive(node.right, newPrefix, true);
+                if (node.getRight() != null) {
+                    displayRecursive(node.getRight(), newPrefix, true);
                 }
             }
         }
@@ -433,6 +433,6 @@ public class ArbolAVL<T extends Comparable<T>> {
         if (node == null) {
             return 0;
         }
-        return 1 + countNodesRecursive(node.left) + countNodesRecursive(node.right);
+        return 1 + countNodesRecursive(node.getLeft()) + countNodesRecursive(node.getRight());
     }
 }
