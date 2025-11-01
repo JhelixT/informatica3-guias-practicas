@@ -40,7 +40,8 @@ public class Main {
         System.out.println("     • Árboles Rojinegro (Red-Black Tree)");
         System.out.println("     • Recursividad (Técnicas de Programación)");
         System.out.println("     • Ejercicios de Listas (10 Ejercicios Prácticos)");
-        System.out.println("     • Ejercicios de Árboles AVL (10 Ejercicios Avanzados)");
+        System.out.println("     • Ejercicios de Árboles AVL (9 Ejercicios Avanzados)");
+        System.out.println("     • Ejercicios de Árboles Rojinegro (10 Ejercicios RB-Tree)");
         System.out.println();
         InputValidator.pausar();
     }
@@ -75,13 +76,16 @@ public class Main {
             System.out.println("     └─ 10 ejercicios prácticos paso a paso");
             
             MenuFormatter.mostrarOpcion(9, "Ejercicios de Árboles AVL");
-            System.out.println("     └─ 10 ejercicios prácticos de AVL");
+            System.out.println("     └─ 9 ejercicios prácticos de AVL");
+            
+            MenuFormatter.mostrarOpcion(10, "Ejercicios de Árboles Rojinegro");
+            System.out.println("     └─ 10 ejercicios prácticos de RB-Tree");
             
             MenuFormatter.mostrarSeparador();
-            MenuFormatter.mostrarOpcion(10, "Información del sistema");
+            MenuFormatter.mostrarOpcion(11, "Información del sistema");
             MenuFormatter.mostrarOpcion(0, "Salir");
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 10);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 11);
             
             switch (opcion) {
                 case 1 -> {
@@ -120,7 +124,11 @@ public class Main {
                     MenuFormatter.limpiarPantalla();
                     EjerciciosArbolesAVLMenu.mostrar();
                 }
-                case 10 -> mostrarInformacionSistema();
+                case 10 -> {
+                    MenuFormatter.limpiarPantalla();
+                    EjerciciosRojinegroMenu.mostrar();
+                }
+                case 11 -> mostrarInformacionSistema();
                 case 0 -> {
                     if (InputValidator.confirmar("¿Está seguro de que desea salir?")) {
                         return;
@@ -154,7 +162,8 @@ public class Main {
         System.out.println("  │   │   └── recursividad/    # Ejercicios recursivos");
         System.out.println("  │   ├── ejercicios/          # Ejercicios prácticos");
         System.out.println("  │   │   ├── listas/          # Ejercicios de listas");
-        System.out.println("  │   │   └── arboles/         # Ejercicios de árboles AVL");
+        System.out.println("  │   │   ├── arboles/         # Ejercicios de árboles AVL");
+        System.out.println("  │   │   └── rojinegro/       # Ejercicios de árboles RB");
         System.out.println("  │   └── utils/               # Utilidades y helpers");
         System.out.println("  ├── views/                   # Interfaces de usuario (Vista)");
         System.out.println("  └── Main.java               # Controlador principal");
