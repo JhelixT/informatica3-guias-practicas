@@ -317,6 +317,35 @@ public class ListaEnlazada<T> {
         head = previous;
     }
     
+    /**
+     * Obtiene el nodo en una posición específica (para uso interno).
+     * 
+     * @param position La posición del nodo a obtener (0 = inicio)
+     * @return El nodo en esa posición
+     */
+    protected Nodo<T> getNodeAt(int position) {
+        if (position < 0 || position >= size) {
+            throw new IndexOutOfBoundsException("Posición inválida: " + position);
+        }
+        
+        Nodo<T> current = head;
+        for (int i = 0; i < position; i++) {
+            current = current.getNext();
+        }
+        
+        return current;
+    }
+    
+    /**
+     * Obtiene el primer nodo de la lista.
+     * Útil para iterar sobre la lista manualmente o en estructuras avanzadas.
+     * 
+     * @return El primer nodo, o null si la lista está vacía
+     */
+    public Nodo<T> getHead() {
+        return head;
+    }
+    
     @Override
     public String toString() {
         if (isEmpty()) {

@@ -44,6 +44,7 @@ public class Main {
         System.out.println("     • Ejercicios de Árboles Rojinegro (10 Ejercicios RB-Tree)");
         System.out.println("     • Montículo Binario (Binary Heap - Min/Max Heap)");
         System.out.println("     • Ejercicios de Montículo Binario (10 Ejercicios Heap)");
+        System.out.println("     • Tabla Hash (Hash Table con Encadenamiento)");
         System.out.println();
         InputValidator.pausar();
     }
@@ -89,11 +90,14 @@ public class Main {
             MenuFormatter.mostrarOpcion(12, "Ejercicios de Montículo Binario");
             System.out.println("     └─ 10 ejercicios prácticos de heap");
             
+            MenuFormatter.mostrarOpcion(13, "Tabla Hash (Hash Table)");
+            System.out.println("     └─ Encadenamiento con ListaEnlazada - O(1) ops");
+            
             MenuFormatter.mostrarSeparador();
-            MenuFormatter.mostrarOpcion(13, "Información del sistema");
+            MenuFormatter.mostrarOpcion(14, "Información del sistema");
             MenuFormatter.mostrarOpcion(0, "Salir");
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 13);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 14);
             
             switch (opcion) {
                 case 1 -> {
@@ -144,7 +148,11 @@ public class Main {
                     MenuFormatter.limpiarPantalla();
                     EjerciciosMonticuloMenu.mostrar();
                 }
-                case 13 -> mostrarInformacionSistema();
+                case 13 -> {
+                    MenuFormatter.limpiarPantalla();
+                    new TablaHashMenu().mostrarMenu();
+                }
+                case 14 -> mostrarInformacionSistema();
                 case 0 -> {
                     if (InputValidator.confirmar("¿Está seguro de que desea salir?")) {
                         return;
@@ -175,6 +183,7 @@ public class Main {
         System.out.println("  │   │   ├── pilas/           # Pilas (arreglo y enlazada)");
         System.out.println("  │   │   ├── colas/           # Colas (circular y enlazada)");
         System.out.println("  │   │   ├── monticulo/       # Montículo binario (heap)");
+        System.out.println("  │   │   ├── hash/            # Tabla Hash con encadenamiento");
         System.out.println("  │   │   ├── nodos/           # Nodos para estructuras enlazadas");
         System.out.println("  │   │   └── recursividad/    # Ejercicios recursivos");
         System.out.println("  │   ├── ejercicios/          # Ejercicios prácticos");
@@ -191,6 +200,7 @@ public class Main {
         System.out.println("  • Algoritmos de Ordenamiento (Inserción, Shell Sort, Quick Sort)");
         System.out.println("  • Estructuras Lineales (Listas, Pilas, Colas - Arreglo y Enlazadas)");
         System.out.println("  • Estructuras No Lineales (Árboles AVL, BST, Rojinegro, Heap)");
+        System.out.println("  • Tablas Hash (Hash Table con encadenamiento y ListaEnlazada)");
         System.out.println("  • Colas de Prioridad (Montículo Binario)");
         System.out.println("  • Programación Orientada a Objetos");
         System.out.println("  • Manejo de Excepciones");
