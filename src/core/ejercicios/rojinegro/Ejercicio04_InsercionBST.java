@@ -1,80 +1,54 @@
 package core.ejercicios.rojinegro;
 
-import core.estructuras.arboles.NodoRojinegro;
-import core.estructuras.arboles.NodoRojinegro.Color;
+import core.estructuras.arboles.ArbolBST;
+import core.estructuras.arboles.ArbolRojinegro;
 
 /**
- * Ejercicio 4: Inserción como ABB (sin balance)
+ * Ejercicio 4: Inserción como ABB (sin balance) vs Rojinegro (con balance)
  * 
- * Insertar como BST y devolver el nodo rojo creado con left/right/parent = null; sin balance ni recoloreo.
+ * Demuestra la diferencia entre inserción BST sin balance y el auto-balanceo de Rojinegro.
  * 
  * @author JhelixT
  * @version 1.0
  */
 public class Ejercicio04_InsercionBST {
     
-    private NodoRojinegro<Integer> root;
-    
-    public NodoRojinegro<Integer> insertBST(int key) {
-        NodoRojinegro<Integer> newNode = new NodoRojinegro<>(key, Color.ROJO);
-        
-        if (root == null) {
-            root = newNode;
-            return newNode;
-        }
-        
-        NodoRojinegro<Integer> current = root;
-        NodoRojinegro<Integer> parent = null;
-        
-        while (current != null) {
-            parent = current;
-            if (key < current.getData()) {
-                current = current.getLeft();
-            } else {
-                current = current.getRight();
-            }
-        }
-        
-        newNode.setParent(parent);
-        
-        if (key < parent.getData()) {
-            parent.setLeft(newNode);
-        } else {
-            parent.setRight(newNode);
-        }
-        
-        return newNode;
-    }
-    
-    private void display(NodoRojinegro<Integer> node, String prefix, boolean isRight) {
-        if (node != null) {
-            System.out.println(prefix + (isRight ? "└── " : "┌── ") + node);
-            if (node.getLeft() != null || node.getRight() != null) {
-                if (node.getRight() != null) {
-                    display(node.getRight(), prefix + (isRight ? "    " : "│   "), true);
-                }
-                if (node.getLeft() != null) {
-                    display(node.getLeft(), prefix + (isRight ? "    " : "│   "), false);
-                }
-            }
-        }
-    }
-    
     public static void ejecutar() {
-        System.out.println("\n═══ EJERCICIO 4: INSERCIÓN COMO ABB ═══\n");
+        System.out.println("\n═══ EJERCICIO 4: INSERCIÓN BST vs ROJINEGRO ═══\n");
         
-        Ejercicio04_InsercionBST tree = new Ejercicio04_InsercionBST();
+        int[] valores = {50, 30, 70, 20, 40, 60, 80};
         
-        NodoRojinegro<Integer> n1 = tree.insertBST(50);
-        System.out.println("Insertado: " + n1);
+        // Paso 1: Inserción como BST (sin balance)
+        System.out.println("--- PASO 1: INSERCIÓN COMO BST (SIN BALANCE) ---\n");
+        ArbolBST<Integer> bst = new ArbolBST<>();
         
-        NodoRojinegro<Integer> n2 = tree.insertBST(30);
-        System.out.println("Insertado: " + n2);
+        for (int v : valores) {
+            bst.insert(v);
+        }
         
-        NodoRojinegro<Integer> n3 = tree.insertBST(70);
-        System.out.println("Insertado: " + n3);
+        System.out.println("Valores insertados: 50, 30, 70, 20, 40, 60, 80");
+        System.out.println("\nÁrbol BST (sin auto-balance):");
+        bst.display();
+        System.out.println("Altura BST: " + bst.getHeight());
+        System.out.println("Inorden: " + bst.inOrderTraversal());
         
-        System.out.println("\nÁrbol resultante (sin balance):");
-        tree.display(tree.root, "", true);
+        // Paso 2: Inserción en Rojinegro (con balance automático)
+        System.out.println("\n--- PASO 2: INSERCIÓN EN ROJINEGRO (CON BALANCE) ---\n");
+        ArbolRojinegro<Integer> rojinegro = new ArbolRojinegro<>();
+        
+        for (int v : valores) {
+            rojinegro.insert(v);
+        }
+        
+        System.out.println("Mismos valores insertados: 50, 30, 70, 20, 40, 60, 80");
+        System.out.println("\nÁrbol Rojinegro (auto-balanceado):");
+        rojinegro.display();
+        System.out.println("Altura Rojinegro: " + rojinegro.getHeight());
+        System.out.println("Inorden: " + rojinegro.inOrderTraversal());
+        
+        // Comparación
+        System.out.println("\n--- COMPARACIÓN ---");
+        System.out.println("BST mantiene orden pero puede desbalancearse");
+        System.out.println("Rojinegro mantiene orden Y garantiza balance O(log n)");
     }
 }
