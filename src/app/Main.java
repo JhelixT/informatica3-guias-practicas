@@ -43,6 +43,7 @@ public class Main {
         System.out.println("     • Ejercicios de Árboles AVL (9 Ejercicios Avanzados)");
         System.out.println("     • Ejercicios de Árboles Rojinegro (10 Ejercicios RB-Tree)");
         System.out.println("     • Montículo Binario (Binary Heap - Min/Max Heap)");
+        System.out.println("     • Ejercicios de Montículo Binario (10 Ejercicios Heap)");
         System.out.println();
         InputValidator.pausar();
     }
@@ -85,11 +86,14 @@ public class Main {
             MenuFormatter.mostrarOpcion(11, "Montículo Binario (Binary Heap)");
             System.out.println("     └─ Min-Heap y Max-Heap con cola de prioridad");
             
+            MenuFormatter.mostrarOpcion(12, "Ejercicios de Montículo Binario");
+            System.out.println("     └─ 10 ejercicios prácticos de heap");
+            
             MenuFormatter.mostrarSeparador();
-            MenuFormatter.mostrarOpcion(12, "Información del sistema");
+            MenuFormatter.mostrarOpcion(13, "Información del sistema");
             MenuFormatter.mostrarOpcion(0, "Salir");
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 12);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un módulo: ", 0, 13);
             
             switch (opcion) {
                 case 1 -> {
@@ -136,7 +140,11 @@ public class Main {
                     MenuFormatter.limpiarPantalla();
                     new MonticuloMenu().mostrarMenu();
                 }
-                case 12 -> mostrarInformacionSistema();
+                case 12 -> {
+                    MenuFormatter.limpiarPantalla();
+                    EjerciciosMonticuloMenu.mostrar();
+                }
+                case 13 -> mostrarInformacionSistema();
                 case 0 -> {
                     if (InputValidator.confirmar("¿Está seguro de que desea salir?")) {
                         return;
@@ -172,7 +180,8 @@ public class Main {
         System.out.println("  │   ├── ejercicios/          # Ejercicios prácticos");
         System.out.println("  │   │   ├── listas/          # Ejercicios de listas");
         System.out.println("  │   │   ├── arboles/         # Ejercicios de árboles AVL");
-        System.out.println("  │   │   └── rojinegro/       # Ejercicios de árboles RB");
+        System.out.println("  │   │   ├── rojinegro/       # Ejercicios de árboles RB");
+        System.out.println("  │   │   └── monticulo/       # Ejercicios de montículo binario");
         System.out.println("  │   └── utils/               # Utilidades y helpers");
         System.out.println("  ├── views/                   # Interfaces de usuario (Vista)");
         System.out.println("  └── Main.java               # Controlador principal");
