@@ -1,11 +1,11 @@
-nombre,dni
-Roberto Álvarez,44289653
-María González,38456789
-Carlos Rodríguez,42158963
-Ana Martínez,35789456
-Diego Fernández,41236547
-Lucía Sánchez,39874521
-Pablo Torres,44562318
-Sofía Díaz,37951236
-Martín López,43658741
-Valentina Castro,40123789
+dni,nombre
+44289653,Roberto Alvarez
+38456789,Maria Gonzalez
+42158963,Carlos Rodriguez
+35789456,Ana Martinez
+41236547,Diego Fernandez
+39874521,Lucia Sanchez
+44562318,Pablo Torres
+37951236,Sofia Diaz
+43658741,Martin Lopez
+40123789,Valentina Castro
