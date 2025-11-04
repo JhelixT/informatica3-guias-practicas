@@ -1,15 +1,15 @@
-package views;
+﻿package views;
 
 import core.estructuras.recursividad.*;
 import core.utils.*;
 import java.util.Arrays;
 
 /**
- * Menú interactivo para ejercicios de Recursividad
+ * Menu interactivo para ejercicios de Recursividad
  * 
  * Proporciona ejemplos demostrativos de diversos algoritmos recursivos
  * 
- * @author Informática 3
+ * @author Informatica 3
  * @version 1.0
  */
 public class RecursividadMenu {

@@ -1,4 +1,4 @@
-package views;
+﻿package views;
 
 import core.pizzeria.*;
 import core.utils.*;
@@ -174,7 +174,7 @@ public class PizzeriaMenu {
     }
     
     private void generarDatosPrueba() {
-        int cantidad = InputValidator.leerEnteroEnRango("¿Cuántos pedidos generar? ", 1, 1000);
+        int cantidad = InputValidator.leerEnteroEnRango("Cuantos pedidos generar? ", 1, 1000);
         
         for (int i = 0; i < cantidad; i++) {
             pizzeria.agregarPedido(

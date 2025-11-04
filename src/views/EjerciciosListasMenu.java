@@ -4,16 +4,16 @@ import core.ejercicios.listas.*;
 import core.utils.*;
 
 /**
- * Menú interactivo para los ejercicios de Listas Enlazadas Simples.
+ * Menu interactivo para los ejercicios de Listas Enlazadas Simples.
  * 
- * Proporciona acceso a 10 ejercicios prácticos que demuestran
- * las operaciones fundamentales de listas enlazadas:
- * - Creación y enlace de nodos
- * - Inserción (inicio, final, posición)
- * - Eliminación (por valor, duplicados)
- * - Búsqueda y conteo
- * - Inversión de lista
- * - Aplicación práctica (registro de alumnos)
+ * Proporciona acceso a 10 ejercicios practicos que demuestran
+ * diversas operaciones fundamentales:
+ * - Creacion y enlace de nodos
+ * - Insercion (inicio, final, posicion)
+ * - Eliminacion (por valor, duplicados)
+ * - Busqueda y conteo
+ * - Inversion de lista
+ * - Aplicacion practica (registro de alumnos)
  * 
  * @author JhelixT
  * @version 1.0
@@ -25,10 +25,10 @@ public class EjerciciosListasMenu {
             MenuFormatter.limpiarPantalla();
             MenuFormatter.mostrarTituloPrincipal("EJERCICIOS DE LISTAS ENLAZADAS SIMPLES");
             
-            System.out.println("📚 Colección de ejercicios prácticos para aprender listas enlazadas\n");
+            System.out.println(" Coleccion de ejercicios practicos para aprender listas enlazadas\n");
             
             MenuFormatter.mostrarSeparador();
-            System.out.println("EJERCICIOS BÁSICOS:");
+            System.out.println("EJERCICIOS BASICOS:");
             MenuFormatter.mostrarOpcion(1, "Ejercicio 1 - Crear un nodo");
             System.out.println("     └─ Crear y enlazar nodos manualmente");
             
@@ -54,18 +54,18 @@ public class EjerciciosListasMenu {
             
             MenuFormatter.mostrarSeparador();
             System.out.println("EJERCICIOS AVANZADOS:");
-            MenuFormatter.mostrarOpcion(8, "Ejercicio 8 - Insertar en posición");
-            System.out.println("     └─ Insertar en una posición específica");
+            MenuFormatter.mostrarOpcion(8, "Ejercicio 8 - Insertar en posicion");
+            System.out.println("     +-- Insertar en una posicion especifica");
             
             MenuFormatter.mostrarOpcion(9, "Ejercicio 9 - Eliminar duplicados");
             System.out.println("     └─ Eliminar valores repetidos");
             
             MenuFormatter.mostrarOpcion(10, "Ejercicio 10 - Registro de alumnos");
-            System.out.println("     └─ Aplicación práctica completa");
+            System.out.println("     +-- Aplicacion practica completa");
             
             MenuFormatter.mostrarSeparador();
             MenuFormatter.mostrarOpcion(11, "▶️  Ejecutar TODOS los ejercicios");
-            MenuFormatter.mostrarOpcion(0, "Volver al menú principal");
+            MenuFormatter.mostrarOpcion(0, "Volver al menu principal");
             
             int opcion = InputValidator.leerEnteroEnRango("\nSeleccione un ejercicio: ", 0, 11);
             
@@ -115,7 +115,7 @@ public class EjerciciosListasMenu {
         System.out.println("╚════════════════════════════════════════════════════════════╝\n");
         
         if (!InputValidator.confirmar("¿Desea ejecutar los 10 ejercicios?")) {
-            MenuFormatter.mostrarMensajeInfo("Operación cancelada");
+            MenuFormatter.mostrarMensajeInfo("Operacion cancelada");
             return;
         }
         
@@ -243,7 +243,7 @@ public class EjerciciosListasMenu {
         // Resumen final
         System.out.println("\n\n");
         System.out.println("╔════════════════════════════════════════════════════════════╗");
-        System.out.println("║              RESUMEN DE EJECUCIÓN                         ║");
+        System.out.println("║              RESUMEN DE EJECUCION                         ║");
         System.out.println("╠════════════════════════════════════════════════════════════╣");
         System.out.printf("║  Ejercicios completados: %-30d║%n", ejerciciosCompletados);
         System.out.printf("║  Ejercicios con error:   %-30d║%n", ejerciciosConError);

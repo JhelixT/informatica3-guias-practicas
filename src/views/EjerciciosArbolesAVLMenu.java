@@ -1,11 +1,11 @@
-package views;
+﻿package views;
 
 import core.ejercicios.arboles.*;
 import core.utils.InputValidator;
 import core.utils.MenuFormatter;
 
 /**
- * Menú de ejercicios de Árbol AVL
+ * Menu de ejercicios de Arbol AVL
  * 
  * @author JhelixT
  * @version 1.0
@@ -19,31 +19,31 @@ public class EjerciciosArbolesAVLMenu {
             MenuFormatter.limpiarPantalla();
             
             System.out.println("╔════════════════════════════════════════════════════════════════════╗");
-            System.out.println("║                  EJERCICIOS DE ÁRBOL AVL                           ║");
+            System.out.println("║                  EJERCICIOS DE Arbol AVL                           ║");
             System.out.println("╠════════════════════════════════════════════════════════════════════╣");
             System.out.println("║                                                                    ║");
-            System.out.println("║  📚 EJERCICIOS BÁSICOS                                             ║");
+            System.out.println("║  📚 EJERCICIOS BASICOS                                             ║");
             System.out.println("║  1. Inserciones y FE paso a paso (LL y RR)                         ║");
-            System.out.println("║  2. Inserciones con rotación doble (LR y RL)                       ║");
+            System.out.println("║  2. Inserciones con rotacion doble (LR y RL)                       ║");
             System.out.println("║  3. Secuencia ordenada y 'efecto peinar'                           ║");
-            System.out.println("║  4. Eliminación con rebalanceo                                     ║");
+            System.out.println("║  4. ELIMINACION con rebalanceo                                     ║");
             System.out.println("║                                                                    ║");
             System.out.println("║  🔬 EJERCICIOS INTERMEDIOS                                         ║");
             System.out.println("║  5. Comprobador de AVL                                             ║");
             System.out.println("║  6. Factor de equilibrio completo                                  ║");
-            System.out.println("║  7. Implementación: Rotación izquierda                             ║");
-            System.out.println("║  8. Implementación: Rotación doble LR                              ║");
+            System.out.println("║  7. Implementacion: rotacion izquierda                             ║");
+            System.out.println("║  8. Implementacion: rotacion doble LR                              ║");
             System.out.println("║                                                                    ║");
             System.out.println("║  🎯 EJERCICIOS AVANZADOS                                           ║");
             System.out.println("║  9. Secuencias estresantes y pruebas unitarias                     ║");
             System.out.println("║                                                                    ║");
             System.out.println("║  🚀 OPCIONES                                                       ║");
             System.out.println("║ 10. Ejecutar TODOS los ejercicios                                  ║");
-            System.out.println("║  0. Volver al menú principal                                       ║");
+            System.out.println("║  0. Volver al Menu principal                                       ║");
             System.out.println("║                                                                    ║");
             System.out.println("╚════════════════════════════════════════════════════════════════════╝");
             
-            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opción: ", 0, 10);
+            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opcion: ", 0, 10);
             
             MenuFormatter.limpiarPantalla();
             
@@ -90,11 +90,11 @@ public class EjerciciosArbolesAVLMenu {
                     
                 case 0:
                     continuar = false;
-                    System.out.println("\n👋 Volviendo al menú principal...\n");
+                    System.out.println("\n👋 Volviendo al Menu principal...\n");
                     break;
                     
                 default:
-                    System.out.println("\n❌ Opción no válida\n");
+                    System.out.println("\n❌ opcion no valida\n");
             }
             
             if (continuar && opcion != 0) {
@@ -112,13 +112,13 @@ public class EjerciciosArbolesAVLMenu {
         
         String[] nombresEjercicios = {
             "Inserciones y FE (LL y RR)",
-            "Rotación doble (LR y RL)",
+            "rotacion doble (LR y RL)",
             "Secuencia ordenada",
-            "Eliminación con rebalanceo",
+            "ELIMINACION con rebalanceo",
             "Comprobador de AVL",
             "Factor de equilibrio completo",
-            "Rotación izquierda",
-            "Rotación doble LR",
+            "rotacion izquierda",
+            "rotacion doble LR",
             "Pruebas unitarias"
         };
         

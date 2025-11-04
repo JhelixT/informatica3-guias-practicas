@@ -1,4 +1,4 @@
-package views;
+﻿package views;
 
 import core.estructuras.pilas.PilaArreglo;
 import core.estructuras.pilas.PilaEnlazada;
@@ -146,7 +146,7 @@ public class EstructurasLinealesMenu {
     
     private void eliminarListaPosicion() {
         if (lista.isEmpty()) {
-            MenuFormatter.mostrarMensajeAdvertencia("La lista está vacía");
+            MenuFormatter.mostrarMensajeAdvertencia("La lista esta vacía");
             return;
         }
         int posicion = InputValidator.leerEnteroEnRango("Ingrese la posicion a eliminar (0-" + 
@@ -172,7 +172,7 @@ public class EstructurasLinealesMenu {
     
     private void obtenerEnPosicion() {
         if (lista.isEmpty()) {
-            MenuFormatter.mostrarMensajeAdvertencia("La lista está vacía");
+            MenuFormatter.mostrarMensajeAdvertencia("La lista esta vacía");
             return;
         }
         int posicion = InputValidator.leerEnteroEnRango("Ingrese la posicion (0-" + 
@@ -199,7 +199,7 @@ public class EstructurasLinealesMenu {
     }
     
     private void llenarListaPrueba() {
-        int cantidad = InputValidator.leerEnteroEnRango("¿Cuántos elementos generar? ", 1, 20);
+        int cantidad = InputValidator.leerEnteroEnRango("Cuantos elementos generar? ", 1, 20);
         for (int i = 1; i <= cantidad; i++) {
             lista.insertLast((int)(Math.random() * 100) + 1);
         }
@@ -216,7 +216,7 @@ public class EstructurasLinealesMenu {
             MenuFormatter.mostrarOpcion(3, "Comparar implementaciones");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 3);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opcion: ", 0, 3);
             
             switch (opcion) {
                 case 1 -> menuPilaArreglo();
@@ -237,11 +237,11 @@ public class EstructurasLinealesMenu {
             MenuFormatter.mostrarOpcion(1, "Push (Apilar)");
             MenuFormatter.mostrarOpcion(2, "Pop (Desapilar)");
             MenuFormatter.mostrarOpcion(3, "Top (Ver tope)");
-            MenuFormatter.mostrarOpcion(4, "Ver información");
+            MenuFormatter.mostrarOpcion(4, "Ver informacion");
             MenuFormatter.mostrarOpcion(5, "Llenar con datos de prueba");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 5);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opcion: ", 0, 5);
             
             switch (opcion) {
                 case 1 -> pushPilaArreglo();
@@ -269,7 +269,7 @@ public class EstructurasLinealesMenu {
             MenuFormatter.mostrarOpcion(5, "Llenar con datos de prueba");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 5);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opcion: ", 0, 5);
             
             switch (opcion) {
                 case 1 -> pushPilaEnlazada();
@@ -314,16 +314,16 @@ public class EstructurasLinealesMenu {
     }
     
     private void infoPilaArreglo() {
-        System.out.println("\nINFORMACIÓN DE LA PILA CON ARREGLO:");
-        System.out.printf("  Tamaño actual: %d elementos%n", pilaArreglo.getSize());
+        System.out.println("\nINFORMACION DE LA PILA CON ARREGLO:");
+        System.out.printf("  Tamanio actual: %d elementos%n", pilaArreglo.getSize());
         System.out.printf("  Capacidad: %d elementos%n", pilaArreglo.getCapacity());
-        System.out.printf("  ¿Está vacía?: %s%n", pilaArreglo.isEmpty() ? "Sí" : "No");
-        System.out.printf("  ¿Está llena?: %s%n", pilaArreglo.isFull() ? "Sí" : "No");
+        System.out.printf("  Esta vacia?: %s%n", pilaArreglo.isEmpty() ? "Si" : "No");
+        System.out.printf("  Esta llena?: %s%n", pilaArreglo.isFull() ? "Si" : "No");
         System.out.printf("  Estado: %s%n", pilaArreglo);
     }
     
     private void llenarPilaArregloPrueba() {
-        int cantidad = InputValidator.leerEnteroEnRango("¿Cuántos elementos generar? ", 1, 20);
+        int cantidad = InputValidator.leerEnteroEnRango("Cuantos elementos generar? ", 1, 20);
         for (int i = 1; i <= cantidad; i++) {
             pilaArreglo.push((int)(Math.random() * 100) + 1);
         }
@@ -365,7 +365,7 @@ public class EstructurasLinealesMenu {
     }
     
     private void llenarPilaEnlazadaPrueba() {
-        int cantidad = InputValidator.leerEnteroEnRango("¿Cuántos elementos generar? ", 1, 20);
+        int cantidad = InputValidator.leerEnteroEnRango("Cuantos elementos generar? ", 1, 20);
         for (int i = 1; i <= cantidad; i++) {
             pilaEnlazada.push((int)(Math.random() * 100) + 1);
         }
@@ -373,19 +373,19 @@ public class EstructurasLinealesMenu {
     }
     
     private void compararPilas() {
-        MenuFormatter.mostrarTituloSecundario("COMPARACIÓN DE IMPLEMENTACIONES DE PILAS");
+        MenuFormatter.mostrarTituloSecundario("COMPARACION DE IMPLEMENTACIONES DE PILAS");
         
         System.out.println("\n╔════════════════════════════════════════════════════════════════╗");
         System.out.println("║            PILA CON ARREGLO vs PILA ENLAZADA                 ║");
         System.out.println("╠════════════════════════════════════════════════════════════════╣");
-        System.out.println("║ Característica    │  Pila Arreglo    │  Pila Enlazada       ║");
+        System.out.println("║ Caracteristica    │  Pila Arreglo    │  Pila Enlazada       ║");
         System.out.println("╠════════════════════════════════════════════════════════════════╣");
         System.out.println("║ Capacidad         │  Fija/Dinámica   │  Ilimitada           ║");
         System.out.println("║ Push              │  O(1)            │  O(1)                ║");
         System.out.println("║ Pop               │  O(1)            │  O(1)                ║");
-        System.out.println("║ Memoria           │  Más eficiente   │  Overhead por nodos  ║");
-        System.out.println("║ Redimensión       │  Costosa O(n)    │  No necesaria        ║");
-        System.out.println("║ Implementación    │  Más simple      │  Requiere Nodo       ║");
+        System.out.println("║ Memoria           │  Mas eficiente   │  Overhead por nodos  ║");
+        System.out.println("║ Redimension       │  Costosa O(n)    │  No necesaria        ║");
+        System.out.println("║ Implementacion    │  Mas simple      │  Requiere Nodo       ║");
         System.out.println("╚════════════════════════════════════════════════════════════════╝");
         
         System.out.println("\nESTADO ACTUAL:");
@@ -395,17 +395,17 @@ public class EstructurasLinealesMenu {
         InputValidator.pausar();
     }
     
-    // ==================== MENÚ DE COLAS ====================
+    // ==================== MENU DE COLAS ====================
     
     private void menuColas() {
         while (true) {
-            MenuFormatter.mostrarTituloSecundario("GESTIÓN DE COLAS");
+            MenuFormatter.mostrarTituloSecundario("GESTION DE COLAS");
             MenuFormatter.mostrarOpcion(1, "Cola Circular (Arreglo)");
             MenuFormatter.mostrarOpcion(2, "Cola Enlazada");
             MenuFormatter.mostrarOpcion(3, "Comparar implementaciones");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 3);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opcion: ", 0, 3);
             
             switch (opcion) {
                 case 1 -> menuColaCircular();
@@ -426,11 +426,11 @@ public class EstructurasLinealesMenu {
             MenuFormatter.mostrarOpcion(1, "Enqueue (Encolar)");
             MenuFormatter.mostrarOpcion(2, "Dequeue (Desencolar)");
             MenuFormatter.mostrarOpcion(3, "Front (Ver frente)");
-            MenuFormatter.mostrarOpcion(4, "Ver información");
+            MenuFormatter.mostrarOpcion(4, "Ver informacion");
             MenuFormatter.mostrarOpcion(5, "Llenar con datos de prueba");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 5);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opcion: ", 0, 5);
             
             switch (opcion) {
                 case 1 -> enqueueColaCircular();
@@ -459,7 +459,7 @@ public class EstructurasLinealesMenu {
             MenuFormatter.mostrarOpcion(6, "Llenar con datos de prueba");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 6);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opcion: ", 0, 6);
             
             switch (opcion) {
                 case 1 -> enqueueColaEnlazada();
@@ -501,16 +501,16 @@ public class EstructurasLinealesMenu {
     }
     
     private void infoColaCircular() {
-        System.out.println("\nINFORMACIÓN DE LA COLA CIRCULAR:");
-        System.out.printf("  Tamaño actual: %d elementos%n", colaCircular.getSize());
+        System.out.println("\nINFORMACION DE LA COLA CIRCULAR:");
+        System.out.printf("  Tamanio actual: %d elementos%n", colaCircular.getSize());
         System.out.printf("  Capacidad: %d elementos%n", colaCircular.getCapacity());
-        System.out.printf("  ¿Está vacía?: %s%n", colaCircular.isEmpty() ? "Sí" : "No");
-        System.out.printf("  ¿Está llena?: %s%n", colaCircular.isFull() ? "Sí" : "No");
+        System.out.printf("  Esta vacia?: %s%n", colaCircular.isEmpty() ? "Si" : "No");
+        System.out.printf("  Esta llena?: %s%n", colaCircular.isFull() ? "Si" : "No");
         System.out.printf("  Estado: %s%n", colaCircular);
     }
     
     private void llenarColaCircularPrueba() {
-        int cantidad = InputValidator.leerEnteroEnRango("¿Cuántos elementos generar? ", 1, 20);
+        int cantidad = InputValidator.leerEnteroEnRango("Cuantos elementos generar? ", 1, 20);
         for (int i = 1; i <= cantidad; i++) {
             colaCircular.enqueue((int)(Math.random() * 100) + 1);
         }
@@ -561,7 +561,7 @@ public class EstructurasLinealesMenu {
     }
     
     private void llenarColaEnlazadaPrueba() {
-        int cantidad = InputValidator.leerEnteroEnRango("¿Cuántos elementos generar? ", 1, 20);
+        int cantidad = InputValidator.leerEnteroEnRango("Cuantos elementos generar? ", 1, 20);
         for (int i = 1; i <= cantidad; i++) {
             colaEnlazada.enqueue((int)(Math.random() * 100) + 1);
         }
@@ -569,19 +569,19 @@ public class EstructurasLinealesMenu {
     }
     
     private void compararColas() {
-        MenuFormatter.mostrarTituloSecundario("COMPARACIÓN DE IMPLEMENTACIONES DE COLAS");
+        MenuFormatter.mostrarTituloSecundario("COMPARACION DE IMPLEMENTACIONES DE COLAS");
         
         System.out.println("\n╔════════════════════════════════════════════════════════════════╗");
         System.out.println("║           COLA CIRCULAR vs COLA ENLAZADA                      ║");
         System.out.println("╠════════════════════════════════════════════════════════════════╣");
-        System.out.println("║ Característica    │  Cola Circular   │  Cola Enlazada       ║");
+        System.out.println("║ Caracteristica    │  Cola Circular   │  Cola Enlazada       ║");
         System.out.println("╠════════════════════════════════════════════════════════════════╣");
-        System.out.println("║ Capacidad         │  Fija/Dinámica   │  Ilimitada           ║");
+        System.out.println("║ Capacidad         │  Fija/Dinamica   │  Ilimitada           ║");
         System.out.println("║ Enqueue           │  O(1)            │  O(1)                ║");
         System.out.println("║ Dequeue           │  O(1)            │  O(1)                ║");
-        System.out.println("║ Memoria           │  Más eficiente   │  Overhead por nodos  ║");
-        System.out.println("║ Circularidad      │  Sí (módulo)     │  No necesaria        ║");
-        System.out.println("║ Redimensión       │  Costosa O(n)    │  No necesaria        ║");
+        System.out.println("║ Memoria           │  Mas eficiente   │  Overhead por nodos  ║");
+        System.out.println("║ Circularidad      │  Si (modulo)     │  No necesaria        ║");
+        System.out.println("║ Redimension       │  Costosa O(n)    │  No necesaria        ║");
         System.out.println("╚════════════════════════════════════════════════════════════════╝");
         
         System.out.println("\nESTADO ACTUAL:");

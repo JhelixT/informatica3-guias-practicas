@@ -1,11 +1,11 @@
-package views;
+﻿package views;
 
 import core.ejercicios.monticulo.*;
 import core.utils.InputValidator;
 import core.utils.MenuFormatter;
 
 /**
- * Menú de ejercicios de Montículo Binario
+ * Menu de ejercicios de Montículo Binario
  * 
  * @author JhelixT
  * @version 1.0
@@ -22,11 +22,11 @@ public class EjerciciosMonticuloMenu {
             System.out.println("║           EJERCICIOS DE MONTÍCULO BINARIO                          ║");
             System.out.println("╠════════════════════════════════════════════════════════════════════╣");
             System.out.println("║                                                                    ║");
-            System.out.println("║  📚 EJERCICIOS BÁSICOS                                             ║");
+            System.out.println("║  📚 EJERCICIOS BASICOS                                             ║");
             System.out.println("║   1. Crear estructura básica de MinHeap                            ║");
             System.out.println("║   2. Implementar percolateUp                                       ║");
             System.out.println("║   3. Implementar percolateDown                                     ║");
-            System.out.println("║   4. Mostrar el heap en forma de árbol                             ║");
+            System.out.println("║   4. Mostrar el heap en forma de Arbol                             ║");
             System.out.println("║                                                                    ║");
             System.out.println("║  🔬 EJERCICIOS INTERMEDIOS                                         ║");
             System.out.println("║   5. Construcción desde un arreglo (heapify)                       ║");
@@ -40,11 +40,11 @@ public class EjerciciosMonticuloMenu {
             System.out.println("║                                                                    ║");
             System.out.println("║  🚀 OPCIONES                                                       ║");
             System.out.println("║  11. Ejecutar TODOS los ejercicios                                 ║");
-            System.out.println("║   0. Volver al menú principal                                      ║");
+            System.out.println("║   0. Volver al Menu principal                                      ║");
             System.out.println("║                                                                    ║");
             System.out.println("╚════════════════════════════════════════════════════════════════════╝");
             
-            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opción: ", 0, 11);
+            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opcion: ", 0, 11);
             
             MenuFormatter.limpiarPantalla();
             
@@ -95,11 +95,11 @@ public class EjerciciosMonticuloMenu {
                     
                 case 0:
                     continuar = false;
-                    System.out.println("\n👋 Volviendo al menú principal...\n");
+                    System.out.println("\n👋 Volviendo al Menu principal...\n");
                     break;
                     
                 default:
-                    System.out.println("\n❌ Opción no válida\n");
+                    System.out.println("\n❌ opcion no válida\n");
             }
             
             if (continuar && opcion != 0) {
@@ -117,7 +117,7 @@ public class EjerciciosMonticuloMenu {
             "Estructura básica de MinHeap",
             "Percolate Up",
             "Percolate Down",
-            "Mostrar árbol",
+            "Mostrar Arbol",
             "Heapify",
             "Heapsort",
             "MaxHeap",
@@ -142,7 +142,7 @@ public class EjerciciosMonticuloMenu {
                 case 8: Ejercicio08_ColaPacientes.ejecutar(); break;
                 case 9: Ejercicio09_SeguimientoEstado.ejecutar(); break;
                 case 10: 
-                    System.out.println("\nNota: El ejercicio 10 es interactivo, ejecutar manualmente desde el menú");
+                    System.out.println("\nNota: El ejercicio 10 es interactivo, ejecutar manualmente desde el Menu");
                     break;
             }
             

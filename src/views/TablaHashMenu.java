@@ -1,4 +1,4 @@
-package views;
+﻿package views;
 
 import core.estructuras.hash.TablaHash;
 import core.utils.InputValidator;
@@ -104,7 +104,7 @@ public class TablaHashMenu {
         System.out.println("=== BUSCAR ELEMENTO ===\n");
         
         if (tabla.isEmpty()) {
-            System.out.println("⚠️ La tabla está vacía");
+            System.out.println("⚠️ La tabla esta vacia");
             return;
         }
         
@@ -122,7 +122,7 @@ public class TablaHashMenu {
         System.out.println("=== ELIMINAR ELEMENTO ===\n");
         
         if (tabla.isEmpty()) {
-            System.out.println("⚠️ La tabla está vacía");
+            System.out.println("⚠️ La tabla esta vacia");
             return;
         }
         
@@ -155,7 +155,7 @@ public class TablaHashMenu {
         System.out.println("=== TODAS LAS CLAVES ===\n");
         
         if (tabla.isEmpty()) {
-            System.out.println("⚠️ La tabla está vacía");
+            System.out.println("⚠️ La tabla esta vacia");
             return;
         }
         
@@ -170,7 +170,7 @@ public class TablaHashMenu {
         System.out.println("=== TODOS LOS VALORES ===\n");
         
         if (tabla.isEmpty()) {
-            System.out.println("⚠️ La tabla está vacía");
+            System.out.println("⚠️ La tabla esta vacia");
             return;
         }
         
@@ -185,7 +185,7 @@ public class TablaHashMenu {
         System.out.println("=== TODAS LAS ENTRADAS ===\n");
         
         if (tabla.isEmpty()) {
-            System.out.println("⚠️ La tabla está vacía");
+            System.out.println("⚠️ La tabla esta vacia");
             return;
         }
         
@@ -202,10 +202,10 @@ public class TablaHashMenu {
     }
     
     private void mostrarEstadisticas() {
-        System.out.println("=== ESTADÍSTICAS ===\n");
+        System.out.println("=== estadisticas ===\n");
         
-        System.out.println("📊 Métricas generales:");
-        System.out.println("   • Tamaño: " + tabla.size());
+        System.out.println("📊 Metricas generales:");
+        System.out.println("   • Tamanio: " + tabla.size());
         System.out.println("   • Capacidad: " + tabla.getCapacity());
         System.out.println("   • Factor de carga: " + String.format("%.2f", tabla.getLoadFactor()));
         System.out.println("   * Vacia: " + (tabla.isEmpty() ? "Si" : "No"));
@@ -214,7 +214,7 @@ public class TablaHashMenu {
             int[] stats = tabla.getCollisionStats();
             System.out.println("\n🔍 Distribución:");
             System.out.println("   • Buckets usados: " + stats[0] + " / " + tabla.getCapacity());
-            System.out.println("   • Buckets vacíos: " + (tabla.getCapacity() - stats[0]));
+            System.out.println("   • Buckets vacios: " + (tabla.getCapacity() - stats[0]));
             System.out.println("   • Uso: " + String.format("%.1f", stats[0] * 100.0 / tabla.getCapacity()) + "%");
         }
     }
@@ -223,7 +223,7 @@ public class TablaHashMenu {
         System.out.println("=== ANALISIS DE COLISIONES ===\n");
         
         if (tabla.isEmpty()) {
-            System.out.println("⚠️ La tabla está vacía");
+            System.out.println("⚠️ La tabla esta vacia");
             return;
         }
         
@@ -295,9 +295,9 @@ public class TablaHashMenu {
     }
     
     private void demostrarOperaciones() {
-        System.out.println("=== DEMOSTRACIÓN COMPLETA ===\n");
+        System.out.println("=== Demostracion COMPLETA ===\n");
         
-        System.out.println("Se creará una tabla hash y se demostrarán sus operaciones.");
+        System.out.println("Se creara una tabla hash y se demostrarán sus operaciones.");
         System.out.println("Presione Enter para continuar...");
         InputValidator.pausar();
         

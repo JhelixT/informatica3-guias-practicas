@@ -1,11 +1,11 @@
-package views;
+﻿package views;
 
 import core.ejercicios.rojinegro.*;
 import core.utils.InputValidator;
 import core.utils.MenuFormatter;
 
 /**
- * Menú de ejercicios de Árbol Rojinegro
+ * Menu de ejercicios de Arbol Rojinegro
  * 
  * @author JhelixT
  * @version 1.0
@@ -19,19 +19,19 @@ public class EjerciciosRojinegroMenu {
             MenuFormatter.limpiarPantalla();
             
             System.out.println("╔════════════════════════════════════════════════════════════════════╗");
-            System.out.println("║              EJERCICIOS DE ÁRBOL ROJINEGRO                         ║");
+            System.out.println("║              EJERCICIOS DE Arbol ROJINEGRO                         ║");
             System.out.println("╠════════════════════════════════════════════════════════════════════╣");
             System.out.println("║                                                                    ║");
-            System.out.println("║  📚 EJERCICIOS BÁSICOS                                             ║");
+            System.out.println("║  📚 EJERCICIOS BASICOS                                             ║");
             System.out.println("║  1. Nodo y NIL sentinel                                            ║");
-            System.out.println("║  2. Rotación izquierda                                             ║");
-            System.out.println("║  3. Rotación derecha                                               ║");
-            System.out.println("║  4. Inserción como ABB (sin balance)                               ║");
+            System.out.println("║  2. rotacion izquierda                                             ║");
+            System.out.println("║  3. rotacion derecha                                               ║");
+            System.out.println("║  4. INSERCION como ABB (sin balance)                               ║");
             System.out.println("║                                                                    ║");
             System.out.println("║  🔬 EJERCICIOS INTERMEDIOS                                         ║");
             System.out.println("║  5. Clasificador de caso para fixInsert                            ║");
             System.out.println("║  6. Recoloreo por tío rojo                                         ║");
-            System.out.println("║  7. Rotación simple vs doble                                       ║");
+            System.out.println("║  7. rotacion simple vs doble                                       ║");
             System.out.println("║  8. Successor y predecessor                                        ║");
             System.out.println("║                                                                    ║");
             System.out.println("║  🎯 EJERCICIOS AVANZADOS                                           ║");
@@ -40,11 +40,11 @@ public class EjerciciosRojinegroMenu {
             System.out.println("║                                                                    ║");
             System.out.println("║  🚀 OPCIONES                                                       ║");
             System.out.println("║ 11. Ejecutar TODOS los ejercicios                                  ║");
-            System.out.println("║  0. Volver al menú principal                                       ║");
+            System.out.println("║  0. Volver al Menu principal                                       ║");
             System.out.println("║                                                                    ║");
             System.out.println("╚════════════════════════════════════════════════════════════════════╝");
             
-            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opción: ", 0, 11);
+            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opcion: ", 0, 11);
             
             MenuFormatter.limpiarPantalla();
             
@@ -95,11 +95,11 @@ public class EjerciciosRojinegroMenu {
                     
                 case 0:
                     continuar = false;
-                    System.out.println("\n👋 Volviendo al menú principal...\n");
+                    System.out.println("\n👋 Volviendo al Menu principal...\n");
                     break;
                     
                 default:
-                    System.out.println("\n❌ Opción no válida\n");
+                    System.out.println("\n❌ opcion no válida\n");
             }
             
             if (continuar && opcion != 0) {
@@ -115,12 +115,12 @@ public class EjerciciosRojinegroMenu {
         
         String[] nombresEjercicios = {
             "Nodo y NIL sentinel",
-            "Rotación izquierda",
-            "Rotación derecha",
-            "Inserción como ABB",
+            "rotacion izquierda",
+            "rotacion derecha",
+            "INSERCION como ABB",
             "Clasificador de caso",
             "Recoloreo por tío rojo",
-            "Rotación simple vs doble",
+            "rotacion simple vs doble",
             "Successor y predecessor",
             "Consulta por rango",
             "Verificadores de invariantes"

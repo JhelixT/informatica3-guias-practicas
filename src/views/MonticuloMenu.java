@@ -1,4 +1,4 @@
-package views;
+﻿package views;
 
 import core.estructuras.monticulo.MonticuloBinario;
 import core.estructuras.monticulo.MonticuloBinario.TipoMonticulo;
@@ -6,7 +6,7 @@ import core.utils.InputValidator;
 import core.utils.MenuFormatter;
 
 /**
- * Menú interactivo para Montículo Binario (Binary Heap).
+ * Menu interactivo para Montículo Binario (Binary Heap).
  * 
  * @author JhelixT
  * @version 1.0
@@ -32,16 +32,16 @@ public class MonticuloMenu {
             System.out.println("║  ESTADO ACTUAL:                                                    ║");
             System.out.println("║  Tipo: " + String.format("%-60s", monticulo.getTipo()) + " ║");
             System.out.println("║  Tamaño: " + String.format("%-58d", monticulo.size()) + " ║");
-            System.out.println("║  Raíz: " + String.format("%-60s", 
-                monticulo.isEmpty() ? "vacío" : monticulo.peek()) + " ║");
+            System.out.println("║  Raiz: " + String.format("%-60s", 
+                monticulo.isEmpty() ? "vacio" : monticulo.peek()) + " ║");
             System.out.println("║                                                                    ║");
             System.out.println("╠════════════════════════════════════════════════════════════════════╣");
             System.out.println("║                                                                    ║");
-            System.out.println("║  📚 OPERACIONES BÁSICAS                                            ║");
+            System.out.println("║  📚 OPERACIONES BASICAS                                            ║");
             System.out.println("║   1. Insertar elemento (add)                                       ║");
-            System.out.println("║   2. Eliminar raíz (poll)                                          ║");
-            System.out.println("║   3. Consultar raíz (peek)                                         ║");
-            System.out.println("║   4. Verificar si está vacío                                       ║");
+            System.out.println("║   2. Eliminar Raiz (poll)                                          ║");
+            System.out.println("║   3. Consultar Raiz (peek)                                         ║");
+            System.out.println("║   4. Verificar si esta vacio                                       ║");
             System.out.println("║   5. Limpiar montículo                                             ║");
             System.out.println("║                                                                    ║");
             System.out.println("║  🔧 OPERACIONES AVANZADAS                                          ║");
@@ -49,19 +49,19 @@ public class MonticuloMenu {
             System.out.println("║   7. Cambiar tipo (Min-Heap ↔ Max-Heap)                           ║");
             System.out.println("║   8. Verificar validez del heap                                    ║");
             System.out.println("║                                                                    ║");
-            System.out.println("║  📊 VISUALIZACIÓN                                                  ║");
+            System.out.println("║  📊 Visualizacion                                                  ║");
             System.out.println("║   9. Mostrar estructura completa                                   ║");
             System.out.println("║  10. Mostrar elementos como arreglo                                ║");
             System.out.println("║                                                                    ║");
             System.out.println("║  🎯 DEMOS                                                          ║");
-            System.out.println("║  11. Demo: Inserción paso a paso                                   ║");
+            System.out.println("║  11. Demo: INSERCION paso a paso                                   ║");
             System.out.println("║  12. Demo: Cola de prioridad                                       ║");
             System.out.println("║                                                                    ║");
-            System.out.println("║   0. Volver al menú principal                                      ║");
+            System.out.println("║   0. Volver al Menu principal                                      ║");
             System.out.println("║                                                                    ║");
             System.out.println("╚════════════════════════════════════════════════════════════════════╝");
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 12);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opcion: ", 0, 12);
             
             MenuFormatter.limpiarPantalla();
             
@@ -80,9 +80,9 @@ public class MonticuloMenu {
                 case 12 -> demoColaPrioridad();
                 case 0 -> {
                     continuar = false;
-                    System.out.println("\n👋 Volviendo al menú principal...\n");
+                    System.out.println("\n👋 Volviendo al Menu principal...\n");
                 }
-                default -> System.out.println("\n❌ Opción no válida\n");
+                default -> System.out.println("\n❌ opcion no válida\n");
             }
             
             if (continuar && opcion != 0) {
@@ -101,16 +101,16 @@ public class MonticuloMenu {
         
         monticulo.add(valor);
         
-        System.out.println("\nDespués de insertar " + valor + ":");
+        System.out.println("\ndespues de insertar " + valor + ":");
         System.out.println(monticulo);
         System.out.println("\n✅ Elemento insertado correctamente");
     }
     
     private void eliminarRaiz() {
-        System.out.println("═══ ELIMINAR RAÍZ ═══\n");
+        System.out.println("═══ ELIMINAR Raiz ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("❌ El montículo está vacío");
+            System.out.println("❌ El montículo esta vacio");
             return;
         }
         
@@ -120,28 +120,28 @@ public class MonticuloMenu {
         Integer eliminado = monticulo.poll();
         
         System.out.println("\nElemento eliminado: " + eliminado);
-        System.out.println("\nDespués de eliminar:");
+        System.out.println("\ndespues de eliminar:");
         System.out.println(monticulo);
     }
     
     private void consultarRaiz() {
-        System.out.println("═══ CONSULTAR RAÍZ ═══\n");
+        System.out.println("═══ CONSULTAR Raiz ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("❌ El montículo está vacío");
+            System.out.println("❌ El montículo esta vacio");
         } else {
-            System.out.println("Raíz actual: " + monticulo.peek());
-            System.out.println("(" + (monticulo.getTipo() == TipoMonticulo.MIN_HEAP ? "mínimo" : "máximo") + ")");
+            System.out.println("Raiz actual: " + monticulo.peek());
+            System.out.println("(" + (monticulo.getTipo() == TipoMonticulo.MIN_HEAP ? "minimo" : "maximo") + ")");
         }
     }
     
     private void verificarVacio() {
-        System.out.println("═══ VERIFICAR VACÍO ═══\n");
+        System.out.println("═══ VERIFICAR vacio ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("✅ El montículo está vacío");
+            System.out.println("✅ El montículo esta vacio");
         } else {
-            System.out.println("❌ El montículo NO está vacío");
+            System.out.println("❌ El montículo NO esta vacio");
             System.out.println("Tamaño actual: " + monticulo.size());
         }
     }
@@ -150,11 +150,11 @@ public class MonticuloMenu {
         System.out.println("═══ LIMPIAR MONTÍCULO ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("El montículo ya está vacío");
+            System.out.println("El montículo ya esta vacio");
         } else {
             System.out.println("Tamaño antes: " + monticulo.size());
             monticulo.clear();
-            System.out.println("Tamaño después: " + monticulo.size());
+            System.out.println("Tamaño despues: " + monticulo.size());
             System.out.println("\n✅ Montículo limpiado");
         }
     }
@@ -187,7 +187,7 @@ public class MonticuloMenu {
             System.out.println("\n✅ Heap construido en O(n)");
             
         } catch (NumberFormatException e) {
-            System.out.println("\n❌ Error: Ingrese solo números válidos");
+            System.out.println("\n❌ Error: Ingrese solo números validos");
         }
     }
     
@@ -223,11 +223,11 @@ public class MonticuloMenu {
         System.out.println("Tamaño: " + monticulo.size());
         
         if (valido) {
-            System.out.println("\n✅ El heap es válido");
+            System.out.println("\n✅ El heap es valido");
             System.out.println("Cumple con la propiedad de " + 
-                (monticulo.getTipo() == TipoMonticulo.MIN_HEAP ? "mínimo" : "máximo"));
+                (monticulo.getTipo() == TipoMonticulo.MIN_HEAP ? "minimo" : "maximo"));
         } else {
-            System.out.println("\n❌ El heap NO es válido");
+            System.out.println("\n❌ El heap NO es valido");
         }
     }
     
@@ -235,7 +235,7 @@ public class MonticuloMenu {
         System.out.println("═══ ESTRUCTURA COMPLETA ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("El montículo está vacío");
+            System.out.println("El montículo esta vacio");
         } else {
             monticulo.display();
             System.out.println("\nAltura: " + monticulo.getHeight());
@@ -246,7 +246,7 @@ public class MonticuloMenu {
         System.out.println("═══ REPRESENTACIÓN COMO ARREGLO ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("El montículo está vacío");
+            System.out.println("El montículo esta vacio");
         } else {
             System.out.println("Elementos (índices desde 1):");
             var elementos = monticulo.getElements();
@@ -273,7 +273,7 @@ public class MonticuloMenu {
     }
     
     private void demoInsercionPasoAPaso() {
-        System.out.println("═══ DEMO: INSERCIÓN PASO A PASO ═══\n");
+        System.out.println("═══ DEMO: INSERCION PASO A PASO ═══\n");
         System.out.println("Insertaremos los valores: 20, 5, 15, 3, 11\n");
         
         monticulo = new MonticuloBinario<>(TipoMonticulo.MIN_HEAP);
@@ -288,7 +288,7 @@ public class MonticuloMenu {
         }
         
         System.out.println("\n✅ Demo completada");
-        System.out.println("El mínimo siempre está en la raíz: " + monticulo.peek());
+        System.out.println("El minimo siempre esta en la Raiz: " + monticulo.peek());
     }
     
     private void demoColaPrioridad() {
