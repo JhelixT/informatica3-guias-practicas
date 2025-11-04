@@ -10,9 +10,9 @@
 3. **Buscar Hueco** - Encontrar primer hueco disponible (`BuscadorHueco.java`)
 
 ### **Integrante 2: Ejercicios 4, 5, 6, 7**
-4. **Cola Circular** - Sala de espera (`SalaEspera.java`)
-5. **Heap Recordatorios** - Planificador con montículo (`Planner.java`)
-6. **Hash Pacientes** - Índice rápido de pacientes (`IndicePacientes.java`)
+4. **Cola Circular** - Sala de espera (`SalaEspera.java`) ✅
+5. **Heap Recordatorios** - Planificador con montículo (`Planner.java` + `PlanificadorRecordatorios.java` + `Recordatorio.java`) ✅
+6. **Hash Pacientes** - Índice rápido de pacientes (`MapaPacientes.java` + `IndicePacientes.java`) ✅
 7. **Merge Agendas** - Consolidar agendas (`ConsolidadorAgendas.java`)
 
 ### **Integrante 3: Ejercicios 8, 9, 10**
@@ -73,7 +73,32 @@ git push origin int1-ejercicios
 
 ---
 
-## 📝 Notas Importantes
+## � Función Hash para DNI (Ejercicio 6)
+
+El `IndicePacientes` utiliza la función hash nativa de Java para Strings:
+
+```java
+hash(s) = s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
+```
+
+**¿Por qué esta función es buena para DNIs?**
+
+1. **Número primo (31)**: Minimiza colisiones por propiedades matemáticas
+2. **Distribución uniforme**: DNIs similares ("12345678" vs "12345679") producen hashes muy diferentes
+3. **Optimización del compilador**: `31*i` se optimiza a `(i<<5)-i` (shift + resta)
+4. **Avalancha**: Pequeños cambios en entrada → grandes cambios en salida
+5. **Probado y confiable**: Usado por Java estándar desde hace décadas
+
+**Ejemplo de distribución:**
+- DNI "20123456" → hash diferente a "20123457" (consecutivos no colisionan)
+- DNI "12345678" → hash diferente a "87654321" (palíndromos no colisionan)
+- Colisiones mínimas en conjuntos típicos de DNIs argentinos (7-8 dígitos)
+
+**Complejidad:** O(n) donde n = longitud del String, pero para DNIs (8 caracteres) es prácticamente O(1).
+
+---
+
+## �📝 Notas Importantes
 
 - **Archivos compartidos**: `Paciente`, `Medico`, `Turno`, `CargadorCSV` → NO modificar sin coordinar
 - **CargadorCSV**: Lo crea primero quien termine, los demás lo usan ⚠️
