@@ -13,8 +13,6 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Sistema que carga y mantiene pacientes, médicos y turnos usando estructuras del repositorio.
@@ -54,9 +52,11 @@ public class CargadorCSV {
 		java.util.List<String> lines = Files.readAllLines(p);
 		if (lines.size() <= 1) return; // sin datos
 		
-		Map<String,Integer> header = parseHeaderLine(lines.get(0));
-		int idxDni = header.getOrDefault("dni", 0);
-		int idxNombre = header.getOrDefault("nombre", 1);
+		TablaHash<String, Integer> header = parseHeaderLine(lines.get(0));
+		Integer dniIdx = header.get("dni");
+		Integer nombreIdx = header.get("nombre");
+		int idxDni = (dniIdx != null) ? dniIdx : 0;
+		int idxNombre = (nombreIdx != null) ? nombreIdx : 1;
 
 		pacientes.clear();
 		pacientesPorDni.clear();
@@ -90,10 +90,13 @@ public class CargadorCSV {
 		java.util.List<String> lines = Files.readAllLines(p);
 		if (lines.size() <= 1) return;
 		
-		Map<String,Integer> header = parseHeaderLine(lines.get(0));
-		int idxMat = header.getOrDefault("matricula", 0);
-		int idxNombre = header.getOrDefault("nombre", 1);
-		int idxEsp = header.getOrDefault("especialidad", 2);
+		TablaHash<String, Integer> header = parseHeaderLine(lines.get(0));
+		Integer matIdx = header.get("matricula");
+		Integer nombreIdx = header.get("nombre");
+		Integer espIdx = header.get("especialidad");
+		int idxMat = (matIdx != null) ? matIdx : 0;
+		int idxNombre = (nombreIdx != null) ? nombreIdx : 1;
+		int idxEsp = (espIdx != null) ? espIdx : 2;
 
 		medicos.clear();
 		medicosPorMatricula.clear();
@@ -129,13 +132,19 @@ public class CargadorCSV {
 		java.util.List<String> lines = Files.readAllLines(p);
 		if (lines.size() <= 1) return;
 		
-		Map<String,Integer> header = parseHeaderLine(lines.get(0));
-		int idxId = header.getOrDefault("id", 0);
-		int idxDni = header.getOrDefault("dnipaciente", 1);
-		int idxMat = header.getOrDefault("matriculamedico", 2);
-		int idxFecha = header.getOrDefault("fechahora", 3);
-		int idxDur = header.getOrDefault("duracionmin", 4);
-		int idxMot = header.getOrDefault("motivo", 5);
+		TablaHash<String, Integer> header = parseHeaderLine(lines.get(0));
+		Integer idIdx = header.get("id");
+		Integer dniIdx = header.get("dnipaciente");
+		Integer matIdx = header.get("matriculamedico");
+		Integer fechaIdx = header.get("fechahora");
+		Integer durIdx = header.get("duracionmin");
+		Integer motIdx = header.get("motivo");
+		int idxId = (idIdx != null) ? idIdx : 0;
+		int idxDni = (dniIdx != null) ? dniIdx : 1;
+		int idxMat = (matIdx != null) ? matIdx : 2;
+		int idxFecha = (fechaIdx != null) ? fechaIdx : 3;
+		int idxDur = (durIdx != null) ? durIdx : 4;
+		int idxMot = (motIdx != null) ? motIdx : 5;
 
 		turnos.clear();
 		
@@ -272,10 +281,10 @@ public class CargadorCSV {
 	}
 
 	/**
-	 * Parsea la línea de cabecera y devuelve un mapa nombre->índice (minúsculas, sin espacios).
+	 * Parsea la línea de cabecera y devuelve una tabla hash nombre->índice (minúsculas, sin espacios).
 	 */
-	private Map<String,Integer> parseHeaderLine(String headerLine) {
-		Map<String,Integer> map = new HashMap<>();
+	private TablaHash<String, Integer> parseHeaderLine(String headerLine) {
+		TablaHash<String, Integer> map = new TablaHash<>();
 		if (headerLine == null) return map;
 		
 		String[] cols = headerLine.split(",", -1);

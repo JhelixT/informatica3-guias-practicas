@@ -2,9 +2,9 @@ package core.integrador.agenda;
 
 import core.integrador.modelo.Turno;
 import core.estructuras.arboles.ArbolAVL;
+import core.estructuras.listas.ListaEnlazada;
+import core.estructuras.nodos.Nodo;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -53,12 +53,15 @@ public class AgendaMedicoTree implements AgendaMedico {
     /** Retorna el siguiente turno a partir de la fecha/hora especificada */
     @Override
     public synchronized Optional<Turno> siguiente(LocalDateTime t) {
-        List<Turno> turnos = obtenerTurnosOrdenados();
+        ListaEnlazada<Turno> turnos = obtenerTurnosOrdenados();
         
-        for (Turno turno : turnos) {
+        Nodo<Turno> nodo = turnos.getHead();
+        while (nodo != null) {
+            Turno turno = nodo.getData();
             if (turno.getFechaHora().compareTo(t) >= 0) {
                 return Optional.of(turno);
             }
+            nodo = nodo.getNext();
         }
         
         return Optional.empty();
@@ -66,8 +69,14 @@ public class AgendaMedicoTree implements AgendaMedico {
     
     /** Busca un turno por su ID recorriendo todos los turnos */
     private Turno buscarPorId(String id) {
-        for (Turno turno : obtenerTurnosOrdenados()) {
-            if (turno.getId().equals(id)) return turno;
+        ListaEnlazada<Turno> turnos = obtenerTurnosOrdenados();
+        Nodo<Turno> nodo = turnos.getHead();
+        
+        while (nodo != null) {
+            if (nodo.getData().getId().equals(id)) {
+                return nodo.getData();
+            }
+            nodo = nodo.getNext();
         }
         return null;
     }
@@ -77,26 +86,31 @@ public class AgendaMedicoTree implements AgendaMedico {
         LocalDateTime inicio = nuevo.getFechaHora();
         LocalDateTime fin = inicio.plusMinutes(nuevo.getDuracionMin());
         
-        for (Turno existente : obtenerTurnosOrdenados()) {
+        ListaEnlazada<Turno> turnos = obtenerTurnosOrdenados();
+        Nodo<Turno> nodo = turnos.getHead();
+        
+        while (nodo != null) {
+            Turno existente = nodo.getData();
             LocalDateTime inicioExist = existente.getFechaHora();
             LocalDateTime finExist = inicioExist.plusMinutes(existente.getDuracionMin());
             
             if (inicio.isBefore(finExist) && inicioExist.isBefore(fin)) {
                 return true;
             }
+            nodo = nodo.getNext();
         }
         return false;
     }
     
     /** Retorna todos los turnos en orden cronológico (recorrido inorden del AVL) */
-    private List<Turno> obtenerTurnosOrdenados() {
-        List<Turno> resultado = new ArrayList<>();
+    private ListaEnlazada<Turno> obtenerTurnosOrdenados() {
+        ListaEnlazada<Turno> resultado = new ListaEnlazada<>();
         recorridoInorden(obtenerRaiz(), resultado);
         return resultado;
     }
     
     /** Usa reflexión para recorrer el árbol AVL en orden */
-    private void recorridoInorden(Object nodo, List<Turno> lista) {
+    private void recorridoInorden(Object nodo, ListaEnlazada<Turno> lista) {
         if (nodo == null) return;
         
         try {
@@ -108,7 +122,7 @@ public class AgendaMedicoTree implements AgendaMedico {
             recorridoInorden(getLeft.invoke(nodo), lista);
             
             TurnoWrapper wrapper = (TurnoWrapper) getData.invoke(nodo);
-            lista.add(wrapper.turno);
+            lista.insertLast(wrapper.turno);
             
             recorridoInorden(getRight.invoke(nodo), lista);
         } catch (Exception e) {
@@ -132,7 +146,7 @@ public class AgendaMedicoTree implements AgendaMedico {
     }
     
     /** Retorna todos los turnos en orden cronológico */
-    public synchronized List<Turno> todosTurnos() {
+    public synchronized ListaEnlazada<Turno> todosTurnos() {
         return obtenerTurnosOrdenados();
     }
     
@@ -168,21 +182,23 @@ public class AgendaMedicoTree implements AgendaMedico {
                 continue;
             }
             
-            List<Turno> turnosMedicoDelDia = obtenerTurnosMedicoDelDia(matriculaMedico, busquedaActual.toLocalDate());
+            ListaEnlazada<Turno> turnosMedicoDelDia = obtenerTurnosMedicoDelDia(matriculaMedico, busquedaActual.toLocalDate());
             
             if (turnosMedicoDelDia.isEmpty()) {
                 return Optional.of(busquedaActual);
             }
             
-            Turno primerTurno = turnosMedicoDelDia.get(0);
+            Turno primerTurno = turnosMedicoDelDia.getHead().getData();
             if (busquedaActual.plusMinutes(durMin).isBefore(primerTurno.getFechaHora()) 
                 || busquedaActual.plusMinutes(durMin).isEqual(primerTurno.getFechaHora())) {
                 return Optional.of(busquedaActual);
             }
             
-            for (int i = 0; i < turnosMedicoDelDia.size() - 1; i++) {
-                Turno actual = turnosMedicoDelDia.get(i);
-                Turno siguiente = turnosMedicoDelDia.get(i + 1);
+            // Buscar hueco entre turnos consecutivos
+            Nodo<Turno> nodoActual = turnosMedicoDelDia.getHead();
+            while (nodoActual != null && nodoActual.getNext() != null) {
+                Turno actual = nodoActual.getData();
+                Turno siguiente = nodoActual.getNext().getData();
                 
                 LocalDateTime finActual = actual.getFechaHoraFin();
                 LocalDateTime inicioSiguiente = siguiente.getFechaHora();
@@ -196,9 +212,13 @@ public class AgendaMedicoTree implements AgendaMedico {
                         return Optional.of(inicioCandidato);
                     }
                 }
+                
+                nodoActual = nodoActual.getNext();
             }
             
-            Turno ultimoTurno = turnosMedicoDelDia.get(turnosMedicoDelDia.size() - 1);
+            // Buscar hueco después del último turno
+            // Usa getAt() y getSize() de ListaEnlazada
+            Turno ultimoTurno = turnosMedicoDelDia.getAt(turnosMedicoDelDia.getSize() - 1);
             LocalDateTime despuesUltimo = ultimoTurno.getFechaHoraFin();
             
             if (despuesUltimo.isBefore(busquedaActual)) {
@@ -217,27 +237,35 @@ public class AgendaMedicoTree implements AgendaMedico {
     }
     
     /** Filtra los turnos de un médico específico en una fecha determinada */
-    private List<Turno> obtenerTurnosMedicoDelDia(String matriculaMedico, java.time.LocalDate fecha) {
-        List<Turno> resultado = new ArrayList<>();
+    private ListaEnlazada<Turno> obtenerTurnosMedicoDelDia(String matriculaMedico, java.time.LocalDate fecha) {
+        ListaEnlazada<Turno> resultado = new ListaEnlazada<>();
+        ListaEnlazada<Turno> todosTurnos = obtenerTurnosOrdenados();
         
-        for (Turno t : obtenerTurnosOrdenados()) {
+        Nodo<Turno> nodo = todosTurnos.getHead();
+        while (nodo != null) {
+            Turno t = nodo.getData();
             if (t.getMatriculaMedico().equals(matriculaMedico) 
                 && t.getFechaHora().toLocalDate().equals(fecha)) {
-                resultado.add(t);
+                resultado.insertLast(t);
             }
+            nodo = nodo.getNext();
         }
         
         return resultado;
     }
     
     /** Retorna todos los turnos de un médico específico en orden cronológico */
-    public synchronized List<Turno> turnosPorMedico(String matriculaMedico) {
-        List<Turno> resultado = new ArrayList<>();
+    public synchronized ListaEnlazada<Turno> turnosPorMedico(String matriculaMedico) {
+        ListaEnlazada<Turno> resultado = new ListaEnlazada<>();
+        ListaEnlazada<Turno> todosTurnos = obtenerTurnosOrdenados();
         
-        for (Turno t : obtenerTurnosOrdenados()) {
+        Nodo<Turno> nodo = todosTurnos.getHead();
+        while (nodo != null) {
+            Turno t = nodo.getData();
             if (t.getMatriculaMedico().equals(matriculaMedico)) {
-                resultado.add(t);
+                resultado.insertLast(t);
             }
+            nodo = nodo.getNext();
         }
         
         return resultado;

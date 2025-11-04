@@ -329,6 +329,14 @@ public class IntegradorMenu {
         System.out.println(AnsiColors.azulNegrita("  PLANIFICADOR DE QUIROFANOS (MIN-HEAP)"));
         System.out.println(AnsiColors.azul("=".repeat(60)));
         
+        // Registrar todos los medicos primero
+        Nodo<Medico> nodoRegistro = medicos.getHead();
+        while (nodoRegistro != null) {
+            Medico m = nodoRegistro.getData();
+            planificadorQuirofano.registrarMedico(m.getMatricula(), m.getNombre());
+            nodoRegistro = nodoRegistro.getNext();
+        }
+        
         // Procesar 3 cirugias de prueba
         System.out.println(AnsiColors.naranjaNegrita("PROCESANDO CIRUGIAS:"));
         System.out.println(AnsiColors.gris("-".repeat(60)));
@@ -354,10 +362,12 @@ public class IntegradorMenu {
         System.out.println("\n" + AnsiColors.naranjaNegrita("TOP-3 MEDICOS CON MAS TIEMPO:"));
         System.out.println(AnsiColors.gris("-".repeat(60)));
         
-        List<String> topK = planificadorQuirofano.topKMedicosBloqueados(3);
+        ListaEnlazada<String> topK = planificadorQuirofano.topKMedicosBloqueados(3);
         int pos = 1;
-        for (String medicoInfo : topK) {
-            System.out.println(pos++ + ". " + medicoInfo);
+        Nodo<String> nodoTopK = topK.getHead();
+        while (nodoTopK != null) {
+            System.out.println(pos++ + ". " + nodoTopK.getData());
+            nodoTopK = nodoTopK.getNext();
         }
         
         System.out.println(AnsiColors.gris("\nComplejidad: O(log Q) - asignacion de quirofano"));

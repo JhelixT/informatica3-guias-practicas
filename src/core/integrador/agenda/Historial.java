@@ -2,6 +2,8 @@ package core.integrador.agenda;
 
 import core.integrador.modelo.Turno;
 import core.estructuras.pilas.PilaEnlazada;
+import core.estructuras.listas.ListaEnlazada;
+import core.estructuras.nodos.Nodo;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -177,10 +179,15 @@ public class Historial implements AgendaConHistorial {
     private Turno buscarTurnoPorId(String idTurno) {
         if (agenda instanceof AgendaMedicoTree) {
             AgendaMedicoTree tree = (AgendaMedicoTree) agenda;
-            for (Turno t : tree.todosTurnos()) {
+            ListaEnlazada<Turno> turnos = tree.todosTurnos();
+            Nodo<Turno> nodo = turnos.getHead();
+            
+            while (nodo != null) {
+                Turno t = nodo.getData();
                 if (t.getId().equals(idTurno)) {
                     return t;
                 }
+                nodo = nodo.getNext();
             }
         }
         return null;

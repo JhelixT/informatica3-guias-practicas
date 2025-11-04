@@ -3,9 +3,10 @@ package core.integrador.quirofano;
 import core.integrador.modelo.SolicitudCirugia;
 import core.estructuras.monticulo.MonticuloBinario;
 import core.estructuras.monticulo.MonticuloBinario.TipoMonticulo;
+import core.estructuras.listas.ListaEnlazada;
+import core.estructuras.nodos.Nodo;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Implementación del planificador de quirófanos usando montículos binarios propios.
@@ -35,10 +36,12 @@ public class PlanificadorQuirofanoImpl implements PlanificadorQuirofano {
     /** Representa un médico con sus minutos bloqueados */
     private static class MedicoBloqueado implements Comparable<MedicoBloqueado> {
         String matricula;
+        String nombre;
         int minutosBloqueados;
         
-        MedicoBloqueado(String matricula, int minutosBloqueados) {
+        MedicoBloqueado(String matricula, String nombre, int minutosBloqueados) {
             this.matricula = matricula;
+            this.nombre = nombre;
             this.minutosBloqueados = minutosBloqueados;
         }
         
@@ -51,22 +54,40 @@ public class PlanificadorQuirofanoImpl implements PlanificadorQuirofano {
     // Min-heap de quirófanos ordenados por finOcupado
     private MonticuloBinario<Quirofano> quirofanos;
     
-    // Listas paralelas para rastrear minutos bloqueados por médico (reemplaza HashMap)
-    private List<String> matriculasMedicos;
-    private List<Integer> minutosMedicos;
+    // Listas enlazadas paralelas para rastrear minutos bloqueados por médico (reemplaza HashMap)
+    private ListaEnlazada<String> matriculasMedicos;
+    private ListaEnlazada<String> nombresMedicos;
+    private ListaEnlazada<Integer> minutosMedicos;
     
     // Reloj actual del sistema
     private LocalDateTime ahora;
     
+    // Formateador de fechas
+    private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM HH:mm");
+    
     public PlanificadorQuirofanoImpl(int numQuirofanos, LocalDateTime inicio) {
         this.quirofanos = new MonticuloBinario<>(TipoMonticulo.MIN_HEAP);
-        this.matriculasMedicos = new ArrayList<>();
-        this.minutosMedicos = new ArrayList<>();
+        this.matriculasMedicos = new ListaEnlazada<>();
+        this.nombresMedicos = new ListaEnlazada<>();
+        this.minutosMedicos = new ListaEnlazada<>();
         this.ahora = inicio;
         
         // Inicializar todos los quirófanos libres desde el inicio
         for (int i = 1; i <= numQuirofanos; i++) {
             quirofanos.add(new Quirofano("Q" + i, inicio));
+        }
+    }
+    
+    /**
+     * Registra un médico en el sistema con su nombre
+     */
+    @Override
+    public void registrarMedico(String matricula, String nombre) {
+        // Usa search() de ListaEnlazada - O(n)
+        if (!matriculasMedicos.contains(matricula)) {
+            matriculasMedicos.insertLast(matricula);
+            nombresMedicos.insertLast(nombre);
+            minutosMedicos.insertLast(0);
         }
     }
     
@@ -96,8 +117,8 @@ public class PlanificadorQuirofanoImpl implements PlanificadorQuirofano {
         
         // Verificar si cumple el deadline
         if (fin.isAfter(s.getDeadline())) {
-            System.out.println("⚠️  Cirugía " + s.getId() + " NO cumple deadline (" + 
-                             fin + " > " + s.getDeadline() + ")");
+            System.out.println("Cirugia " + s.getId() + " NO cumple deadline (" + 
+                             FORMATO_FECHA.format(fin) + " > " + FORMATO_FECHA.format(s.getDeadline()) + ")");
         }
         
         // Actualizar minutos bloqueados del médico (usando listas paralelas)
@@ -107,29 +128,43 @@ public class PlanificadorQuirofanoImpl implements PlanificadorQuirofano {
         quirofano.finOcupado = fin;
         quirofanos.add(quirofano);
         
-        System.out.printf("✅ Asignado: %s → %s [%s - %s] (Médico %s: %d min acumulados)%n",
-                s.getId(), quirofano.id, inicio, fin, s.getMatricula(), 
-                obtenerMinutosMedico(s.getMatricula()));
+        System.out.printf("Asignado: %s -> %s [%s - %s] (Medico %s: %d min acumulados)%n",
+                s.getId(), quirofano.id, FORMATO_FECHA.format(inicio), FORMATO_FECHA.format(fin), 
+                s.getMatricula(), obtenerMinutosMedico(s.getMatricula()));
     }
     
     /** Actualiza los minutos bloqueados de un médico usando listas paralelas */
     private void actualizarMinutosMedico(String matricula, int minutos) {
-        int index = matriculasMedicos.indexOf(matricula);
+        // Usa search() de ListaEnlazada - O(n)
+        int index = matriculasMedicos.search(matricula);
         
         if (index == -1) {
-            // Médico nuevo
-            matriculasMedicos.add(matricula);
-            minutosMedicos.add(minutos);
+            // Médico nuevo (sin nombre por ahora)
+            matriculasMedicos.insertLast(matricula);
+            nombresMedicos.insertLast("Desconocido");
+            minutosMedicos.insertLast(minutos);
         } else {
             // Médico existente, acumular minutos
-            minutosMedicos.set(index, minutosMedicos.get(index) + minutos);
+            // Usa getAt() de ListaEnlazada - O(n)
+            Integer minutosActuales = minutosMedicos.getAt(index);
+            // Actualiza usando Nodo.setData() navegando
+            Nodo<Integer> nodo = minutosMedicos.getHead();
+            for (int i = 0; i < index; i++) {
+                nodo = nodo.getNext();
+            }
+            nodo.setData(minutosActuales + minutos);
         }
     }
     
     /** Obtiene los minutos bloqueados de un médico */
     private int obtenerMinutosMedico(String matricula) {
-        int index = matriculasMedicos.indexOf(matricula);
-        return index == -1 ? 0 : minutosMedicos.get(index);
+        // Usa search() de ListaEnlazada - O(n)
+        int index = matriculasMedicos.search(matricula);
+        if (index == -1) return 0;
+        
+        // Usa getAt() de ListaEnlazada - O(n)
+        Integer minutos = minutosMedicos.getAt(index);
+        return minutos != null ? minutos : 0;
     }
     
     /**
@@ -138,18 +173,26 @@ public class PlanificadorQuirofanoImpl implements PlanificadorQuirofano {
      * Complejidad: O(M log K) donde M = total de médicos
      */
     @Override
-    public List<String> topKMedicosBloqueados(int K) {
+    public ListaEnlazada<String> topKMedicosBloqueados(int K) {
+        ListaEnlazada<String> resultado = new ListaEnlazada<>();
+        
         if (K <= 0 || matriculasMedicos.isEmpty()) {
-            return new ArrayList<>();
+            return resultado;
         }
         
         // Min-heap de tamaño K para mantener los K médicos con MÁS minutos
         MonticuloBinario<MedicoBloqueado> topK = new MonticuloBinario<>(TipoMonticulo.MIN_HEAP);
         
-        for (int i = 0; i < matriculasMedicos.size(); i++) {
+        // Iterar sobre las listas paralelas usando nodos
+        Nodo<String> nodoMatricula = matriculasMedicos.getHead();
+        Nodo<String> nodoNombre = nombresMedicos.getHead();
+        Nodo<Integer> nodoMinutos = minutosMedicos.getHead();
+        
+        while (nodoMatricula != null && nodoNombre != null && nodoMinutos != null) {
             MedicoBloqueado medico = new MedicoBloqueado(
-                matriculasMedicos.get(i), 
-                minutosMedicos.get(i)
+                nodoMatricula.getData(),
+                nodoNombre.getData(),
+                nodoMinutos.getData()
             );
             
             if (topK.size() < K) {
@@ -160,31 +203,58 @@ public class PlanificadorQuirofanoImpl implements PlanificadorQuirofano {
                 topK.poll();
                 topK.add(medico);
             }
+            
+            nodoMatricula = nodoMatricula.getNext();
+            nodoNombre = nodoNombre.getNext();
+            nodoMinutos = nodoMinutos.getNext();
         }
         
-        // Convertir a lista y ordenar de mayor a menor
-        List<MedicoBloqueado> lista = new ArrayList<>();
+        // Convertir a ListaEnlazada y ordenar de mayor a menor
+        ListaEnlazada<MedicoBloqueado> lista = new ListaEnlazada<>();
         while (!topK.isEmpty()) {
-            lista.add(topK.poll());
+            lista.insertLast(topK.poll());
         }
         
-        // Ordenar de mayor a menor (insertion sort simple ya que K es pequeño)
-        for (int i = 0; i < lista.size(); i++) {
-            for (int j = i + 1; j < lista.size(); j++) {
-                if (lista.get(j).minutosBloqueados > lista.get(i).minutosBloqueados) {
-                    MedicoBloqueado temp = lista.get(i);
-                    lista.set(i, lista.get(j));
-                    lista.set(j, temp);
-                }
-            }
-        }
+        // Ordenar de mayor a menor usando nodos
+        ordenarListaPorMinutos(lista);
         
-        List<String> resultado = new ArrayList<>();
-        for (MedicoBloqueado mb : lista) {
-            resultado.add(mb.matricula + " (" + mb.minutosBloqueados + " min)");
+        // Convertir a formato de string
+        Nodo<MedicoBloqueado> nodo = lista.getHead();
+        while (nodo != null) {
+            MedicoBloqueado mb = nodo.getData();
+            resultado.insertLast(mb.nombre + " [" + mb.matricula + "] - " + mb.minutosBloqueados + " min");
+            nodo = nodo.getNext();
         }
         
         return resultado;
+    }
+    
+    /**
+     * Ordena una lista enlazada de MedicoBloqueado de mayor a menor por minutos.
+     * Usa bubble sort adaptado para listas enlazadas.
+     */
+    private void ordenarListaPorMinutos(ListaEnlazada<MedicoBloqueado> lista) {
+        if (lista.isEmpty()) return;
+        
+        boolean cambio = true;
+        while (cambio) {
+            cambio = false;
+            Nodo<MedicoBloqueado> actual = lista.getHead();
+            
+            while (actual != null && actual.getNext() != null) {
+                MedicoBloqueado datoActual = actual.getData();
+                MedicoBloqueado datoSiguiente = actual.getNext().getData();
+                
+                if (datoActual.minutosBloqueados < datoSiguiente.minutosBloqueados) {
+                    // Intercambiar datos
+                    actual.setData(datoSiguiente);
+                    actual.getNext().setData(datoActual);
+                    cambio = true;
+                }
+                
+                actual = actual.getNext();
+            }
+        }
     }
     
     /** Avanza el reloj del sistema */
@@ -194,29 +264,51 @@ public class PlanificadorQuirofanoImpl implements PlanificadorQuirofano {
     
     /** Muestra el estado actual de los quirófanos */
     public void mostrarEstadoQuirofanos() {
-        System.out.println("\n📊 Estado de quirófanos:");
+        System.out.println("\nEstado de quirofanos:");
         
         // Extraer todos los quirófanos para mostrarlos
-        List<Quirofano> temp = new ArrayList<>();
+        ListaEnlazada<Quirofano> temp = new ListaEnlazada<>();
         while (!quirofanos.isEmpty()) {
-            temp.add(quirofanos.poll());
+            temp.insertLast(quirofanos.poll());
         }
         
-        // Ordenar por ID para mostrar en orden
-        for (int i = 0; i < temp.size(); i++) {
-            for (int j = i + 1; j < temp.size(); j++) {
-                if (temp.get(j).id.compareTo(temp.get(i).id) < 0) {
-                    Quirofano aux = temp.get(i);
-                    temp.set(i, temp.get(j));
-                    temp.set(j, aux);
-                }
-            }
-        }
+        // Ordenar por ID usando bubble sort
+        ordenarQuirofanosPorId(temp);
         
         // Mostrar y volver a insertar en el heap
-        for (Quirofano q : temp) {
-            System.out.printf("   %s: libre desde %s%n", q.id, q.finOcupado);
+        Nodo<Quirofano> nodo = temp.getHead();
+        while (nodo != null) {
+            Quirofano q = nodo.getData();
+            System.out.printf("   %s: libre desde %s%n", q.id, FORMATO_FECHA.format(q.finOcupado));
             quirofanos.add(q);
+            nodo = nodo.getNext();
+        }
+    }
+    
+    /**
+     * Ordena quirófanos por ID alfabéticamente usando bubble sort.
+     */
+    private void ordenarQuirofanosPorId(ListaEnlazada<Quirofano> lista) {
+        if (lista.isEmpty()) return;
+        
+        boolean cambio = true;
+        while (cambio) {
+            cambio = false;
+            Nodo<Quirofano> actual = lista.getHead();
+            
+            while (actual != null && actual.getNext() != null) {
+                Quirofano datoActual = actual.getData();
+                Quirofano datoSiguiente = actual.getNext().getData();
+                
+                if (datoActual.id.compareTo(datoSiguiente.id) > 0) {
+                    // Intercambiar datos
+                    actual.setData(datoSiguiente);
+                    actual.getNext().setData(datoActual);
+                    cambio = true;
+                }
+                
+                actual = actual.getNext();
+            }
         }
     }
 }
