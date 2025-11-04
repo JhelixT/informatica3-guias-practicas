@@ -7,12 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Implementación de AgendaMedico usando árbol AVL.
- * Ordena turnos por fechaHora con operaciones O(log n).
+ * Implementación de AgendaMedico usando árbol AVL ordenado por fechaHora.
  */
 public class AgendaMedicoTree implements AgendaMedico {
     
-    /** Wrapper para hacer Turno comparable por fechaHora en el AVL */
+    /** Wrapper para hacer Turno comparable por fechaHora */
     private static class TurnoWrapper implements Comparable<TurnoWrapper> {
         final Turno turno;
         
@@ -28,21 +27,19 @@ public class AgendaMedicoTree implements AgendaMedico {
     
     private final ArbolAVL<TurnoWrapper> arbolTurnos = new ArbolAVL<>();
     
+    /** Agenda un nuevo turno verificando duplicados y solapamientos */
     @Override
     public synchronized boolean agendar(Turno t) {
         if (t == null || t.getId() == null) return false;
         
-        // Verificar ID duplicado
         if (buscarPorId(t.getId()) != null) return false;
-        
-        // Verificar solapamiento
         if (tieneSolapamiento(t)) return false;
         
-        // Insertar en AVL
         arbolTurnos.insert(new TurnoWrapper(t));
         return true;
     }
     
+    /** Cancela un turno por su ID, eliminándolo del árbol */
     @Override
     public synchronized boolean cancelar(String idTurno) {
         Turno turno = buscarPorId(idTurno);
@@ -52,6 +49,7 @@ public class AgendaMedicoTree implements AgendaMedico {
         return true;
     }
     
+    /** Retorna el siguiente turno a partir de la fecha/hora especificada */
     @Override
     public synchronized Optional<Turno> siguiente(LocalDateTime t) {
         List<Turno> turnos = obtenerTurnosOrdenados();
@@ -65,7 +63,7 @@ public class AgendaMedicoTree implements AgendaMedico {
         return Optional.empty();
     }
     
-    /** Busca un turno por ID (O(n)) */
+    /** Busca un turno por su ID recorriendo todos los turnos */
     private Turno buscarPorId(String id) {
         for (Turno turno : obtenerTurnosOrdenados()) {
             if (turno.getId().equals(id)) return turno;
@@ -73,7 +71,7 @@ public class AgendaMedicoTree implements AgendaMedico {
         return null;
     }
     
-    /** Verifica si hay solapamiento de horarios */
+    /** Verifica si un turno nuevo se solapa con algún turno existente */
     private boolean tieneSolapamiento(Turno nuevo) {
         LocalDateTime inicio = nuevo.getFechaHora();
         LocalDateTime fin = inicio.plusMinutes(nuevo.getDuracionMin());
@@ -82,7 +80,6 @@ public class AgendaMedicoTree implements AgendaMedico {
             LocalDateTime inicioExist = existente.getFechaHora();
             LocalDateTime finExist = inicioExist.plusMinutes(existente.getDuracionMin());
             
-            // Solapamiento: inicio1 < fin2 Y inicio2 < fin1
             if (inicio.isBefore(finExist) && inicioExist.isBefore(fin)) {
                 return true;
             }
@@ -90,14 +87,14 @@ public class AgendaMedicoTree implements AgendaMedico {
         return false;
     }
     
-    /** Obtiene todos los turnos en orden cronológico (inorden del AVL) */
+    /** Retorna todos los turnos en orden cronológico (recorrido inorden del AVL) */
     private List<Turno> obtenerTurnosOrdenados() {
         List<Turno> resultado = new ArrayList<>();
         recorridoInorden(obtenerRaiz(), resultado);
         return resultado;
     }
     
-    /** Recorrido inorden recursivo */
+    /** Usa reflexión para recorrer el árbol AVL en orden */
     private void recorridoInorden(Object nodo, List<Turno> lista) {
         if (nodo == null) return;
         
@@ -114,11 +111,10 @@ public class AgendaMedicoTree implements AgendaMedico {
             
             recorridoInorden(getRight.invoke(nodo), lista);
         } catch (Exception e) {
-            // Ignorar errores de reflexión
         }
     }
     
-    /** Obtiene la raíz del árbol usando reflexión */
+    /** Obtiene la raíz del árbol AVL usando reflexión */
     private Object obtenerRaiz() {
         try {
             var campo = ArbolAVL.class.getDeclaredField("root");
@@ -129,70 +125,60 @@ public class AgendaMedicoTree implements AgendaMedico {
         }
     }
     
-    /** Cantidad de turnos agendados */
+    /** Retorna la cantidad total de turnos agendados */
     public synchronized int cantidadTurnos() {
         return arbolTurnos.countNodes();
     }
     
-    /** Todos los turnos en orden cronológico */
+    /** Retorna todos los turnos en orden cronológico */
     public synchronized List<Turno> todosTurnos() {
         return obtenerTurnosOrdenados();
     }
     
     /**
-     * Busca el primer hueco libre de al menos durMin minutos a partir de t0
-     * para un médico específico.
-     * Complejidad: O(log n + k) donde k es la cantidad de turnos del médico examinados.
+     * Encuentra el primer hueco disponible en la agenda de un médico.
+     * Busca desde t0 hasta 7 días después, dentro del horario laboral (8:00-22:00).
      * 
-     * @param matriculaMedico Matrícula del médico para buscar huecos en su agenda
+     * @param matriculaMedico Matrícula del médico
      * @param t0 Hora desde la cual comenzar la búsqueda
-     * @param durMin Duración mínima del hueco requerido (en minutos)
-     * @return Optional con la hora del primer hueco disponible, o vacío si no hay
+     * @param durMin Duración mínima del hueco (en minutos)
+     * @return Optional con la hora del primer hueco, o vacío si no hay
      */
     public synchronized Optional<LocalDateTime> primerHueco(String matriculaMedico, LocalDateTime t0, int durMin) {
         if (matriculaMedico == null || t0 == null || durMin <= 0) {
             return Optional.empty();
         }
         
-        // Definir horario laboral (ajusta según necesidad)
-        final int HORA_INICIO_LABORAL = 8;  // 08:00
-        final int HORA_FIN_LABORAL = 22;     // 22:00
+        final int HORA_INICIO_LABORAL = 8;
+        final int HORA_FIN_LABORAL = 22;
         
         LocalDateTime busquedaActual = t0;
         
-        // Intentar hasta 7 días (una semana)
         for (int dia = 0; dia < 7; dia++) {
-            // Asegurar que estamos dentro del horario laboral
             LocalDateTime inicioLaboral = busquedaActual.withHour(HORA_INICIO_LABORAL).withMinute(0);
             LocalDateTime finLaboral = busquedaActual.withHour(HORA_FIN_LABORAL).withMinute(0);
             
-            // Si la búsqueda actual es antes del inicio laboral, ajustar
             if (busquedaActual.isBefore(inicioLaboral)) {
                 busquedaActual = inicioLaboral;
             }
             
-            // Si ya pasó el horario laboral, ir al día siguiente
             if (busquedaActual.isAfter(finLaboral) || busquedaActual.plusMinutes(durMin).isAfter(finLaboral)) {
                 busquedaActual = busquedaActual.plusDays(1).withHour(HORA_INICIO_LABORAL).withMinute(0);
                 continue;
             }
             
-            // Obtener solo los turnos del médico específico en este día
             List<Turno> turnosMedicoDelDia = obtenerTurnosMedicoDelDia(matriculaMedico, busquedaActual.toLocalDate());
             
-            // Si no hay turnos del médico en el día, el hueco es desde busquedaActual
             if (turnosMedicoDelDia.isEmpty()) {
                 return Optional.of(busquedaActual);
             }
             
-            // Verificar hueco antes del primer turno del médico
             Turno primerTurno = turnosMedicoDelDia.get(0);
             if (busquedaActual.plusMinutes(durMin).isBefore(primerTurno.getFechaHora()) 
                 || busquedaActual.plusMinutes(durMin).isEqual(primerTurno.getFechaHora())) {
                 return Optional.of(busquedaActual);
             }
             
-            // Buscar hueco entre turnos consecutivos del médico
             for (int i = 0; i < turnosMedicoDelDia.size() - 1; i++) {
                 Turno actual = turnosMedicoDelDia.get(i);
                 Turno siguiente = turnosMedicoDelDia.get(i + 1);
@@ -200,13 +186,10 @@ public class AgendaMedicoTree implements AgendaMedico {
                 LocalDateTime finActual = actual.getFechaHoraFin();
                 LocalDateTime inicioSiguiente = siguiente.getFechaHora();
                 
-                // Si el hueco candidato es después de busquedaActual
                 LocalDateTime inicioCandidato = finActual.isAfter(busquedaActual) ? finActual : busquedaActual;
                 
-                // Verificar si hay espacio suficiente
                 if (inicioCandidato.plusMinutes(durMin).isBefore(inicioSiguiente)
                     || inicioCandidato.plusMinutes(durMin).isEqual(inicioSiguiente)) {
-                    // Verificar que no se pase del horario laboral
                     if (inicioCandidato.plusMinutes(durMin).isBefore(finLaboral)
                         || inicioCandidato.plusMinutes(durMin).isEqual(finLaboral)) {
                         return Optional.of(inicioCandidato);
@@ -214,7 +197,6 @@ public class AgendaMedicoTree implements AgendaMedico {
                 }
             }
             
-            // Verificar hueco después del último turno del médico
             Turno ultimoTurno = turnosMedicoDelDia.get(turnosMedicoDelDia.size() - 1);
             LocalDateTime despuesUltimo = ultimoTurno.getFechaHoraFin();
             
@@ -227,22 +209,13 @@ public class AgendaMedicoTree implements AgendaMedico {
                 return Optional.of(despuesUltimo);
             }
             
-            // No hay hueco hoy para este médico, intentar día siguiente
             busquedaActual = busquedaActual.plusDays(1).withHour(HORA_INICIO_LABORAL).withMinute(0);
         }
         
-        // No se encontró hueco en una semana
         return Optional.empty();
     }
     
-    /**
-     * Obtiene todos los turnos de un médico específico en una fecha.
-     * Complejidad: O(n) en el peor caso
-     * 
-     * @param matriculaMedico Matrícula del médico
-     * @param fecha La fecha para filtrar turnos
-     * @return Lista de turnos del médico en esa fecha, ordenados cronológicamente
-     */
+    /** Filtra los turnos de un médico específico en una fecha determinada */
     private List<Turno> obtenerTurnosMedicoDelDia(String matriculaMedico, java.time.LocalDate fecha) {
         List<Turno> resultado = new ArrayList<>();
         
@@ -256,13 +229,7 @@ public class AgendaMedicoTree implements AgendaMedico {
         return resultado;
     }
     
-    /**
-     * Obtiene todos los turnos de un médico específico.
-     * Útil para ver la agenda completa de un médico.
-     * 
-     * @param matriculaMedico Matrícula del médico
-     * @return Lista de todos los turnos del médico, ordenados cronológicamente
-     */
+    /** Retorna todos los turnos de un médico específico en orden cronológico */
     public synchronized List<Turno> turnosPorMedico(String matriculaMedico) {
         List<Turno> resultado = new ArrayList<>();
         
