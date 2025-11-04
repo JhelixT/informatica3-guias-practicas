@@ -6,7 +6,7 @@ import core.utils.InputValidator;
 import core.utils.MenuFormatter;
 
 /**
- * Menu interactivo para Montículo Binario (Binary Heap).
+ * Menu interactivo para Monticulo Binario (Binary Heap).
  * 
  * @author JhelixT
  * @version 1.0
@@ -26,12 +26,12 @@ public class MonticuloMenu {
             MenuFormatter.limpiarPantalla();
             
             System.out.println("╔════════════════════════════════════════════════════════════════════╗");
-            System.out.println("║                    MONTÍCULO BINARIO (BINARY HEAP)                ║");
+            System.out.println("║                    Monticulo BINARIO (BINARY HEAP)                ║");
             System.out.println("╠════════════════════════════════════════════════════════════════════╣");
             System.out.println("║                                                                    ║");
             System.out.println("║  ESTADO ACTUAL:                                                    ║");
             System.out.println("║  Tipo: " + String.format("%-60s", monticulo.getTipo()) + " ║");
-            System.out.println("║  Tamaño: " + String.format("%-58d", monticulo.size()) + " ║");
+            System.out.println("║  Tamanio: " + String.format("%-58d", monticulo.size()) + " ║");
             System.out.println("║  Raiz: " + String.format("%-60s", 
                 monticulo.isEmpty() ? "vacio" : monticulo.peek()) + " ║");
             System.out.println("║                                                                    ║");
@@ -42,7 +42,7 @@ public class MonticuloMenu {
             System.out.println("║   2. Eliminar Raiz (poll)                                          ║");
             System.out.println("║   3. Consultar Raiz (peek)                                         ║");
             System.out.println("║   4. Verificar si esta vacio                                       ║");
-            System.out.println("║   5. Limpiar montículo                                             ║");
+            System.out.println("║   5. Limpiar Monticulo                                             ║");
             System.out.println("║                                                                    ║");
             System.out.println("║  🔧 OPERACIONES AVANZADAS                                          ║");
             System.out.println("║   6. Construir heap desde arreglo (heapify)                        ║");
@@ -82,7 +82,7 @@ public class MonticuloMenu {
                     continuar = false;
                     System.out.println("\n👋 Volviendo al Menu principal...\n");
                 }
-                default -> System.out.println("\n❌ opcion no válida\n");
+                default -> System.out.println("\n❌ opcion no valida\n");
             }
             
             if (continuar && opcion != 0) {
@@ -110,7 +110,7 @@ public class MonticuloMenu {
         System.out.println("═══ ELIMINAR Raiz ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("❌ El montículo esta vacio");
+            System.out.println("❌ El Monticulo esta vacio");
             return;
         }
         
@@ -128,7 +128,7 @@ public class MonticuloMenu {
         System.out.println("═══ CONSULTAR Raiz ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("❌ El montículo esta vacio");
+            System.out.println("❌ El Monticulo esta vacio");
         } else {
             System.out.println("Raiz actual: " + monticulo.peek());
             System.out.println("(" + (monticulo.getTipo() == TipoMonticulo.MIN_HEAP ? "minimo" : "maximo") + ")");
@@ -139,23 +139,23 @@ public class MonticuloMenu {
         System.out.println("═══ VERIFICAR vacio ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("✅ El montículo esta vacio");
+            System.out.println("✅ El Monticulo esta vacio");
         } else {
-            System.out.println("❌ El montículo NO esta vacio");
-            System.out.println("Tamaño actual: " + monticulo.size());
+            System.out.println("❌ El Monticulo NO esta vacio");
+            System.out.println("Tamanio actual: " + monticulo.size());
         }
     }
     
     private void limpiarMonticulo() {
-        System.out.println("═══ LIMPIAR MONTÍCULO ═══\n");
+        System.out.println("═══ LIMPIAR Monticulo ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("El montículo ya esta vacio");
+            System.out.println("El Monticulo ya esta vacio");
         } else {
-            System.out.println("Tamaño antes: " + monticulo.size());
+            System.out.println("Tamanio antes: " + monticulo.size());
             monticulo.clear();
-            System.out.println("Tamaño despues: " + monticulo.size());
-            System.out.println("\n✅ Montículo limpiado");
+            System.out.println("Tamanio despues: " + monticulo.size());
+            System.out.println("\n✅ Monticulo limpiado");
         }
     }
     
@@ -192,7 +192,7 @@ public class MonticuloMenu {
     }
     
     private void cambiarTipo() {
-        System.out.println("═══ CAMBIAR TIPO DE MONTÍCULO ═══\n");
+        System.out.println("═══ CAMBIAR TIPO DE Monticulo ═══\n");
         
         TipoMonticulo tipoActual = monticulo.getTipo();
         System.out.println("Tipo actual: " + tipoActual);
@@ -204,7 +204,7 @@ public class MonticuloMenu {
             System.out.println("Nuevo tipo: " + nuevoTipo);
             System.out.println("\n✅ Tipo cambiado");
         } else {
-            System.out.println("\n⚠️  Para cambiar el tipo, primero debe limpiar el montículo");
+            System.out.println("\n⚠️  Para cambiar el tipo, primero debe limpiar el Monticulo");
             if (InputValidator.confirmar("¿Desea limpiar y cambiar el tipo?")) {
                 TipoMonticulo nuevoTipo = (tipoActual == TipoMonticulo.MIN_HEAP) 
                     ? TipoMonticulo.MAX_HEAP : TipoMonticulo.MIN_HEAP;
@@ -220,7 +220,7 @@ public class MonticuloMenu {
         boolean valido = monticulo.isValidHeap();
         
         System.out.println("Tipo: " + monticulo.getTipo());
-        System.out.println("Tamaño: " + monticulo.size());
+        System.out.println("Tamanio: " + monticulo.size());
         
         if (valido) {
             System.out.println("\n✅ El heap es valido");
@@ -235,7 +235,7 @@ public class MonticuloMenu {
         System.out.println("═══ ESTRUCTURA COMPLETA ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("El montículo esta vacio");
+            System.out.println("El Monticulo esta vacio");
         } else {
             monticulo.display();
             System.out.println("\nAltura: " + monticulo.getHeight());
@@ -246,7 +246,7 @@ public class MonticuloMenu {
         System.out.println("═══ REPRESENTACIÓN COMO ARREGLO ═══\n");
         
         if (monticulo.isEmpty()) {
-            System.out.println("El montículo esta vacio");
+            System.out.println("El Monticulo esta vacio");
         } else {
             System.out.println("Elementos (índices desde 1):");
             var elementos = monticulo.getElements();

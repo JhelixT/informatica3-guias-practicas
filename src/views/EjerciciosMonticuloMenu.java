@@ -5,7 +5,7 @@ import core.utils.InputValidator;
 import core.utils.MenuFormatter;
 
 /**
- * Menu de ejercicios de Montículo Binario
+ * Menu de ejercicios de Monticulo Binario
  * 
  * @author JhelixT
  * @version 1.0
@@ -19,7 +19,7 @@ public class EjerciciosMonticuloMenu {
             MenuFormatter.limpiarPantalla();
             
             System.out.println("╔════════════════════════════════════════════════════════════════════╗");
-            System.out.println("║           EJERCICIOS DE MONTÍCULO BINARIO                          ║");
+            System.out.println("║           EJERCICIOS DE Monticulo BINARIO                          ║");
             System.out.println("╠════════════════════════════════════════════════════════════════════╣");
             System.out.println("║                                                                    ║");
             System.out.println("║  📚 EJERCICIOS BASICOS                                             ║");
@@ -110,7 +110,7 @@ public class EjerciciosMonticuloMenu {
     
     private static void ejecutarTodosLosEjercicios() {
         System.out.println("\n╔════════════════════════════════════════════════════════════════════╗");
-        System.out.println("║        EJECUTANDO TODOS LOS EJERCICIOS DE MONTÍCULO               ║");
+        System.out.println("║        EJECUTANDO TODOS LOS EJERCICIOS DE Monticulo               ║");
         System.out.println("╚════════════════════════════════════════════════════════════════════╝\n");
         
         String[] nombresEjercicios = {

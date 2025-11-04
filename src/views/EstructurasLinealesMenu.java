@@ -146,7 +146,7 @@ public class EstructurasLinealesMenu {
     
     private void eliminarListaPosicion() {
         if (lista.isEmpty()) {
-            MenuFormatter.mostrarMensajeAdvertencia("La lista esta vacía");
+            MenuFormatter.mostrarMensajeAdvertencia("La lista esta vacia");
             return;
         }
         int posicion = InputValidator.leerEnteroEnRango("Ingrese la posicion a eliminar (0-" + 
@@ -172,7 +172,7 @@ public class EstructurasLinealesMenu {
     
     private void obtenerEnPosicion() {
         if (lista.isEmpty()) {
-            MenuFormatter.mostrarMensajeAdvertencia("La lista esta vacía");
+            MenuFormatter.mostrarMensajeAdvertencia("La lista esta vacia");
             return;
         }
         int posicion = InputValidator.leerEnteroEnRango("Ingrese la posicion (0-" + 
@@ -380,7 +380,7 @@ public class EstructurasLinealesMenu {
         System.out.println("╠════════════════════════════════════════════════════════════════╣");
         System.out.println("║ Caracteristica    │  Pila Arreglo    │  Pila Enlazada       ║");
         System.out.println("╠════════════════════════════════════════════════════════════════╣");
-        System.out.println("║ Capacidad         │  Fija/Dinámica   │  Ilimitada           ║");
+        System.out.println("║ Capacidad         │  Fija/Dinamica   │  Ilimitada           ║");
         System.out.println("║ Push              │  O(1)            │  O(1)                ║");
         System.out.println("║ Pop               │  O(1)            │  O(1)                ║");
         System.out.println("║ Memoria           │  Mas eficiente   │  Overhead por nodos  ║");

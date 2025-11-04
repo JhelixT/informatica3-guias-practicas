@@ -212,7 +212,7 @@ public class TablaHashMenu {
         
         if (!tabla.isEmpty()) {
             int[] stats = tabla.getCollisionStats();
-            System.out.println("\n🔍 Distribución:");
+            System.out.println("\n🔍 Distribucion:");
             System.out.println("   • Buckets usados: " + stats[0] + " / " + tabla.getCapacity());
             System.out.println("   • Buckets vacios: " + (tabla.getCapacity() - stats[0]));
             System.out.println("   • Uso: " + String.format("%.1f", stats[0] * 100.0 / tabla.getCapacity()) + "%");
@@ -237,13 +237,13 @@ public class TablaHashMenu {
         double avgChain = (double) tabla.size() / stats[0];
         System.out.println("   • Promedio por bucket: " + String.format("%.2f", avgChain));
         
-        System.out.println("\n💡 Interpretación:");
+        System.out.println("\n💡 Interpretacion:");
         if (stats[2] == 0) {
-            System.out.println("   ✓ Distribución perfecta, sin colisiones");
+            System.out.println("   ✓ distribucion perfecta, sin colisiones");
         } else if (stats[1] <= 3) {
-            System.out.println("   ✓ Buena distribución, pocas colisiones");
+            System.out.println("   ✓ Buena distribucion, pocas colisiones");
         } else if (stats[1] <= 5) {
-            System.out.println("   ⚠️ Distribución aceptable");
+            System.out.println("   ⚠️ distribucion aceptable");
         } else {
             System.out.println("   ✗ Muchas colisiones, considere redimensionar");
         }
@@ -297,7 +297,7 @@ public class TablaHashMenu {
     private void demostrarOperaciones() {
         System.out.println("=== Demostracion COMPLETA ===\n");
         
-        System.out.println("Se creara una tabla hash y se demostrarán sus operaciones.");
+        System.out.println("Se creara una tabla hash y se demostraran sus operaciones.");
         System.out.println("Presione Enter para continuar...");
         InputValidator.pausar();
         
