@@ -1,4 +1,4 @@
-package core.integrador;
+package core.integrador.modelo;
 
 import java.time.LocalDateTime;
 

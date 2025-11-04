@@ -1,4 +1,4 @@
-package core.integrador;
+package core.integrador.modelo;
 
 public class Paciente {
     private String dni;

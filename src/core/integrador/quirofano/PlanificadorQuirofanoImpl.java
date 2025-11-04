@@ -1,5 +1,6 @@
-package core.integrador;
+package core.integrador.quirofano;
 
+import core.integrador.modelo.SolicitudCirugia;
 import core.estructuras.monticulo.MonticuloBinario;
 import core.estructuras.monticulo.MonticuloBinario.TipoMonticulo;
 import java.time.LocalDateTime;

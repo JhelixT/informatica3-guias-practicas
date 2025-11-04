@@ -1,5 +1,6 @@
-package core.integrador;
+package core.integrador.quirofano;
 
+import core.integrador.modelo.SolicitudCirugia;
 import java.util.List;
 
 /** Interfaz para planificar asignación de quirófanos y obtener top-K médicos bloqueados */

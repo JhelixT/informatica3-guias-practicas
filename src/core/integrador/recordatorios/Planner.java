@@ -1,5 +1,6 @@
-package core.integrador;
+package core.integrador.recordatorios;
 
+import core.integrador.modelo.Recordatorio;
 import java.time.LocalDateTime;
 
 /**

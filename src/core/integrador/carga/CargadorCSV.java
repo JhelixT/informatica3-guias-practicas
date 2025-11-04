@@ -1,5 +1,8 @@
-package core.integrador;
+package core.integrador.carga;
 
+import core.integrador.modelo.Medico;
+import core.integrador.modelo.Paciente;
+import core.integrador.modelo.Turno;
 import core.estructuras.listas.ListaEnlazada;
 import core.estructuras.hash.TablaHash;
 

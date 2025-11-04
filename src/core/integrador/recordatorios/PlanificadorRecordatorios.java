@@ -1,5 +1,6 @@
-package core.integrador;
+package core.integrador.recordatorios;
 
+import core.integrador.modelo.Recordatorio;
 import core.estructuras.monticulo.MonticuloIndexado;
 import core.estructuras.hash.TablaHash;
 import java.time.LocalDateTime;

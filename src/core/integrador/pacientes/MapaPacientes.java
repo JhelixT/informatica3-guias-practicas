@@ -1,4 +1,6 @@
-package core.integrador;
+package core.integrador.pacientes;
+
+import core.integrador.modelo.Paciente;
 
 /**
  * Interfaz para índice rápido de pacientes por DNI.

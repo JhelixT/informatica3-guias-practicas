@@ -1,4 +1,4 @@
-package core.integrador;
+package core.integrador.salaespera;
 
 import core.estructuras.colas.ColaCircular;
 

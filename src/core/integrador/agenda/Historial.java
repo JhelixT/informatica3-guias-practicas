@@ -1,4 +1,6 @@
-package core.integrador;
+package core.integrador.agenda;
+
+import core.integrador.modelo.Turno;
 import core.estructuras.pilas.PilaEnlazada;
 import java.time.LocalDateTime;
 import java.util.Optional;

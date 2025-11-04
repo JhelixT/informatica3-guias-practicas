@@ -1,5 +1,6 @@
-package core.integrador;
+package core.integrador.pacientes;
 
+import core.integrador.modelo.Paciente;
 import core.estructuras.hash.TablaHash;
 import java.util.List;
 

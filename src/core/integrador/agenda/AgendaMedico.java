@@ -1,5 +1,6 @@
-package core.integrador;
+package core.integrador.agenda;
 
+import core.integrador.modelo.Turno;
 import java.time.LocalDateTime;
 import java.util.Optional;
 

@@ -1,5 +1,6 @@
-package core.integrador;
+package core.integrador.merge;
 
+import core.integrador.modelo.Turno;
 import core.estructuras.listas.ListaEnlazada;
 import core.estructuras.hash.TablaHash;
 import core.estructuras.nodos.Nodo;

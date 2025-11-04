@@ -1,4 +1,4 @@
-package core.integrador;
+package core.integrador.agenda;
 
 import java.time.LocalDateTime;
 
