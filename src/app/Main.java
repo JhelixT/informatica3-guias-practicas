@@ -48,6 +48,7 @@ public class Main {
         System.out.println(AnsiColors.naranja("     * ") + AnsiColors.blanco("Monticulo Binario (Binary Heap - Min/Max Heap)"));
         System.out.println(AnsiColors.naranja("     * ") + AnsiColors.blanco("Ejercicios de Monticulo Binario (10 Ejercicios Heap)"));
         System.out.println(AnsiColors.naranja("     * ") + AnsiColors.blanco("Tabla Hash (Hash Table con Encadenamiento)"));
+        System.out.println(AnsiColors.naranja("     * ") + AnsiColors.blanco("Sistema Integrador (Gestion de Turnos Medicos)"));
         System.out.println();
         InputValidator.pausar();
     }
@@ -96,11 +97,14 @@ public class Main {
             MenuFormatter.mostrarOpcion(13, "Tabla Hash (Hash Table)");
             System.out.println(AnsiColors.gris("     |-- Encadenamiento con ListaEnlazada - O(1) ops"));
             
+            MenuFormatter.mostrarOpcion(14, "Sistema Integrador de Gestion Medica");
+            System.out.println(AnsiColors.gris("     |-- Integracion completa: Hash, AVL, Cola, Heap, Merge"));
+            
             MenuFormatter.mostrarSeparador();
-            MenuFormatter.mostrarOpcion(14, "Informacion del sistema");
+            MenuFormatter.mostrarOpcion(15, "Informacion del sistema");
             MenuFormatter.mostrarOpcion(0, "Salir");
             
-            int opcion = InputValidator.leerEnteroEnRango("\n" + AnsiColors.azul("Seleccione un modulo: "), 0, 14);
+            int opcion = InputValidator.leerEnteroEnRango("\n" + AnsiColors.azul("Seleccione un modulo: "), 0, 15);
             
             switch (opcion) {
                 case 1 -> {
@@ -155,7 +159,11 @@ public class Main {
                     MenuFormatter.limpiarPantalla();
                     new TablaHashMenu().mostrarMenu();
                 }
-                case 14 -> mostrarInformacionSistema();
+                case 14 -> {
+                    MenuFormatter.limpiarPantalla();
+                    new IntegradorMenu().mostrar();
+                }
+                case 15 -> mostrarInformacionSistema();
                 case 0 -> {
                     if (InputValidator.confirmar("¿Está seguro de que desea salir?")) {
                         return;
@@ -189,6 +197,7 @@ public class Main {
         System.out.println(AnsiColors.azul("  |   |   +-- ") + AnsiColors.blanco("hash/            # Tabla Hash con encadenamiento"));
         System.out.println(AnsiColors.azul("  |   |   +-- ") + AnsiColors.blanco("nodos/           # Nodos para estructuras enlazadas"));
         System.out.println(AnsiColors.azul("  |   |   +-- ") + AnsiColors.blanco("recursividad/    # Ejercicios recursivos"));
+        System.out.println(AnsiColors.azul("  |   +-- ") + AnsiColors.blanco("integrador/          # Sistema integrador de turnos"));
         System.out.println(AnsiColors.azul("  |   +-- ") + AnsiColors.blanco("ejercicios/          # Ejercicios practicos"));
         System.out.println(AnsiColors.azul("  |   |   +-- ") + AnsiColors.blanco("listas/          # Ejercicios de listas"));
         System.out.println(AnsiColors.azul("  |   |   +-- ") + AnsiColors.blanco("arboles/         # Ejercicios de arboles AVL"));
@@ -205,6 +214,7 @@ public class Main {
         System.out.println(AnsiColors.azul("  * ") + AnsiColors.blanco("Estructuras No Lineales (Arboles AVL, BST, Rojinegro, Heap)"));
         System.out.println(AnsiColors.azul("  * ") + AnsiColors.blanco("Tablas Hash (Hash Table con encadenamiento y ListaEnlazada)"));
         System.out.println(AnsiColors.azul("  * ") + AnsiColors.blanco("Colas de Prioridad (Monticulo Binario)"));
+        System.out.println(AnsiColors.azul("  * ") + AnsiColors.blanco("Sistema Integrador (Gestion de Turnos Medicos - Todas las estructuras)"));
         System.out.println(AnsiColors.azul("  * ") + AnsiColors.blanco("Programacion Orientada a Objetos"));
         System.out.println(AnsiColors.azul("  * ") + AnsiColors.blanco("Manejo de Excepciones"));
         System.out.println(AnsiColors.azul("  * ") + AnsiColors.blanco("Validacion de Entrada de Datos"));
