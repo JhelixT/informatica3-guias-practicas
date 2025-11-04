@@ -24,4 +24,9 @@ public class Paciente {
     public int hashCode() {
         return dni.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

@@ -398,35 +398,60 @@ public class TablaHash<K, V> {
      * Útil para debugging y visualizar cómo se distribuyen las claves.
      */
     public void display() {
-        System.out.println("╔══════════════════════════════════════════════════════════╗");
-        System.out.println("║            ESTRUCTURA INTERNA - TABLA HASH               ║");
-        System.out.println("╠══════════════════════════════════════════════════════════╣");
-        System.out.printf("║ Capacidad: %-10d   Elementos: %-10d        ║%n", capacidad, size);
-        System.out.printf("║ Factor de carga: %.2f                                    ║%n", getLoadFactor());
-        System.out.println("╠══════════════════════════════════════════════════════════╣");
+        System.out.println("╔════════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                  ESTRUCTURA INTERNA - TABLA HASH                           ║");
+        System.out.println("╠════════════════════════════════════════════════════════════════════════════╣");
+        System.out.printf("║ Capacidad: %-10d   Elementos: %-10d   Load Factor: %.2f         ║%n", 
+                         capacidad, size, getLoadFactor());
+        System.out.println("╠════════════════════════════════════════════════════════════════════════════╣");
         
-        for (int i = 0; i < capacidad; i++) {
+        int bucketsShown = 0;
+        final int MAX_BUCKETS = 10;
+        
+        for (int i = 0; i < capacidad && bucketsShown < MAX_BUCKETS; i++) {
             ListaEnlazada<Entry<K, V>> bucket = tabla[i];
             
             if (!bucket.isEmpty()) {
-                System.out.printf("║ [%3d] → ", i);
+                System.out.printf("║ [%3d] -> ", i);
                 
                 Nodo<Entry<K, V>> current = bucket.getHead();
                 boolean first = true;
+                StringBuilder line = new StringBuilder();
                 while (current != null) {
                     if (!first) {
-                        System.out.print(" → ");
+                        line.append(" -> ");
                     }
-                    System.out.print(current.getData().toString());
+                    line.append(current.getData().toString());
                     current = current.getNext();
                     first = false;
                 }
                 
-                System.out.println();
+                // Imprimir la línea, truncarla si es muy larga
+                String lineStr = line.toString();
+                if (lineStr.length() > 65) {
+                    System.out.println(lineStr.substring(0, 62) + "...║");
+                } else {
+                    System.out.printf("%-65s║%n", lineStr);
+                }
+                
+                bucketsShown++;
             }
         }
         
-        System.out.println("╚══════════════════════════════════════════════════════════╝");
+        // Contar buckets no mostrados
+        int bucketsNoMostrados = 0;
+        for (int i = 0; i < capacidad; i++) {
+            if (!tabla[i].isEmpty()) {
+                bucketsNoMostrados++;
+            }
+        }
+        bucketsNoMostrados -= bucketsShown;
+        
+        if (bucketsNoMostrados > 0) {
+            System.out.printf("║ ... (%d buckets adicionales no mostrados)                                  ║%n", bucketsNoMostrados);
+        }
+        
+        System.out.println("╚════════════════════════════════════════════════════════════════════════════╝");
     }
     
     /**
