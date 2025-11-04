@@ -21,17 +21,17 @@ public class RecursividadMenu {
         while (true) {
             MenuFormatter.mostrarTituloSecundario("EJERCICIOS DE RECURSIVIDAD");
             MenuFormatter.mostrarOpcion(1, "Buscar en arreglo");
-            MenuFormatter.mostrarOpcion(2, "Contar dígitos");
-            MenuFormatter.mostrarOpcion(3, "Conversión a binario");
+            MenuFormatter.mostrarOpcion(2, "Contar digitos");
+            MenuFormatter.mostrarOpcion(3, "Conversion a binario");
             MenuFormatter.mostrarOpcion(4, "Fibonacci simple");
             MenuFormatter.mostrarOpcion(5, "Fibonacci optimizado");
             MenuFormatter.mostrarOpcion(6, "Invertir cadena");
-            MenuFormatter.mostrarOpcion(7, "Máximo Común Divisor");
-            MenuFormatter.mostrarOpcion(8, "Verificar palíndromo");
+            MenuFormatter.mostrarOpcion(7, "Maximo Comun Divisor");
+            MenuFormatter.mostrarOpcion(8, "Verificar palindromo");
             MenuFormatter.mostrarOpcion(9, "Sumar arreglo");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 9);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opcion: ", 0, 9);
             
             switch (opcion) {
                 case 1 -> buscarEnArreglo();
@@ -57,31 +57,31 @@ public class RecursividadMenu {
         int[] arreglo = {3, 5, 7, 9, 11, 13, 15};
         System.out.println("Arreglo: " + Arrays.toString(arreglo));
         
-        int numero = InputValidator.leerEntero("\nIngrese el número a buscar: ");
+        int numero = InputValidator.leerEntero("\nIngrese el numero a buscar: ");
         
         boolean encontrado = BuscarEnArreglo.buscar(arreglo, numero, 0);
         
         if (encontrado) {
-            MenuFormatter.mostrarMensajeExito("El valor " + numero + " SÍ está en el arreglo");
+            MenuFormatter.mostrarMensajeExito("El valor " + numero + " SI esta en el arreglo");
         } else {
-            MenuFormatter.mostrarMensajeError("El valor " + numero + " NO está en el arreglo");
+            MenuFormatter.mostrarMensajeError("El valor " + numero + " NO esta en el arreglo");
         }
     }
     
     private void contarDigitos() {
-        MenuFormatter.mostrarTituloSecundario("CONTAR DÍGITOS");
+        MenuFormatter.mostrarTituloSecundario("CONTAR DIGITOS");
         
-        int numero = InputValidator.leerEntero("Ingrese un número: ");
+        int numero = InputValidator.leerEntero("Ingrese un numero: ");
         int digitos = ConteoDigitos.contarDigitos(Math.abs(numero));
         
         System.out.println("\nResultado:");
-        System.out.println("  El número " + numero + " tiene " + digitos + " dígitos");
+        System.out.println("  El numero " + numero + " tiene " + digitos + " digitos");
     }
     
     private void conversionBinaria() {
-        MenuFormatter.mostrarTituloSecundario("CONVERSIÓN A BINARIO");
+        MenuFormatter.mostrarTituloSecundario("CONVERSION A BINARIO");
         
-        int numero = InputValidator.leerEnteroPositivo("Ingrese un número decimal: ");
+        int numero = InputValidator.leerEnteroPositivo("Ingrese un numero decimal: ");
         String binario = ConversionBinaria.conversion(numero);
         
         System.out.println("\nResultado:");
@@ -92,32 +92,32 @@ public class RecursividadMenu {
     private void fibonacci() {
         MenuFormatter.mostrarTituloSecundario("FIBONACCI SIMPLE");
         
-        int n = InputValidator.leerEnteroEnRango("¿Cuántos números de Fibonacci desea generar? (1-15): ", 1, 15);
+        int n = InputValidator.leerEnteroEnRango("Cuantos numeros de Fibonacci desea generar? (1-15): ", 1, 15);
         
-        System.out.println("\nPrimeros " + n + " números de Fibonacci:");
+        System.out.println("\nPrimeros " + n + " numeros de Fibonacci:");
         for (int i = 1; i <= n; i++) {
             System.out.println("  F(" + i + ") = " + Fibonacci.numeroFibonacci(i));
         }
         
-        MenuFormatter.mostrarMensajeInfo("Nota: Este método es ineficiente para números grandes");
+        MenuFormatter.mostrarMensajeInfo("Nota: Este metodo es ineficiente para numeros grandes");
     }
     
     private void fibonacciOptimizado() {
         MenuFormatter.mostrarTituloSecundario("FIBONACCI OPTIMIZADO");
         
-        int n = InputValidator.leerEnteroEnRango("¿Cuántos números de Fibonacci desea generar? (1-40): ", 1, 40);
+        int n = InputValidator.leerEnteroEnRango("Cuantos numeros de Fibonacci desea generar? (1-40): ", 1, 40);
         
         int[] memo = new int[n + 1];
         Arrays.fill(memo, -1);
         
-        System.out.println("\nPrimeros " + n + " números de Fibonacci (con memoización):");
+        System.out.println("\nPrimeros " + n + " numeros de Fibonacci (con memoizacion):");
         for (int i = 1; i <= n; i++) {
             memo = new int[n + 1];
             Arrays.fill(memo, -1);
             System.out.println("  F(" + i + ") = " + FibonacciOptimizado.numeroFibonacci(i));
         }
         
-        MenuFormatter.mostrarMensajeInfo("Este método usa memoización para mayor eficiencia");
+        MenuFormatter.mostrarMensajeInfo("Este metodo usa memoizacion para mayor eficiencia");
     }
     
     private void invertirCadena() {
@@ -132,10 +132,10 @@ public class RecursividadMenu {
     }
     
     private void maximoComunDivisor() {
-        MenuFormatter.mostrarTituloSecundario("MÁXIMO COMÚN DIVISOR");
+        MenuFormatter.mostrarTituloSecundario("MAXIMO COMUN DIVISOR");
         
-        int a = InputValidator.leerEnteroPositivo("Ingrese el primer número: ");
-        int b = InputValidator.leerEnteroPositivo("Ingrese el segundo número: ");
+        int a = InputValidator.leerEnteroPositivo("Ingrese el primer numero: ");
+        int b = InputValidator.leerEnteroPositivo("Ingrese el segundo numero: ");
         
         int mcd = MaximoComunDivisor.mcd(a, b);
         
@@ -144,7 +144,7 @@ public class RecursividadMenu {
     }
     
     private void verificarPalindromo() {
-        MenuFormatter.mostrarTituloSecundario("VERIFICAR PALÍNDROMO");
+        MenuFormatter.mostrarTituloSecundario("VERIFICAR PALINDROMO");
         
         String cadena = InputValidator.leerCadenaNoVacia("Ingrese una cadena: ");
         cadena = cadena.toLowerCase().replaceAll("\\s+", "");
@@ -153,9 +153,9 @@ public class RecursividadMenu {
         
         System.out.println("\nResultado:");
         if (esPalindromo) {
-            MenuFormatter.mostrarMensajeExito("'" + cadena + "' ES un palíndromo");
+            MenuFormatter.mostrarMensajeExito("'" + cadena + "' ES un palindromo");
         } else {
-            MenuFormatter.mostrarMensajeError("'" + cadena + "' NO es un palíndromo");
+            MenuFormatter.mostrarMensajeError("'" + cadena + "' NO es un palindromo");
         }
     }
     

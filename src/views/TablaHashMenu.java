@@ -5,7 +5,7 @@ import core.utils.InputValidator;
 import core.utils.MenuFormatter;
 
 /**
- * Menú interactivo para demostrar las operaciones de Tabla Hash.
+ * Menu interactivo para demostrar las operaciones de Tabla Hash.
  * 
  * @author JhelixT
  * @version 1.0
@@ -25,7 +25,7 @@ public class TablaHashMenu {
             MenuFormatter.limpiarPantalla();
             mostrarOpciones();
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 14);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opcion: ", 0, 14);
             
             MenuFormatter.limpiarPantalla();
             
@@ -45,9 +45,9 @@ public class TablaHashMenu {
                 case 13 -> cambiarCapacidad();
                 case 14 -> demostrarOperaciones();
                 case 0 -> {
-                    if (InputValidator.confirmar("¿Está seguro de que desea salir?")) {
+                    if (InputValidator.confirmar("Esta seguro de que desea salir?")) {
                         continuar = false;
-                        System.out.println("\n👋 Saliendo del menú de Tabla Hash...\n");
+                        System.out.println("\n Saliendo del menu de Tabla Hash...\n");
                     }
                 }
             }
@@ -62,7 +62,7 @@ public class TablaHashMenu {
         MenuFormatter.mostrarTituloPrincipal("TABLA HASH CON ENCADENAMIENTO");
         
         System.out.println("╔══════════════════════════════════════════════════════════════════╗");
-        System.out.println("║                      OPERACIONES BÁSICAS                         ║");
+        System.out.println("║                      OPERACIONES BASICAS                         ║");
         System.out.println("╠══════════════════════════════════════════════════════════════════╣");
         MenuFormatter.mostrarOpcion(1, "Insertar elemento (put)");
         MenuFormatter.mostrarOpcion(2, "Buscar elemento (get)");
@@ -75,17 +75,17 @@ public class TablaHashMenu {
         MenuFormatter.mostrarOpcion(6, "Mostrar todos los valores");
         MenuFormatter.mostrarOpcion(7, "Mostrar todas las entradas");
         MenuFormatter.mostrarOpcion(8, "Ver estructura interna");
-        MenuFormatter.mostrarOpcion(9, "Ver estadísticas");
-        MenuFormatter.mostrarOpcion(10, "Análisis de colisiones");
+        MenuFormatter.mostrarOpcion(9, "Ver estadisticas");
+        MenuFormatter.mostrarOpcion(10, "Analisis de colisiones");
         System.out.println("╠══════════════════════════════════════════════════════════════════╣");
         System.out.println("║                      UTILIDADES                                  ║");
         System.out.println("╠══════════════════════════════════════════════════════════════════╣");
         MenuFormatter.mostrarOpcion(11, "Limpiar tabla");
         MenuFormatter.mostrarOpcion(12, "Insertar datos de prueba");
         MenuFormatter.mostrarOpcion(13, "Cambiar capacidad inicial");
-        MenuFormatter.mostrarOpcion(14, "Demostración completa");
+        MenuFormatter.mostrarOpcion(14, "Demostracion completa");
         MenuFormatter.mostrarSeparador();
-        MenuFormatter.mostrarOpcion(0, "Volver al menú principal");
+        MenuFormatter.mostrarOpcion(0, "Volver al menu principal");
         System.out.println("╚══════════════════════════════════════════════════════════════════╝");
     }
     
@@ -208,7 +208,7 @@ public class TablaHashMenu {
         System.out.println("   • Tamaño: " + tabla.size());
         System.out.println("   • Capacidad: " + tabla.getCapacity());
         System.out.println("   • Factor de carga: " + String.format("%.2f", tabla.getLoadFactor()));
-        System.out.println("   • Vacía: " + (tabla.isEmpty() ? "Sí" : "No"));
+        System.out.println("   * Vacia: " + (tabla.isEmpty() ? "Si" : "No"));
         
         if (!tabla.isEmpty()) {
             int[] stats = tabla.getCollisionStats();
@@ -220,7 +220,7 @@ public class TablaHashMenu {
     }
     
     private void mostrarColisiones() {
-        System.out.println("=== ANÁLISIS DE COLISIONES ===\n");
+        System.out.println("=== ANALISIS DE COLISIONES ===\n");
         
         if (tabla.isEmpty()) {
             System.out.println("⚠️ La tabla está vacía");
@@ -229,10 +229,10 @@ public class TablaHashMenu {
         
         int[] stats = tabla.getCollisionStats();
         
-        System.out.println("📈 Estadísticas de colisiones:");
-        System.out.println("   • Buckets usados: " + stats[0]);
-        System.out.println("   • Colisiones totales: " + stats[2]);
-        System.out.println("   • Máxima cadena: " + stats[1] + " elementos");
+        System.out.println(" Estadisticas de colisiones:");
+        System.out.println("   * Buckets usados: " + stats[0]);
+        System.out.println("   * Colisiones: " + stats[2]);
+        System.out.println("   * Maxima cadena: " + stats[1] + " elementos");
         
         double avgChain = (double) tabla.size() / stats[0];
         System.out.println("   • Promedio por bucket: " + String.format("%.2f", avgChain));
@@ -251,11 +251,11 @@ public class TablaHashMenu {
     
     private void limpiarTabla() {
         if (tabla.isEmpty()) {
-            System.out.println("⚠️ La tabla ya está vacía");
+            System.out.println(" La tabla ya esta vacia");
             return;
         }
         
-        if (InputValidator.confirmar("¿Está seguro de que desea limpiar toda la tabla?")) {
+        if (InputValidator.confirmar("Esta seguro de que desea limpiar toda la tabla?")) {
             tabla.clear();
             System.out.println("\n✓ Tabla limpiada correctamente");
         }
@@ -264,8 +264,8 @@ public class TablaHashMenu {
     private void insertarVariosDatos() {
         System.out.println("=== INSERTAR DATOS DE PRUEBA ===\n");
         
-        String[] nombres = {"Juan", "María", "Pedro", "Ana", "Luis", 
-                           "Carmen", "José", "Laura", "Carlos", "Elena"};
+        String[] nombres = {"Juan", "Maria", "Pedro", "Ana", "Luis", 
+                           "Carmen", "Jose", "Laura", "Carlos", "Elena"};
         int[] edades = {25, 30, 22, 28, 35, 27, 32, 24, 29, 26};
         
         for (int i = 0; i < nombres.length; i++) {
@@ -282,7 +282,7 @@ public class TablaHashMenu {
         
         if (!tabla.isEmpty()) {
             System.out.println("⚠️ La tabla actual tiene datos.");
-            if (!InputValidator.confirmar("¿Desea crear una nueva tabla vacía?")) {
+            if (!InputValidator.confirmar("Desea crear una nueva tabla vacia?")) {
                 return;
             }
         }
@@ -344,13 +344,13 @@ public class TablaHashMenu {
         System.out.println(tabla);
         InputValidator.pausar();
         
-        // Estadísticas finales
-        System.out.println("\n7️⃣ Estadísticas finales:");
+        // Estadisticas finales
+        System.out.println("\n[7] Estadisticas finales:");
         int[] stats = tabla.getCollisionStats();
         System.out.println("   • Elementos: " + tabla.size());
         System.out.println("   • Factor de carga: " + String.format("%.2f", tabla.getLoadFactor()));
         System.out.println("   • Colisiones: " + stats[2]);
         
-        System.out.println("\n✓ Demostración completa");
+        System.out.println("\n> Demostracion completa");
     }
 }

@@ -13,7 +13,7 @@ public class TareasMenu {
     
     public void mostrarMenu() {
         while (true) {
-            MenuFormatter.mostrarTituloSecundario("GESTIÓN DE TAREAS");
+            MenuFormatter.mostrarTituloSecundario("GESTION DE TAREAS");
             MenuFormatter.mostrarOpcion(1, "Agregar tarea");
             MenuFormatter.mostrarOpcion(2, "Listar todas las tareas");
             MenuFormatter.mostrarOpcion(3, "Listar tareas pendientes");
@@ -21,10 +21,10 @@ public class TareasMenu {
             MenuFormatter.mostrarOpcion(5, "Cambiar estado de tarea");
             MenuFormatter.mostrarOpcion(6, "Eliminar tarea");
             MenuFormatter.mostrarOpcion(7, "Eliminar tareas completadas");
-            MenuFormatter.mostrarOpcion(8, "Ver estadísticas");
+            MenuFormatter.mostrarOpcion(8, "Ver estadisticas");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 8);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opcion: ", 0, 8);
             
             switch (opcion) {
                 case 1 -> agregarTarea();
@@ -47,7 +47,7 @@ public class TareasMenu {
         MenuFormatter.mostrarTituloSecundario("AGREGAR TAREA");
         
         try {
-            String descripcion = InputValidator.leerCadenaNoVacia("Descripción de la tarea: ");
+            String descripcion = InputValidator.leerCadenaNoVacia("Descripcion de la tarea: ");
             
             MenuFormatter.mostrarTituloSecundario("ESTADO INICIAL");
             MenuFormatter.mostrarOpcion(1, "Pendiente");
@@ -157,7 +157,7 @@ public class TareasMenu {
         int indice = InputValidator.leerEnteroEnRango("Seleccione la tarea a eliminar: ", 1, gestor.getCantidadTareas()) - 1;
         Tarea tarea = gestor.getTarea(indice);
         
-        if (InputValidator.confirmar("¿Está seguro de eliminar la tarea '" + tarea.getDescripcion() + "'?")) {
+        if (InputValidator.confirmar("Esta seguro de eliminar la tarea '" + tarea.getDescripcion() + "'?")) {
             if (gestor.eliminarTarea(indice)) {
                 MenuFormatter.mostrarMensajeExito("Tarea eliminada correctamente");
             } else {
@@ -181,7 +181,7 @@ public class TareasMenu {
     }
     
     private void mostrarEstadisticas() {
-        MenuFormatter.mostrarTituloSecundario("ESTADÍSTICAS DE TAREAS");
+        MenuFormatter.mostrarTituloSecundario("ESTADISTICAS DE TAREAS");
         
         if (!gestor.tieneTareas()) {
             MenuFormatter.mostrarMensajeInfo("No hay tareas registradas");
@@ -200,7 +200,7 @@ public class TareasMenu {
         System.out.printf("Progreso: %.1f%%%n", porcentajeCompletado);
         
         // Barra de progreso simple
-        int barras = (int) (porcentajeCompletado / 5); // 20 posiciones máximo
+        int barras = (int) (porcentajeCompletado / 5); // 20 posiciones maximo
         System.out.print("▓");
         for (int i = 0; i < 20; i++) {
             System.out.print(i < barras ? "█" : "░");

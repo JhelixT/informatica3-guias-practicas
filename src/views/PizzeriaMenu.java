@@ -13,7 +13,7 @@ public class PizzeriaMenu {
     
     public void mostrarMenu() {
         while (true) {
-            MenuFormatter.mostrarTituloSecundario("GESTIÓN DE PIZZERÍA");
+            MenuFormatter.mostrarTituloSecundario("GESTION DE PIZZERIA");
             MenuFormatter.mostrarOpcion(1, "Agregar pedido");
             MenuFormatter.mostrarOpcion(2, "Listar pedidos");
             MenuFormatter.mostrarOpcion(3, "Editar pedido");
@@ -23,7 +23,7 @@ public class PizzeriaMenu {
             MenuFormatter.mostrarOpcion(7, "Generar datos de prueba");
             MenuFormatter.mostrarOpcionSalir(0);
             
-            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opción: ", 0, 7);
+            int opcion = InputValidator.leerEnteroEnRango("\nSeleccione una opcion: ", 0, 7);
             
             switch (opcion) {
                 case 1 -> agregarPedido();
@@ -46,7 +46,7 @@ public class PizzeriaMenu {
         
         try {
             String cliente = InputValidator.leerCadenaNoVacia("Nombre del cliente: ");
-            double tiempo = InputValidator.leerDoublePositivo("Tiempo de preparación (minutos): ");
+            double tiempo = InputValidator.leerDoublePositivo("Tiempo de preparacion (minutos): ");
             double precio = InputValidator.leerDoublePositivo("Precio total: $");
             
             pizzeria.agregarPedido(tiempo, precio, cliente);
@@ -83,8 +83,8 @@ public class PizzeriaMenu {
         
         int indice = InputValidator.leerEnteroEnRango("Seleccione el pedido a editar: ", 1, pizzeria.getCantidadPedidos()) - 1;
         
-        MenuFormatter.mostrarTituloSecundario("¿QUÉ DESEA EDITAR?");
-        MenuFormatter.mostrarOpcion(1, "Tiempo de preparación");
+        MenuFormatter.mostrarTituloSecundario("QUE DESEA EDITAR?");
+        MenuFormatter.mostrarOpcion(1, "Tiempo de preparacion");
         MenuFormatter.mostrarOpcion(2, "Precio total");
         
         int opcion = InputValidator.leerEnteroEnRango("Seleccione: ", 1, 2);
@@ -114,7 +114,7 @@ public class PizzeriaMenu {
         int indice = InputValidator.leerEnteroEnRango("Seleccione el pedido a eliminar: ", 1, pizzeria.getCantidadPedidos()) - 1;
         
         Pedido pedido = pizzeria.getPedido(indice);
-        if (InputValidator.confirmar("¿Está seguro de eliminar el pedido de " + pedido.getNombreCliente() + "?")) {
+        if (InputValidator.confirmar("Esta seguro de eliminar el pedido de " + pedido.getNombreCliente() + "?")) {
             try {
                 pizzeria.eliminarPedido(indice);
                 MenuFormatter.mostrarMensajeExito("Pedido eliminado correctamente");
@@ -131,7 +131,7 @@ public class PizzeriaMenu {
         }
         
         MenuFormatter.mostrarTituloSecundario("ORDENAMIENTO DE PEDIDOS");
-        MenuFormatter.mostrarOpcion(1, "Por tiempo de preparación (Inserción)");
+        MenuFormatter.mostrarOpcion(1, "Por tiempo de preparacion (Insercion)");
         MenuFormatter.mostrarOpcion(2, "Por precio (Shell Sort)");
         MenuFormatter.mostrarOpcion(3, "Por nombre cliente (Quick Sort)");
         
@@ -142,7 +142,7 @@ public class PizzeriaMenu {
         switch (opcion) {
             case 1 -> {
                 Ordenador.ordenarPorTiempoPreparacion(pedidos);
-                MenuFormatter.mostrarMensajeExito("Pedidos ordenados por tiempo (Inserción)");
+                MenuFormatter.mostrarMensajeExito("Pedidos ordenados por tiempo (Insercion)");
             }
             case 2 -> {
                 Ordenador.ordenarPorPrecio(pedidos);
@@ -162,7 +162,7 @@ public class PizzeriaMenu {
     }
     
     private void analizarRendimiento() {
-        MenuFormatter.mostrarTituloSecundario("ANÁLISIS DE RENDIMIENTO");
+        MenuFormatter.mostrarTituloSecundario("ANALISIS DE RENDIMIENTO");
         MenuFormatter.mostrarMensajeInfo("Ejecutando pruebas de rendimiento...");
         TiempoOrdenamiento.probarAlgoritmos();
         
