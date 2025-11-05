@@ -2,6 +2,7 @@ package core.integrador.agenda;
 
 import core.integrador.modelo.Turno;
 import core.estructuras.arboles.ArbolAVL;
+import core.estructuras.arboles.NodoAVL;
 import core.estructuras.listas.ListaEnlazada;
 import core.estructuras.nodos.Nodo;
 import core.estructuras.hash.TablaHash;
@@ -129,38 +130,56 @@ public class AgendaMedicoTree implements AgendaMedico {
     
     /**
      * Busca si existe algún turno que se solape con el rango [inicio, fin)
-     * Complejidad: O(log n + k) donde k = turnos en el rango
+     * OPTIMIZADO: Complejidad O(log n + k) usando búsqueda dirigida en AVL
      * 
      * @param inicio Inicio del rango a verificar
      * @param fin Fin del rango a verificar
      * @return Primer turno que se solapa, o null si no hay
      */
     private Turno buscarTurnoEnRango(LocalDateTime inicio, LocalDateTime fin) {
-        // Obtener turnos ordenados y buscar eficientemente
-        ListaEnlazada<Turno> turnos = obtenerTurnosOrdenados();
-        Nodo<Turno> nodo = turnos.getHead();
+        // Crear turno ficticio para búsqueda en AVL
+        Turno turnoBuscado = new Turno("BUSQUEDA", "DUMMY", "DUMMY", inicio, 1, "BUSQUEDA");
+        TurnoWrapper wrapperBuscado = new TurnoWrapper(turnoBuscado);
         
-        // Optimización: saltar turnos que terminan antes del rango de interés
-        while (nodo != null) {
-            Turno turno = nodo.getData();
-            LocalDateTime finTurno = turno.getFechaHoraFin();
-            
-            // Si este turno termina antes de nuestro inicio, seguir buscando
-            if (finTurno.isBefore(inicio) || finTurno.equals(inicio)) {
-                nodo = nodo.getNext();
-                continue;
-            }
+        // PASO 1: Buscar el primer turno >= inicio - O(log n)
+        NodoAVL<TurnoWrapper> nodoActual = arbolTurnos.findCeilingNode(wrapperBuscado);
+        
+        // PASO 2: Recorrer hacia adelante solo turnos relevantes - O(k)
+        while (nodoActual != null) {
+            Turno turno = nodoActual.getData().turno;
             
             // Si este turno empieza después de nuestro fin, no hay más conflictos
             if (turno.getFechaHora().isAfter(fin) || turno.getFechaHora().equals(fin)) {
-                break;
+                break;  // ✅ PARADA TEMPRANA - no seguir recorriendo
             }
             
-            // Este turno se solapa con nuestro rango
-            return turno;
+            // Verificar si hay solapamiento real
+            if (hayConflictoReal(turno, inicio, fin)) {
+                return turno;  // ✅ ENCONTRADO - primer conflicto
+            }
+            
+            // Avanzar al siguiente turno en orden - O(log n) amortizado
+            nodoActual = arbolTurnos.getInorderSuccessor(nodoActual);
         }
         
-        return null; // No hay turnos en el rango
+        return null; // ✅ NO HAY CONFLICTOS en el rango
+    }
+    
+    /**
+     * Verifica si dos turnos realmente se solapan en tiempo
+     * 
+     * @param turno Turno existente a verificar
+     * @param inicioNuevo Inicio del nuevo turno/rango
+     * @param finNuevo Fin del nuevo turno/rango
+     * @return true si hay solapamiento, false en caso contrario
+     */
+    private boolean hayConflictoReal(Turno turno, LocalDateTime inicioNuevo, LocalDateTime finNuevo) {
+        LocalDateTime inicioExistente = turno.getFechaHora();
+        LocalDateTime finExistente = turno.getFechaHoraFin();
+        
+        // Dos turnos se solapan si:
+        // inicioNuevo < finExistente AND inicioExistente < finNuevo
+        return inicioNuevo.isBefore(finExistente) && inicioExistente.isBefore(finNuevo);
     }
     
     /** Busca un turno por su ID y retorna Optional (método público) - O(1) */

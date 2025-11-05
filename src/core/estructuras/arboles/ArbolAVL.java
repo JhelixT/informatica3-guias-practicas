@@ -435,4 +435,99 @@ public class ArbolAVL<T extends Comparable<T>> {
         }
         return 1 + countNodesRecursive(node.getLeft()) + countNodesRecursive(node.getRight());
     }
+    
+    /**
+     * Busca el primer nodo con valor >= al dado (successor o igual)
+     * Complejidad: O(log n)
+     * 
+     * @param value Valor a buscar
+     * @return Nodo con valor >= value, o null si no existe
+     */
+    public NodoAVL<T> findCeilingNode(T value) {
+        return findCeilingRecursive(root, value);
+    }
+    
+    private NodoAVL<T> findCeilingRecursive(NodoAVL<T> node, T value) {
+        if (node == null) {
+            return null;
+        }
+        
+        int comparison = value.compareTo(node.getData());
+        
+        if (comparison == 0) {
+            // Encontramos el valor exacto
+            return node;
+        } else if (comparison > 0) {
+            // El valor buscado es mayor, buscar en subárbol derecho
+            return findCeilingRecursive(node.getRight(), value);
+        } else {
+            // El valor buscado es menor, este nodo es candidato
+            // Pero puede haber uno menor en el subárbol izquierdo
+            NodoAVL<T> leftResult = findCeilingRecursive(node.getLeft(), value);
+            return (leftResult != null) ? leftResult : node;
+        }
+    }
+    
+    /**
+     * Obtiene el sucesor inorden de un nodo (siguiente en recorrido inorden)
+     * Complejidad: O(log n) en promedio
+     * 
+     * @param node Nodo del cual obtener el sucesor
+     * @return Sucesor inorden, o null si no existe
+     */
+    public NodoAVL<T> getInorderSuccessor(NodoAVL<T> node) {
+        if (node == null) {
+            return null;
+        }
+        
+        // Si tiene subárbol derecho, el sucesor es el mínimo de ese subárbol
+        if (node.getRight() != null) {
+            return findMinimumNode(node.getRight());
+        }
+        
+        // Si no tiene subárbol derecho, buscar el primer ancestro que sea hijo izquierdo
+        return findSuccessorAncestor(root, node);
+    }
+    
+    /**
+     * Encuentra el nodo con el valor mínimo en un subárbol
+     */
+    private NodoAVL<T> findMinimumNode(NodoAVL<T> node) {
+        while (node.getLeft() != null) {
+            node = node.getLeft();
+        }
+        return node;
+    }
+    
+    /**
+     * Encuentra el ancestro que es sucesor del nodo dado
+     */
+    private NodoAVL<T> findSuccessorAncestor(NodoAVL<T> root, NodoAVL<T> target) {
+        NodoAVL<T> successor = null;
+        NodoAVL<T> current = root;
+        
+        while (current != null) {
+            int comparison = target.getData().compareTo(current.getData());
+            
+            if (comparison < 0) {
+                successor = current;  // Este es un candidato a sucesor
+                current = current.getLeft();
+            } else if (comparison > 0) {
+                current = current.getRight();
+            } else {
+                break;  // Encontramos el nodo target
+            }
+        }
+        
+        return successor;
+    }
+    
+    /**
+     * Obtiene la raíz del árbol (para acceso controlado)
+     * 
+     * @return Nodo raíz del árbol
+     */
+    public NodoAVL<T> getRoot() {
+        return root;
+    }
 }
