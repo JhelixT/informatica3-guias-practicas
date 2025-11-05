@@ -5,6 +5,7 @@ import core.estructuras.listas.ListaEnlazada;
 import core.estructuras.hash.TablaHash;
 import core.estructuras.nodos.Nodo;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Consolidador de agendas que unifica dos fuentes de turnos ordenadas.
@@ -164,14 +165,18 @@ public class ConsolidadorAgendas {
             if (turnoExistente.getMatriculaMedico().equals(turno.getMatriculaMedico()) &&
                 turnosSeSuperponen(turnoExistente, turno)) {
                 
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                String fechaInicio = turnoExistente.getFechaHora().format(formatter);
+                String fechaFin = turnoExistente.getFechaHoraFin().format(formatter);
+                
                 conflictos.insertLast(String.format(
                     "Conflicto de horario: Médico %s - Turno %s de %s solapa con turno %s (%s a %s)",
                     turno.getMatriculaMedico(),
                     turno.getId(),
                     origen,
                     turnoExistente.getId(),
-                    turnoExistente.getFechaHora(),
-                    turnoExistente.getFechaHoraFin()
+                    fechaInicio,
+                    fechaFin
                 ));
                 
                 return true; // Hay conflicto, no agregar

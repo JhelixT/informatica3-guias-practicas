@@ -8,12 +8,13 @@ import core.integrador.salaespera.SalaEspera;
 import core.integrador.salaespera.GestorSalaEspera;
 import core.integrador.recordatorios.PlanificadorRecordatorios;
 import core.integrador.recordatorios.GestorRecordatorios;
-import core.integrador.agenda.AgendaMedicoTree;
-import core.integrador.agenda.GestorAgenda;
+import core.integrador.agenda.AgendaMedicoConHistorial;
 import core.integrador.merge.ConsolidadorAgendas;
 import core.integrador.quirofano.PlanificadorQuirofanoImpl;
 import core.integrador.quirofano.GestorQuirofanos;
+import core.integrador.reportes.GestorReportes;
 import core.estructuras.listas.ListaEnlazada;
+import core.estructuras.hash.TablaHash;
 import core.estructuras.nodos.Nodo;
 import core.utils.AnsiColors;
 import core.utils.InputValidator;
@@ -43,17 +44,17 @@ public class IntegradorMenu {
     private ListaEnlazada<Turno> turnos;
     
     private IndicePacientes indicePacientes;
-    private AgendaMedicoTree agendaMedico;
+    private AgendaMedicoConHistorial agendaMedico;
     private SalaEspera salaEspera;
     private PlanificadorRecordatorios planificadorRecordatorios;
     private PlanificadorQuirofanoImpl planificadorQuirofano;
     
     // Gestores para lógica de negocio
     private GestorPacientes gestorPacientes;
-    private GestorAgenda gestorAgenda;
     private GestorSalaEspera gestorSala;
     private GestorRecordatorios gestorRecordatorios;
     private GestorQuirofanos gestorQuirofanos;
+    private GestorReportes gestorReportes;
     
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     
@@ -72,7 +73,7 @@ public class IntegradorMenu {
         boolean continuar = true;
         while (continuar) {
             mostrarMenu();
-            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opcion: ", 0, 9);
+            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opcion: ", 0, 10);
             
             switch (opcion) {
                 case 1 -> verIndicePacientes();
@@ -84,6 +85,7 @@ public class IntegradorMenu {
                 case 7 -> verDatosCompletos();
                 case 8 -> verEstadisticas();
                 case 9 -> ejecutarTests();
+                case 10 -> verReportesOperativos();
                 case 0 -> continuar = false;
             }
             
@@ -108,6 +110,7 @@ public class IntegradorMenu {
         System.out.println(AnsiColors.naranja("7.") + AnsiColors.blanco(" Ver Datos Completos"));
         System.out.println(AnsiColors.naranja("8.") + AnsiColors.blanco(" Estadisticas del Sistema"));
         System.out.println(AnsiColors.naranja("9.") + AnsiColors.blanco(" Ejecutar Tests"));
+        System.out.println(AnsiColors.naranja("10.") + AnsiColors.blanco(" Reportes Operativos (Ejercicio 8)"));
         System.out.println(AnsiColors.gris("0.") + AnsiColors.gris(" Salir"));
         System.out.println(AnsiColors.azul("=".repeat(60)));
     }
@@ -156,18 +159,13 @@ public class IntegradorMenu {
             nodoPac = nodoPac.getNext();
         }
         
-        // Arbol AVL de agenda
-        agendaMedico = new AgendaMedicoTree();
-        if (medicos.getSize() > 0) {
-            Medico primerMedico = medicos.getHead().getData();
-            Nodo<Turno> nodoTurno = turnos.getHead();
-            while (nodoTurno != null) {
-                Turno t = nodoTurno.getData();
-                if (t.getMatriculaMedico().equals(primerMedico.getMatricula())) {
-                    agendaMedico.agendar(t);
-                }
-                nodoTurno = nodoTurno.getNext();
-            }
+        // Agenda con historial - Cargar TODOS los turnos de TODOS los médicos
+        agendaMedico = new AgendaMedicoConHistorial();
+        Nodo<Turno> nodoTurno = turnos.getHead();
+        while (nodoTurno != null) {
+            Turno t = nodoTurno.getData();
+            agendaMedico.agendar(t);
+            nodoTurno = nodoTurno.getNext();
         }
         
         // Cola circular
@@ -176,15 +174,51 @@ public class IntegradorMenu {
         // Monticulo indexado
         planificadorRecordatorios = new PlanificadorRecordatorios();
         
-        // Min-Heap de quirofanos
-        planificadorQuirofano = new PlanificadorQuirofanoImpl(3, LocalDateTime.now());
+        // Min-Heap de quirofanos - Inicializar con fecha de la primera cirugía para verlas activas
+        LocalDateTime fechaInicio = LocalDateTime.of(2025, 11, 14, 8, 0); // 14/11/2025 08:00
+        planificadorQuirofano = new PlanificadorQuirofanoImpl(3, fechaInicio);
+        
+        // Registrar TODOS los médicos PRIMERO
+        Nodo<Medico> nodoMed = medicos.getHead();
+        while (nodoMed != null) {
+            Medico m = nodoMed.getData();
+            planificadorQuirofano.registrarMedico(m.getMatricula(), m.getNombre());
+            nodoMed = nodoMed.getNext();
+        }
+        
+        // Luego cargar cirugías de ejemplo (buscar en turnos los que sean cirugías)
+        Nodo<Turno> nodoTurnoCir = turnos.getHead();
+        while (nodoTurnoCir != null) {
+            Turno t = nodoTurnoCir.getData();
+            String motivo = t.getMotivo().toLowerCase();
+            // Identificar cirugías por el motivo
+            if (motivo.contains("cirugia") || motivo.contains("operatorio") || 
+                motivo.contains("anestesia") || motivo.contains("preoperatoria")) {
+                SolicitudCirugia solicitud = new SolicitudCirugia(
+                    t.getId(),
+                    t.getMatriculaMedico(),
+                    t.getDuracionMin(),
+                    t.getFechaHora()
+                );
+                planificadorQuirofano.procesar(solicitud);
+            }
+            nodoTurnoCir = nodoTurnoCir.getNext();
+        }
         
         // Inicializar gestores (lógica de negocio modularizada)
         gestorPacientes = new GestorPacientes(indicePacientes, pacientes);
-        gestorAgenda = new GestorAgenda(agendaMedico, indicePacientes, turnos);
         gestorSala = new GestorSalaEspera(salaEspera, indicePacientes);
         gestorRecordatorios = new GestorRecordatorios(planificadorRecordatorios, indicePacientes);
         gestorQuirofanos = new GestorQuirofanos(planificadorQuirofano);
+        // Crear una TablaHash de pacientes para reportes
+        TablaHash<String, Paciente> pacientesPorDni = new TablaHash<>();
+        Nodo<Paciente> nodo = pacientes.getHead();
+        while (nodo != null) {
+            Paciente p = nodo.getData();
+            pacientesPorDni.put(p.getDni(), p);
+            nodo = nodo.getNext();
+        }
+        gestorReportes = new GestorReportes(pacientesPorDni);
     }
     
     // ========== OPCION 1: INDICE DE PACIENTES ==========
@@ -353,20 +387,26 @@ public class IntegradorMenu {
             return;
         }
         
-        Medico medico = medicos.getHead().getData();
-        
         boolean continuar = true;
         while (continuar) {
             System.out.println("\n" + AnsiColors.azul("=".repeat(60)));
             System.out.println(AnsiColors.azulNegrita("  AGENDA MEDICA (ARBOL AVL)"));
             System.out.println(AnsiColors.azul("=".repeat(60)));
-            System.out.println(AnsiColors.verde("Medico: ") + medico.getNombre() + " - " + medico.getEspecialidad());
-            System.out.println(AnsiColors.cyan("Turnos actuales: ") + agendaMedico.cantidadTurnos());
+            
+            // Seleccionar médico
+            Medico medico = seleccionarMedico();
+            if (medico == null) {
+                return; // Usuario canceló
+            }
+            
+            System.out.println("\n" + AnsiColors.verde("Medico seleccionado: ") + medico.getNombre() + " - " + medico.getEspecialidad());
+            System.out.println(AnsiColors.cyan("Matricula: ") + medico.getMatricula());
             
             // Obtener turnos actuales del AVL (reflejan cambios en tiempo real)
-            ListaEnlazada<Turno> turnosActuales = agendaMedico.turnosPorMedico(medico.getMatricula());
+            ListaEnlazada<Turno> turnosActuales = agendaMedico.getAgendaBase().turnosPorMedico(medico.getMatricula());
+            System.out.println(AnsiColors.cyan("Turnos agendados: ") + turnosActuales.getSize());
             
-            System.out.println("\n" + AnsiColors.naranjaNegrita("TURNOS ACTUALES EN AGENDA (primeros 10):"));
+            System.out.println("\n" + AnsiColors.naranjaNegrita("TURNOS DEL MEDICO (primeros 10):"));
             System.out.println(AnsiColors.gris("-".repeat(60)));
             
             if (turnosActuales.isEmpty()) {
@@ -401,9 +441,10 @@ public class IntegradorMenu {
             System.out.println(AnsiColors.blanco("4. Reprogramar turno (con Undo/Redo)"));
             System.out.println(AnsiColors.blanco("5. Deshacer ultima reprogramacion (Undo)"));
             System.out.println(AnsiColors.blanco("6. Rehacer reprogramacion (Redo)"));
+            System.out.println(AnsiColors.blanco("7. Cambiar de medico"));
             System.out.println(AnsiColors.gris("0. Volver al menu principal"));
             
-            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opcion: ", 0, 6);
+            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opcion: ", 0, 7);
             
             switch (opcion) {
                 case 1 -> {
@@ -430,9 +471,56 @@ public class IntegradorMenu {
                     rehacerReprogramacion();
                     esperarEnter();
                 }
+                case 7 -> {
+                    // Continúa el loop para volver a seleccionar médico
+                }
                 case 0 -> continuar = false;
             }
         }
+    }
+    
+    private Medico seleccionarMedico() {
+        System.out.println("\n" + AnsiColors.cyan("SELECCIONAR MEDICO"));
+        System.out.println(AnsiColors.gris("=".repeat(60)));
+        
+        // Mostrar lista de médicos
+        System.out.println(AnsiColors.naranja("Medicos disponibles:"));
+        System.out.println(AnsiColors.gris("-".repeat(60)));
+        
+        ListaEnlazada<Medico> listaMedicos = new ListaEnlazada<>();
+        Nodo<Medico> nodo = medicos.getHead();
+        int index = 1;
+        
+        while (nodo != null) {
+            Medico m = nodo.getData();
+            listaMedicos.insertLast(m);
+            System.out.printf("%s%2d.%s %-10s | %-25s | %s%n",
+                AnsiColors.cyan(""),
+                index++,
+                AnsiColors.blanco(""),
+                m.getMatricula(),
+                m.getNombre(),
+                m.getEspecialidad()
+            );
+            nodo = nodo.getNext();
+        }
+        
+        System.out.println(AnsiColors.gris("-".repeat(60)));
+        System.out.println(AnsiColors.gris("0. Cancelar"));
+        
+        int opcion = InputValidator.leerEnteroEnRango("Seleccione medico (numero): ", 0, listaMedicos.getSize());
+        
+        if (opcion == 0) {
+            return null;
+        }
+        
+        // Obtener médico seleccionado
+        nodo = listaMedicos.getHead();
+        for (int i = 1; i < opcion && nodo != null; i++) {
+            nodo = nodo.getNext();
+        }
+        
+        return nodo != null ? nodo.getData() : null;
     }
     
     private void buscarProximoTurnoDisponible(Medico medico) {
@@ -445,7 +533,7 @@ public class IntegradorMenu {
         
         try {
             LocalDateTime fecha = LocalDateTime.parse(fechaStr, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-            Optional<LocalDateTime> proximoHueco = agendaMedico.primerHueco(medico.getMatricula(), fecha, 30); // Duracion por defecto 30 min
+            Optional<LocalDateTime> proximoHueco = agendaMedico.getAgendaBase().primerHueco(medico.getMatricula(), fecha, 30); // Duracion por defecto 30 min
             
             if (proximoHueco.isPresent()) {
                 LocalDateTime fechaDisponible = proximoHueco.get();
@@ -466,7 +554,7 @@ public class IntegradorMenu {
         System.out.println(AnsiColors.azul("=".repeat(60)));
         
         // Mostrar turnos actuales del médico
-        ListaEnlazada<Turno> turnosActuales = agendaMedico.turnosPorMedico(medico.getMatricula());
+        ListaEnlazada<Turno> turnosActuales = agendaMedico.getAgendaBase().turnosPorMedico(medico.getMatricula());
         
         if (turnosActuales.isEmpty()) {
             System.out.println(AnsiColors.amarillo("No hay turnos para reprogramar"));
@@ -503,7 +591,7 @@ public class IntegradorMenu {
             
             System.out.println(AnsiColors.amarillo("\nReprogramando..."));
             
-            boolean exito = gestorAgenda.reprogramar(idTurno, nuevaFecha);
+            boolean exito = agendaMedico.reprogramar(idTurno, nuevaFecha);
             
             if (exito) {
                 System.out.println(AnsiColors.verde("\n✓ Turno reprogramado exitosamente"));
@@ -555,18 +643,23 @@ public class IntegradorMenu {
             
             System.out.println(AnsiColors.amarillo("\nAgendando turno..."));
             
-            GestorAgenda.ResultadoAgenda resultado = gestorAgenda.agendar(
-                dniPaciente, medico.getMatricula(), fechaTurno, duracion, motivo
-            );
+            // Generar nuevo ID
+            String nuevoId = generarNuevoIdTurno();
+            Turno nuevoTurno = new Turno(nuevoId, dniPaciente, medico.getMatricula(), fechaTurno, duracion, motivo);
             
-            if (resultado.isExito()) {
-                System.out.println(AnsiColors.verde("\n✓ " + resultado.getMensaje()));
-                System.out.println(AnsiColors.cyan("  ID: ") + resultado.getIdTurno());
+            boolean exito = agendaMedico.agendar(nuevoTurno);
+            
+            if (exito) {
+                // Agregar a la lista global de turnos
+                turnos.insertLast(nuevoTurno);
+                
+                System.out.println(AnsiColors.verde("\n✓ Turno agendado exitosamente"));
+                System.out.println(AnsiColors.cyan("  ID: ") + nuevoId);
                 System.out.println(AnsiColors.cyan("  Fecha: ") + fechaTurno.format(FORMATO_FECHA));
                 System.out.println(AnsiColors.cyan("  Paciente: ") + paciente.getNombre());
-                System.out.println(AnsiColors.cyan("  Total turnos: ") + agendaMedico.cantidadTurnos());
+                System.out.println(AnsiColors.cyan("  Total turnos: ") + agendaMedico.getAgendaBase().cantidadTurnos());
             } else {
-                System.out.println(AnsiColors.rojo("\n✗ " + resultado.getMensaje()));
+                System.out.println(AnsiColors.rojo("\n✗ Conflicto de horario"));
             }
         } catch (Exception e) {
             System.out.println(AnsiColors.rojo("✗ Error: Formato de fecha inválido"));
@@ -579,7 +672,7 @@ public class IntegradorMenu {
         System.out.println(AnsiColors.azulNegrita("  CANCELAR TURNO"));
         System.out.println(AnsiColors.azul("=".repeat(60)));
         
-        ListaEnlazada<Turno> turnosActuales = agendaMedico.turnosPorMedico(medico.getMatricula());
+        ListaEnlazada<Turno> turnosActuales = agendaMedico.getAgendaBase().turnosPorMedico(medico.getMatricula());
         
         if (turnosActuales.isEmpty()) {
             System.out.println(AnsiColors.amarillo("No hay turnos para cancelar"));
@@ -614,16 +707,14 @@ public class IntegradorMenu {
         if (confirma.equals("S")) {
             System.out.println(AnsiColors.amarillo("\nCancelando turno..."));
             
-            GestorAgenda.ResultadoCancelacion resultado = gestorAgenda.cancelar(idTurno, medico.getMatricula());
+            boolean exito = agendaMedico.cancelar(idTurno);
             
-            if (resultado.isExito()) {
-                Turno cancelado = resultado.getTurnoCancelado();
-                System.out.println(AnsiColors.verde("\n✓ " + resultado.getMensaje()));
-                System.out.println(AnsiColors.cyan("  ID cancelado: ") + cancelado.getId());
-                System.out.println(AnsiColors.cyan("  Fecha: ") + cancelado.getFechaHora().format(FORMATO_FECHA));
-                System.out.println(AnsiColors.cyan("  Turnos restantes: ") + agendaMedico.cantidadTurnos());
+            if (exito) {
+                System.out.println(AnsiColors.verde("\n✓ Turno cancelado exitosamente"));
+                System.out.println(AnsiColors.cyan("  ID cancelado: ") + idTurno);
+                System.out.println(AnsiColors.cyan("  Turnos restantes: ") + agendaMedico.getAgendaBase().cantidadTurnos());
             } else {
-                System.out.println(AnsiColors.rojo("\n✗ " + resultado.getMensaje()));
+                System.out.println(AnsiColors.rojo("\n✗ Error al cancelar el turno"));
             }
         } else {
             System.out.println(AnsiColors.amarillo("\n✗ Operación cancelada"));
@@ -637,7 +728,7 @@ public class IntegradorMenu {
         
         System.out.println(AnsiColors.amarillo("Deshaciendo última reprogramación..."));
         
-        boolean exito = gestorAgenda.undo();
+        boolean exito = agendaMedico.undo();
         
         if (exito) {
             System.out.println(AnsiColors.verde("\n✓ Reprogramación deshecha exitosamente"));
@@ -656,7 +747,7 @@ public class IntegradorMenu {
         
         System.out.println(AnsiColors.amarillo("Rehaciendo reprogramación..."));
         
-        boolean exito = gestorAgenda.redo();
+        boolean exito = agendaMedico.redo();
         
         if (exito) {
             System.out.println(AnsiColors.verde("\n✓ Reprogramación rehecha exitosamente"));
@@ -1029,14 +1120,6 @@ public class IntegradorMenu {
     
     // ========== OPCION 5: QUIROFANOS ==========
     private void verQuirofanos() {
-        // Registrar todos los médicos si no están registrados
-        Nodo<Medico> nodoRegistro = medicos.getHead();
-        while (nodoRegistro != null) {
-            Medico m = nodoRegistro.getData();
-            planificadorQuirofano.registrarMedico(m.getMatricula(), m.getNombre());
-            nodoRegistro = nodoRegistro.getNext();
-        }
-        
         boolean continuar = true;
         while (continuar) {
             System.out.println("\n" + AnsiColors.azul("=".repeat(60)));
@@ -1045,7 +1128,7 @@ public class IntegradorMenu {
             
             planificadorQuirofano.mostrarEstadoQuirofanos();
             
-            System.out.println("\n" + AnsiColors.naranjaNegrita("TOP-3 MEDICOS CON MAS TIEMPO:"));
+            System.out.println("\n" + AnsiColors.naranjaNegrita("TOP-3 MEDICOS CON MAS MINUTOS PROGRAMADOS:"));
             System.out.println(AnsiColors.gris("-".repeat(60)));
             
             ListaEnlazada<String> topK = planificadorQuirofano.topKMedicosBloqueados(3);
@@ -1056,15 +1139,18 @@ public class IntegradorMenu {
                 nodoTopK = nodoTopK.getNext();
             }
             
-            System.out.println(AnsiColors.gris("\nComplejidad: O(log Q) - asignación de quirófano"));
+            System.out.println(AnsiColors.gris("\nComplejidad por evento: O(log Q + log K)"));
+            System.out.println(AnsiColors.gris("  • log Q = asignación de quirófano (Min-Heap)"));
+            System.out.println(AnsiColors.gris("  • log K = actualización top-K médicos"));
             
             // Submenú
             System.out.println("\n" + AnsiColors.naranja("Opciones:"));
             System.out.println(AnsiColors.blanco("1. Procesar nueva cirugía"));
             System.out.println(AnsiColors.blanco("2. Ver estado detallado"));
+            System.out.println(AnsiColors.blanco("3. Avanzar/Cambiar fecha del sistema"));
             System.out.println(AnsiColors.gris("0. Volver al menú principal"));
             
-            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opción: ", 0, 2);
+            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opción: ", 0, 3);
             
             switch (opcion) {
                 case 1 -> {
@@ -1073,6 +1159,10 @@ public class IntegradorMenu {
                 }
                 case 2 -> {
                     verEstadoDetalladoQuirofanos();
+                    esperarEnter();
+                }
+                case 3 -> {
+                    avanzarFechaSistema();
                     esperarEnter();
                 }
                 case 0 -> continuar = false;
@@ -1104,8 +1194,7 @@ public class IntegradorMenu {
         }
         
         System.out.println(AnsiColors.gris("-".repeat(60)));
-        System.out.print(AnsiColors.blanco("Matrícula del médico: "));
-        String matricula = scanner.nextLine().trim();
+        String matricula = InputValidator.leerCadenaNoVacia("Matrícula del médico: ");
         
         // Verificar que el médico existe
         Medico medicoSeleccionado = null;
@@ -1126,14 +1215,12 @@ public class IntegradorMenu {
         System.out.println(AnsiColors.verde("Médico: ") + medicoSeleccionado.getNombre());
         
         System.out.print(AnsiColors.blanco("\nID de la cirugía: "));
-        String idCirugia = scanner.nextLine().trim();
+        String idCirugia = InputValidator.leerCadenaNoVacia("");
         
-        System.out.print(AnsiColors.blanco("Duración en minutos: "));
-        int duracion = InputValidator.leerEnteroEnRango("", 30, 480);
-        scanner.nextLine(); // Consumir newline
+        int duracion = InputValidator.leerEnteroEnRango("Duración en minutos (30-480): ", 30, 480);
         
         System.out.print(AnsiColors.blanco("Fecha/hora programada (dd/MM/yyyy HH:mm): "));
-        String fechaStr = scanner.nextLine();
+        String fechaStr = InputValidator.getScanner().nextLine();
         
         try {
             LocalDateTime fecha = LocalDateTime.parse(fechaStr, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
@@ -1154,6 +1241,33 @@ public class IntegradorMenu {
             }
         } catch (Exception e) {
             System.out.println(AnsiColors.rojo("✗ Error: Formato de fecha inválido"));
+        }
+    }
+    
+    private void avanzarFechaSistema() {
+        System.out.println("\n" + AnsiColors.azul("=".repeat(60)));
+        System.out.println(AnsiColors.azulNegrita("  AVANZAR/CAMBIAR FECHA DEL SISTEMA"));
+        System.out.println(AnsiColors.azul("=".repeat(60)));
+        
+        System.out.print(AnsiColors.blanco("Ingrese nueva fecha/hora (dd/MM/yyyy HH:mm): "));
+        String fechaStr = scanner.nextLine().trim();
+        
+        try {
+            LocalDateTime nuevaFecha = LocalDateTime.parse(fechaStr, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            
+            System.out.println(AnsiColors.amarillo("\nAvanzando tiempo del sistema..."));
+            
+            GestorQuirofanos.ResultadoAvance resultado = gestorQuirofanos.avanzarTiempo(nuevaFecha);
+            
+            if (resultado.isExito()) {
+                System.out.println(AnsiColors.verde("\n✓ " + resultado.getMensaje()));
+                System.out.println(AnsiColors.cyan("  Nueva fecha del sistema: ") + nuevaFecha.format(FORMATO_FECHA));
+                System.out.println(AnsiColors.amarillo("\n  Los quirófanos se actualizaron según la nueva fecha"));
+            } else {
+                System.out.println(AnsiColors.rojo("\n✗ " + resultado.getMensaje()));
+            }
+        } catch (Exception e) {
+            System.out.println(AnsiColors.rojo("✗ Error: Formato de fecha inválido. Use dd/MM/yyyy HH:mm"));
         }
     }
     
@@ -1184,47 +1298,63 @@ public class IntegradorMenu {
         System.out.println(AnsiColors.azulNegrita("  CONSOLIDACION DE AGENDAS (MERGE)"));
         System.out.println(AnsiColors.azul("=".repeat(60)));
         
-        // Dividir turnos en dos agendas
+        // Cargar agendas desde archivos CSV
         ListaEnlazada<Turno> agendaLocal = new ListaEnlazada<>();
         ListaEnlazada<Turno> agendaNube = new ListaEnlazada<>();
         
-        int count = 0;
-        Nodo<Turno> nodo = turnos.getHead();
-        while (nodo != null && count < 20) {
-            if (count % 2 == 0) {
-                agendaLocal.insertLast(nodo.getData());
-            } else {
-                agendaNube.insertLast(nodo.getData());
-            }
-            count++;
-            nodo = nodo.getNext();
+        try {
+            System.out.println(AnsiColors.cyan("Cargando agendas..."));
+            
+            // Crear cargadores independientes para cada agenda
+            CargadorCSV cargadorLocal = new CargadorCSV();
+            CargadorCSV cargadorNube = new CargadorCSV();
+            
+            // Cargar pacientes y médicos (necesarios para validar turnos)
+            // Reusar los datos ya cargados del sistema
+            cargadorLocal.loadPacientes(CargadorCSV.DEFAULT_PACIENTES);
+            cargadorLocal.loadMedicos(CargadorCSV.DEFAULT_MEDICOS);
+            
+            cargadorNube.loadPacientes(CargadorCSV.DEFAULT_PACIENTES);
+            cargadorNube.loadMedicos(CargadorCSV.DEFAULT_MEDICOS);
+            
+            // Cargar agenda local
+            cargadorLocal.loadTurnos("src/core/integrador/datos/turnos_local.csv");
+            agendaLocal = cargadorLocal.getTurnos();
+            System.out.println(AnsiColors.verde("✓ Agenda Local: ") + agendaLocal.getSize() + " turnos");
+            
+            // Cargar agenda nube
+            cargadorNube.loadTurnos("src/core/integrador/datos/turnos_nube.csv");
+            agendaNube = cargadorNube.getTurnos();
+            System.out.println(AnsiColors.cyan("✓ Agenda Nube: ") + agendaNube.getSize() + " turnos");
+            
+        } catch (Exception e) {
+            System.out.println(AnsiColors.rojo("✗ Error al cargar agendas: ") + e.getMessage());
+            return;
         }
         
-        // Agregar duplicado
-        if (agendaLocal.getSize() > 0) {
-            agendaNube.insertLast(agendaLocal.getHead().getData());
-        }
-        
-        System.out.println(AnsiColors.verde("Agenda Local: ") + agendaLocal.getSize() + " turnos");
-        System.out.println(AnsiColors.cyan("Agenda Nube: ") + agendaNube.getSize() + " turnos");
+        System.out.println("\n" + AnsiColors.amarillo("Ejecutando merge..."));
         
         // Realizar merge
         ConsolidadorAgendas.ResultadoMerge resultado = ConsolidadorAgendas.merge(agendaLocal, agendaNube);
         
-        System.out.println("\n" + AnsiColors.verde("Consolidacion completada"));
+        System.out.println("\n" + AnsiColors.verde("═".repeat(60)));
+        System.out.println(AnsiColors.verde("  CONSOLIDACION COMPLETADA"));
+        System.out.println(AnsiColors.verde("═".repeat(60)));
         System.out.println(AnsiColors.cyan("Turnos consolidados: ") + resultado.cantidadTurnos());
         System.out.println(AnsiColors.amarillo("Conflictos detectados: ") + resultado.cantidadConflictos());
         
         if (resultado.cantidadConflictos() > 0) {
-            System.out.println("\n" + AnsiColors.rojo("CONFLICTOS:"));
+            System.out.println("\n" + AnsiColors.rojo("CONFLICTOS ENCONTRADOS:"));
             Nodo<String> conflictoNodo = resultado.getConflictos().getHead();
+            int num = 1;
             while (conflictoNodo != null) {
-                System.out.println(AnsiColors.amarillo("- ") + conflictoNodo.getData());
+                System.out.println(AnsiColors.amarillo(num + ". ") + conflictoNodo.getData());
                 conflictoNodo = conflictoNodo.getNext();
+                num++;
             }
         }
         
-        System.out.println(AnsiColors.gris("\nComplejidad: O(n + m) - merge lineal"));
+        System.out.println("\n" + AnsiColors.gris("Complejidad: O(n + m) - merge lineal"));
     }
     
     // ========== OPCION 7: DATOS COMPLETOS ==========
@@ -1444,7 +1574,7 @@ public class IntegradorMenu {
         System.out.println(AnsiColors.gris("      Colisiones: ") + stats[2]);
         
         System.out.println(AnsiColors.verde("  - Arbol AVL:"));
-        System.out.println(AnsiColors.gris("      Turnos: ") + agendaMedico.cantidadTurnos());
+        System.out.println(AnsiColors.gris("      Turnos: ") + agendaMedico.getAgendaBase().cantidadTurnos());
         
         System.out.println(AnsiColors.verde("  - Cola Circular:"));
         System.out.println(AnsiColors.gris("      En espera: ") + salaEspera.size() + "/" + salaEspera.getCapacidad());
@@ -1508,6 +1638,230 @@ public class IntegradorMenu {
         }
         
         System.out.println(AnsiColors.verde("  Estado final: " + testCola.size() + "/5"));
+    }
+    
+    // ========== OPCION 10: REPORTES OPERATIVOS ==========
+    
+    private void verReportesOperativos() {
+        boolean continuar = true;
+        while (continuar) {
+            System.out.println("\n" + AnsiColors.azul("=".repeat(60)));
+            System.out.println(AnsiColors.azulNegrita("  REPORTES OPERATIVOS - EJERCICIO 8"));
+            System.out.println(AnsiColors.azul("=".repeat(60)));
+            System.out.println(AnsiColors.naranja("1.") + AnsiColors.blanco(" Reporte por Hora (Insertion Sort - Estable)"));
+            System.out.println(AnsiColors.naranja("2.") + AnsiColors.blanco(" Reporte por Duración (Shell Sort - Eficiente)"));
+            System.out.println(AnsiColors.naranja("3.") + AnsiColors.blanco(" Reporte por Apellido (Quick Sort - Rápido)"));
+            System.out.println(AnsiColors.naranja("4.") + AnsiColors.blanco(" Comparar Algoritmos (todos con timing)"));
+            System.out.println(AnsiColors.gris("0.") + AnsiColors.gris(" Volver al menú principal"));
+            System.out.println(AnsiColors.azul("=".repeat(60)));
+            
+            int opcion = InputValidator.leerEnteroEnRango("Seleccione una opción: ", 0, 4);
+            
+            switch (opcion) {
+                case 1 -> {
+                    generarReportePorHora();
+                    esperarEnter();
+                }
+                case 2 -> {
+                    generarReportePorDuracion();
+                    esperarEnter();
+                }
+                case 3 -> {
+                    generarReportePorApellido();
+                    esperarEnter();
+                }
+                case 4 -> {
+                    compararAlgoritmos();
+                    esperarEnter();
+                }
+                case 0 -> continuar = false;
+            }
+        }
+    }
+    
+    private void generarReportePorHora() {
+        System.out.println("\n" + AnsiColors.verde("=".repeat(60)));
+        System.out.println(AnsiColors.verde("  REPORTE POR HORA - INSERTION SORT (ESTABLE)"));
+        System.out.println(AnsiColors.verde("=".repeat(60)));
+        
+        ListaEnlazada<Turno> turnosDelDia = obtenerTurnosDelDia();
+        
+        if (turnosDelDia.isEmpty()) {
+            System.out.println(AnsiColors.amarillo("No hay turnos para mostrar"));
+            return;
+        }
+        
+        System.out.println(AnsiColors.amarillo("Ordenando turnos por hora usando Insertion Sort..."));
+        
+        GestorReportes.ResultadoReporte resultado = gestorReportes.reportePorHora(turnosDelDia);
+        
+        mostrarReporteTurnos(resultado.getTurnos(), "HORA", resultado.getTiempoMs());
+    }
+    
+    private void generarReportePorDuracion() {
+        System.out.println("\n" + AnsiColors.verde("=".repeat(60)));
+        System.out.println(AnsiColors.verde("  REPORTE POR DURACIÓN - SHELL SORT (EFICIENTE)"));
+        System.out.println(AnsiColors.verde("=".repeat(60)));
+        
+        ListaEnlazada<Turno> turnosDelDia = obtenerTurnosDelDia();
+        
+        if (turnosDelDia.isEmpty()) {
+            System.out.println(AnsiColors.amarillo("No hay turnos para mostrar"));
+            return;
+        }
+        
+        System.out.println(AnsiColors.amarillo("Ordenando turnos por duración usando Shell Sort..."));
+        
+        GestorReportes.ResultadoReporte resultado = gestorReportes.reportePorDuracion(turnosDelDia);
+        
+        mostrarReporteTurnos(resultado.getTurnos(), "DURACIÓN", resultado.getTiempoMs());
+    }
+    
+    private void generarReportePorApellido() {
+        System.out.println("\n" + AnsiColors.verde("=".repeat(60)));
+        System.out.println(AnsiColors.verde("  REPORTE POR APELLIDO - QUICK SORT (RÁPIDO)"));
+        System.out.println(AnsiColors.verde("=".repeat(60)));
+        
+        ListaEnlazada<Turno> turnosDelDia = obtenerTurnosDelDia();
+        
+        if (turnosDelDia.isEmpty()) {
+            System.out.println(AnsiColors.amarillo("No hay turnos para mostrar"));
+            return;
+        }
+        
+        System.out.println(AnsiColors.amarillo("Ordenando turnos por apellido del paciente usando Quick Sort..."));
+        
+        GestorReportes.ResultadoReporte resultado = gestorReportes.reportePorApellido(turnosDelDia);
+        
+        mostrarReporteTurnos(resultado.getTurnos(), "APELLIDO PACIENTE", resultado.getTiempoMs());
+    }
+    
+    private void compararAlgoritmos() {
+        System.out.println("\n" + AnsiColors.cyan("=".repeat(70)));
+        System.out.println(AnsiColors.cyan("  COMPARACIÓN DE ALGORITMOS DE ORDENAMIENTO"));
+        System.out.println(AnsiColors.cyan("=".repeat(70)));
+        
+        ListaEnlazada<Turno> turnosDelDia = obtenerTurnosDelDia();
+        
+        if (turnosDelDia.isEmpty()) {
+            System.out.println(AnsiColors.amarillo("No hay turnos para mostrar"));
+            return;
+        }
+        
+        int cantidadTurnos = turnosDelDia.getSize();
+        System.out.println(AnsiColors.blanco("Dataset: ") + AnsiColors.cyan(cantidadTurnos + " turnos"));
+        System.out.println(AnsiColors.gris("-".repeat(70)));
+        
+        // Insertion Sort (por hora)
+        System.out.print(AnsiColors.blanco("1. Insertion Sort (estable): "));
+        GestorReportes.ResultadoReporte resultado1 = gestorReportes.reportePorHora(turnosDelDia);
+        System.out.printf(AnsiColors.verde("%.3f ms") + "\n", resultado1.getTiempoMs());
+        
+        // Shell Sort (por duración)
+        System.out.print(AnsiColors.blanco("2. Shell Sort (eficiente):   "));
+        GestorReportes.ResultadoReporte resultado2 = gestorReportes.reportePorDuracion(turnosDelDia);
+        System.out.printf(AnsiColors.verde("%.3f ms") + "\n", resultado2.getTiempoMs());
+        
+        // Quick Sort (por apellido)
+        System.out.print(AnsiColors.blanco("3. Quick Sort (rápido):      "));
+        GestorReportes.ResultadoReporte resultado3 = gestorReportes.reportePorApellido(turnosDelDia);
+        System.out.printf(AnsiColors.verde("%.3f ms") + "\n", resultado3.getTiempoMs());
+        
+        System.out.println(AnsiColors.gris("-".repeat(70)));
+        
+        // Análisis de rendimiento
+        double[] tiempos = {resultado1.getTiempoMs(), resultado2.getTiempoMs(), resultado3.getTiempoMs()};
+        String[] algoritmos = {"Insertion Sort", "Shell Sort", "Quick Sort"};
+        String[] complejidades = {"O(n²)", "O(n log n)", "O(n log n)"};
+        
+        double minTiempo = Double.MAX_VALUE;
+        int indiceMasRapido = 0;
+        
+        for (int i = 0; i < tiempos.length; i++) {
+            if (tiempos[i] < minTiempo) {
+                minTiempo = tiempos[i];
+                indiceMasRapido = i;
+            }
+        }
+        
+        System.out.println(AnsiColors.amarillo("ANÁLISIS DE RENDIMIENTO:"));
+        System.out.printf(AnsiColors.blanco("• Más rápido: ") + AnsiColors.cyan("%s") + 
+                         AnsiColors.blanco(" (%.3f ms) - %s\n"),
+                         algoritmos[indiceMasRapido], minTiempo, complejidades[indiceMasRapido]);
+                         
+        for (int i = 0; i < tiempos.length; i++) {
+            if (i != indiceMasRapido) {
+                double factor = tiempos[i] / minTiempo;
+                System.out.printf(AnsiColors.blanco("• %s: ") + AnsiColors.gris("%.1fx más lento\n"),
+                                 algoritmos[i], factor);
+            }
+        }
+    }
+    
+    private ListaEnlazada<Turno> obtenerTurnosDelDia() {
+        // Filtrar turnos del día actual (o usar todos si no hay filtro específico)
+        return turnos; // Por simplicidad, usar todos los turnos
+    }
+    
+    private void mostrarReporteTurnos(ListaEnlazada<Turno> turnosOrdenados, String criterio, double tiempoMs) {
+        System.out.println(AnsiColors.gris("-".repeat(80)));
+        System.out.printf(AnsiColors.blanco("ORDENAMIENTO COMPLETADO - ") + AnsiColors.cyan("%.3f ms") + "\n", tiempoMs);
+        System.out.printf(AnsiColors.blanco("CRITERIO: ") + AnsiColors.cyan("%s") + "\n", criterio);
+        System.out.printf(AnsiColors.blanco("TOTAL: ") + AnsiColors.cyan("%d turnos") + "\n", turnosOrdenados.getSize());
+        System.out.println(AnsiColors.gris("-".repeat(80)));
+        System.out.printf("%-8s %-12s %-20s %-15s %s\n",
+            AnsiColors.amarillo("ID"),
+            AnsiColors.amarillo("FECHA/HORA"),
+            AnsiColors.amarillo("PACIENTE"),
+            AnsiColors.amarillo("DURACIÓN"),
+            AnsiColors.amarillo("MOTIVO"));
+        System.out.println(AnsiColors.gris("-".repeat(80)));
+        
+        Nodo<Turno> nodo = turnosOrdenados.getHead();
+        int contador = 0;
+        
+        while (nodo != null && contador < 15) { // Mostrar solo primeros 15
+            Turno turno = nodo.getData();
+            Paciente paciente = gestorReportes.buscarPaciente(turno.getDniPaciente());
+            String nombrePaciente = paciente != null ? paciente.getNombre() : "Desconocido";
+            
+            System.out.printf("%-8s %-12s %-20s %13d min %s\n",
+                AnsiColors.cyan(turno.getId()),
+                AnsiColors.blanco(turno.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM HH:mm"))),
+                AnsiColors.verde(nombrePaciente.length() > 18 ? 
+                    nombrePaciente.substring(0, 15) + "..." : nombrePaciente),
+                turno.getDuracionMin(),
+                AnsiColors.gris(turno.getMotivo().length() > 25 ? 
+                    turno.getMotivo().substring(0, 22) + "..." : turno.getMotivo())
+            );
+            
+            nodo = nodo.getNext();
+            contador++;
+        }
+        
+        if (turnosOrdenados.getSize() > 15) {
+            System.out.println(AnsiColors.gris("... y " + (turnosOrdenados.getSize() - 15) + " turnos más"));
+        }
+        
+        System.out.println(AnsiColors.gris("-".repeat(80)));
+    }
+    
+    private String generarNuevoIdTurno() {
+        int maxId = 0;
+        Nodo<Turno> nodo = turnos.getHead();
+        
+        while (nodo != null) {
+            String id = nodo.getData().getId();
+            if (id.startsWith("T-")) {
+                try {
+                    int num = Integer.parseInt(id.substring(2));
+                    if (num > maxId) maxId = num;
+                } catch (NumberFormatException e) {}
+            }
+            nodo = nodo.getNext();
+        }
+        
+        return String.format("T-%03d", maxId + 1);
     }
     
     private void esperarEnter() {

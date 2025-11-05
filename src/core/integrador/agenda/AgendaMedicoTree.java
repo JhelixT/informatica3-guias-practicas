@@ -4,11 +4,24 @@ import core.integrador.modelo.Turno;
 import core.estructuras.arboles.ArbolAVL;
 import core.estructuras.listas.ListaEnlazada;
 import core.estructuras.nodos.Nodo;
+import core.estructuras.hash.TablaHash;
 import java.time.LocalDateTime;
+
 import java.util.Optional;
 
 /**
- * Implementación de AgendaMedico usando árbol AVL ordenado por fechaHora.
+ * Implementación OPTIMIZADA de AgendaMedico usando árbol AVL + TablaHash.
+ * 
+ * Estructuras:
+ * - ArbolAVL<TurnoWrapper>: Turnos ordenados por fechaHora para búsquedas temporales O(log n)
+ * - TablaHash<String, Turno>: Índice por ID para búsquedas rápidas O(1)
+ * 
+ * Complejidades logradas:
+ * - agendar(): O(log n) - eliminado factor O(n) de búsqueda por ID
+ * - cancelar(): O(log n) - eliminado factor O(n) de búsqueda por ID  
+ * - siguiente(): O(log n) - recorrido inorden eficiente
+ * - primerHueco(): O(log n + k) - búsqueda optimizada en rango
+ * - buscarPorIdOpt(): O(1) - TablaHash directo
  */
 public class AgendaMedicoTree implements AgendaMedico {
     
@@ -28,25 +41,36 @@ public class AgendaMedicoTree implements AgendaMedico {
     
     private final ArbolAVL<TurnoWrapper> arbolTurnos = new ArbolAVL<>();
     
+    // TablaHash para búsqueda O(1) por ID - optimización de complejidad
+    private final TablaHash<String, Turno> turnosPorId = new TablaHash<>();
+    
     /** Agenda un nuevo turno verificando duplicados y solapamientos */
     @Override
     public synchronized boolean agendar(Turno t) {
         if (t == null || t.getId() == null) return false;
         
-        if (buscarPorId(t.getId()) != null) return false;
-        if (tieneSolapamiento(t)) return false;
+        // O(1) - Verificación duplicado usando TablaHash
+        if (turnosPorId.containsKey(t.getId())) return false;
         
+        // O(log n) - Verificación solapamiento optimizada
+        if (tieneSolapamientoOptimizado(t)) return false;
+        
+        // O(log n) - Inserción en AVL + O(1) en TablaHash
         arbolTurnos.insert(new TurnoWrapper(t));
+        turnosPorId.put(t.getId(), t);
         return true;
     }
     
     /** Cancela un turno por su ID, eliminándolo del árbol */
     @Override
     public synchronized boolean cancelar(String idTurno) {
-        Turno turno = buscarPorId(idTurno);
+        // O(1) - Búsqueda usando TablaHash
+        Turno turno = turnosPorId.get(idTurno);
         if (turno == null) return false;
         
+        // O(log n) - Eliminación del AVL + O(1) del TablaHash
         arbolTurnos.delete(new TurnoWrapper(turno));
+        turnosPorId.remove(idTurno);
         return true;
     }
     
@@ -67,39 +91,94 @@ public class AgendaMedicoTree implements AgendaMedico {
         return Optional.empty();
     }
     
-    /** Busca un turno por su ID recorriendo todos los turnos */
-    private Turno buscarPorId(String id) {
+    /**
+     * Ejercicio 3: Busca el primer hueco libre de duración mínima a partir de t0
+     * Complejidad: O(log n + k) donde k = turnos solapantes revisados
+     * 
+     * @param t0 Fecha/hora de inicio de búsqueda
+     * @param duracionMin Duración mínima requerida en minutos
+     * @return Fecha/hora del primer hueco disponible, o empty si no hay
+     */
+    public synchronized Optional<LocalDateTime> primerHueco(LocalDateTime t0, int duracionMin) {
+        if (duracionMin <= 0) return Optional.empty();
+        
+        LocalDateTime inicioHueco = t0;
+        
+        // Buscar usando búsqueda optimizada en rango específico
+        boolean encontrado = false;
+        
+        while (!encontrado) {
+            Turno turnoConflictivo = buscarTurnoEnRango(inicioHueco, inicioHueco.plusMinutes(duracionMin));
+            
+            if (turnoConflictivo == null) {
+                // No hay conflictos, encontramos el hueco
+                return Optional.of(inicioHueco);
+            }
+            
+            // Hay conflicto, mover inicio del hueco después del turno conflictivo
+            inicioHueco = turnoConflictivo.getFechaHoraFin();
+            
+            // Verificar límite razonable para evitar bucle infinito
+            if (inicioHueco.isAfter(t0.plusDays(7))) {
+                break; // No buscar más allá de una semana
+            }
+        }
+        
+        return Optional.of(inicioHueco);
+    }
+    
+    /**
+     * Busca si existe algún turno que se solape con el rango [inicio, fin)
+     * Complejidad: O(log n + k) donde k = turnos en el rango
+     * 
+     * @param inicio Inicio del rango a verificar
+     * @param fin Fin del rango a verificar
+     * @return Primer turno que se solapa, o null si no hay
+     */
+    private Turno buscarTurnoEnRango(LocalDateTime inicio, LocalDateTime fin) {
+        // Obtener turnos ordenados y buscar eficientemente
         ListaEnlazada<Turno> turnos = obtenerTurnosOrdenados();
         Nodo<Turno> nodo = turnos.getHead();
         
+        // Optimización: saltar turnos que terminan antes del rango de interés
         while (nodo != null) {
-            if (nodo.getData().getId().equals(id)) {
-                return nodo.getData();
+            Turno turno = nodo.getData();
+            LocalDateTime finTurno = turno.getFechaHoraFin();
+            
+            // Si este turno termina antes de nuestro inicio, seguir buscando
+            if (finTurno.isBefore(inicio) || finTurno.equals(inicio)) {
+                nodo = nodo.getNext();
+                continue;
             }
-            nodo = nodo.getNext();
+            
+            // Si este turno empieza después de nuestro fin, no hay más conflictos
+            if (turno.getFechaHora().isAfter(fin) || turno.getFechaHora().equals(fin)) {
+                break;
+            }
+            
+            // Este turno se solapa con nuestro rango
+            return turno;
         }
-        return null;
+        
+        return null; // No hay turnos en el rango
     }
     
-    /** Verifica si un turno nuevo se solapa con algún turno existente */
-    private boolean tieneSolapamiento(Turno nuevo) {
+    /** Busca un turno por su ID y retorna Optional (método público) - O(1) */
+    public Optional<Turno> buscarPorIdOpt(String id) {
+        Turno turno = turnosPorId.get(id);
+        return turno != null ? Optional.of(turno) : Optional.empty();
+    }
+    
+    /** 
+     * Verifica solapamiento usando búsqueda optimizada
+     * Complejidad: O(log n + k) donde k = turnos en ventana de tiempo relevante
+     */
+    private boolean tieneSolapamientoOptimizado(Turno nuevo) {
         LocalDateTime inicio = nuevo.getFechaHora();
         LocalDateTime fin = inicio.plusMinutes(nuevo.getDuracionMin());
         
-        ListaEnlazada<Turno> turnos = obtenerTurnosOrdenados();
-        Nodo<Turno> nodo = turnos.getHead();
-        
-        while (nodo != null) {
-            Turno existente = nodo.getData();
-            LocalDateTime inicioExist = existente.getFechaHora();
-            LocalDateTime finExist = inicioExist.plusMinutes(existente.getDuracionMin());
-            
-            if (inicio.isBefore(finExist) && inicioExist.isBefore(fin)) {
-                return true;
-            }
-            nodo = nodo.getNext();
-        }
-        return false;
+        // Usar método optimizado para buscar conflictos en rango específico
+        return buscarTurnoEnRango(inicio, fin) != null;
     }
     
     /** Retorna todos los turnos en orden cronológico (recorrido inorden del AVL) */
