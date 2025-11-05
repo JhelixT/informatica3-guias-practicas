@@ -29,7 +29,7 @@ public class EstructurasLinealesMenu {
         this.lista = new ListaEnlazada<>();
         this.pilaArreglo = new PilaArreglo<>(5);
         this.pilaEnlazada = new PilaEnlazada<>();
-        this.colaCircular = new ColaCircular<>(5);
+        this.colaCircular = new ColaCircular<>(5, true);
         this.colaEnlazada = new ColaEnlazada<>();
     }
     
